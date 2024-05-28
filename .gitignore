@@ -1,0 +1,15 @@
+﻿################################################################################
+# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/ScreenMusic
+/ScreenMusic.Api/bin/Debug/net8.0
+/ScreenMusic.Api/obj
+/ScreenMusic.Arguments/bin/Debug/net8.0
+/ScreenMusic.Arguments/obj
+/ScreenMusic.Domain/bin/Debug/net8.0
+/ScreenMusic.Domain/obj/Debug/net8.0
+/ScreenMusic.Domain/obj
+/ScreenMusic.Infraestructure/bin/Debug/net8.0
+/ScreenMusic.Infraestructure/obj/Debug/net8.0
+/ScreenMusic.Infraestructure/obj
