@@ -31,12 +31,12 @@ public class MusicMap : IEntityTypeConfiguration<Music>
         builder.Property(x => x.Name).HasColumnName("nome");
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.Name).HasMaxLength(50);
-        builder.Property(x => x.Name).HasColumnType("VARCHAR");
+        builder.Property(x => x.Name).HasColumnType("VARCHAR(50)");
         builder.Property(x => x.Name).ValueGeneratedNever();
 
         builder.Property(x => x.ReleaseYear).HasColumnName("ano_lancamento");
         builder.Property(x => x.ReleaseYear).IsRequired();
-        builder.Property(x => x.ReleaseYear).HasColumnType("DATETIME");
+        builder.Property(x => x.ReleaseYear).HasColumnType("INT");
         builder.Property(x => x.ReleaseYear).ValueGeneratedNever();
 
         builder.Property(x => x.ArtistaId).HasColumnName("id_artista");

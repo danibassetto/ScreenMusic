@@ -29,13 +29,13 @@ public class MusicGenreMap : IEntityTypeConfiguration<MusicGenre>
         builder.Property(x => x.Name).HasColumnName("nome");
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.Name).HasMaxLength(50);
-        builder.Property(x => x.Name).HasColumnType("VARCHAR");
+        builder.Property(x => x.Name).HasColumnType("VARCHAR(50)");
         builder.Property(x => x.Name).ValueGeneratedNever();
 
         builder.Property(x => x.Description).HasColumnName("descricao");
         builder.Property(x => x.Description).IsRequired();
         builder.Property(x => x.Description).HasMaxLength(150);
-        builder.Property(x => x.Description).HasColumnType("VARCHAR");
+        builder.Property(x => x.Description).HasColumnType("VARCHAR(150)");
         builder.Property(x => x.Description).ValueGeneratedNever();
     }
 }

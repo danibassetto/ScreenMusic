@@ -2,6 +2,7 @@
 using ScreenMusic.Domain.Entities;
 using ScreenMusic.Domain.Interfaces.Repository;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace ScreenMusic.Infraestructure.Repository;
 
@@ -13,12 +14,16 @@ public class BaseRepository<TEntity, TInputIdentifier>(ScreenMusicContext contex
     #region Read
     public List<TEntity>? GetAll()
     {
-        return [.. _context.Set<TEntity>().AsNoTracking()];
-    }
+        IQueryable<TEntity> query = _context.Set<TEntity>().AsNoTracking();
+        query = BaseRepository<TEntity, TInputIdentifier>.IncludeVirtualProperties(query);
+        return [.. query];
+    }    
 
     public TEntity? Get(long id)
     {
-        return _context.Set<TEntity>().AsNoTracking().Where(x => x.Id == id).FirstOrDefault();
+        IQueryable<TEntity> query = _context.Set<TEntity>().AsNoTracking().Where(x => x.Id == id);
+        query = BaseRepository<TEntity, TInputIdentifier>.IncludeVirtualProperties(query);
+        return query.FirstOrDefault();
     }
 
     public TEntity? GetByIdentifier(TInputIdentifier inputIdentifier)
@@ -70,6 +75,21 @@ public class BaseRepository<TEntity, TInputIdentifier>(ScreenMusicContext contex
         _context.Remove(entity);
         _context.SaveChanges();
         return true;
+    }
+    #endregion
+
+    #region InternalMethods
+    private static IQueryable<TEntity> IncludeVirtualProperties(IQueryable<TEntity> query)
+    {
+        var entityType = typeof(TEntity);
+        var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetGetMethod()?.IsVirtual == true);
+
+        foreach (var property in properties)
+        {
+            query = query.Include(property.Name);
+        }
+
+        return query;
     }
     #endregion
 }

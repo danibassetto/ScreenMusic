@@ -83,7 +83,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
 
     #region Create
     [HttpPost]
-    public virtual async Task<ActionResult<BaseResponse<string>>> Create(TInputCreate inputCreate)
+    public virtual async Task<ActionResult<BaseResponse<long>>> Create(TInputCreate inputCreate)
     {
         try
         {
@@ -102,7 +102,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
 
     #region Update
     [HttpPut("{id}")]
-    public virtual async Task<ActionResult<BaseResponse<string>>> Update(long id, TInputUpdate inputUpdate)
+    public virtual async Task<ActionResult<BaseResponse<long>>> Update(long id, TInputUpdate inputUpdate)
     {
         try
         {

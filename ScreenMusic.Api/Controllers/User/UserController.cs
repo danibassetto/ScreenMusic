@@ -10,7 +10,7 @@ namespace ScreenMusic.Api.Controllers;
 public class UserController(IApiDataService apiDataService, IUserService service) : BaseController<IUserService, InputCreateUser, InputUpdateUser, OutputUser, InputIdentifierUser>(apiDataService, service) 
 {
     [AllowAnonymous]
-    public override Task<ActionResult<BaseResponse<string>>> Create(InputCreateUser inputCreate)
+    public override Task<ActionResult<BaseResponse<long>>> Create(InputCreateUser inputCreate)
     {
         return base.Create(inputCreate);
     }
@@ -26,6 +26,12 @@ public class UserController(IApiDataService apiDataService, IUserService service
     public override Task<ActionResult<BaseResponse<OutputUser>>> GetByIdentifier(InputIdentifierUser inputIdentifier)
     {
         return base.GetByIdentifier(inputIdentifier);
+    }
+
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public override Task<ActionResult<BaseResponse<OutputUser>>> Get(long id)
+    {
+        return base.Get(id);
     }
     #endregion
 }

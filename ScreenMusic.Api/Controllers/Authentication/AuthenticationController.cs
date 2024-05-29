@@ -51,13 +51,13 @@ public class AuthenticationController(IApiDataService apiDataService, IAuthentic
     }
 
     [ApiExplorerSettings(IgnoreApi = true)]
-    public override Task<ActionResult<BaseResponse<string>>> Create(object inputCreate)
+    public override Task<ActionResult<BaseResponse<long>>> Create(object inputCreate)
     {
         return base.Create(inputCreate);
     }
 
     [ApiExplorerSettings(IgnoreApi = true)]
-    public override Task<ActionResult<BaseResponse<string>>> Update(long id, object inputUpdate)
+    public override Task<ActionResult<BaseResponse<long>>> Update(long id, object inputUpdate)
     {
         return base.Update(id, inputUpdate);
     }
