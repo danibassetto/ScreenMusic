@@ -4,7 +4,7 @@ public class MusicGenre : BaseEntity<MusicGenre>
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public virtual ICollection<Music>? ListMusic { get; set; }
+    public virtual ICollection<Music>? ListMusic { get; set; } = new List<Music>();
 
     public MusicGenre() { }
 
