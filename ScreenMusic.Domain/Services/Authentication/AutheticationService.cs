@@ -15,7 +15,7 @@ public class AuthenticationService(IHttpContextAccessor httpContext, IUserServic
 
     public OutputAuthentication? Authenticate(InputAuthentication inputAuthentication)
     {
-        OutputUser user = _userService.GetByIdentifier(new InputIdentifierUser(inputAuthentication.Username));
+        OutputUser? user = _userService.GetByIdentifier(new InputIdentifierUser(inputAuthentication.Username));
         if (user is not null)
         {
             if (inputAuthentication.Password == user.Password)
@@ -37,7 +37,7 @@ public class AuthenticationService(IHttpContextAccessor httpContext, IUserServic
                     }
                 }
 
-                _userService.Update(user.Id, new InputUpdateUser(user.Username, user.Password, DateTime.UtcNow.AddDays(7)));
+                _userService.Update(user.Id, new InputUpdateUser(user.Username!, user.Password) { TokenExpirationDate = DateTime.UtcNow.AddDays(7) } );
 
                 return new OutputAuthentication("Usúario autorizado. Configure seu novo Bearer Token.", token, DateTime.UtcNow.AddDays(7));
             }

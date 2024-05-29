@@ -1,6 +1,8 @@
-﻿namespace ScreenMusic.Arguments;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ScreenMusic.Arguments;
 
 public class InputIdentifierUser(string username)
 {
-    public string Username { get; private set; } = username;
+    [MaxLength(50)] public string Username { get; private set; } = username;
 }

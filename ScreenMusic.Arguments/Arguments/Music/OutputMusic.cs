@@ -8,5 +8,5 @@ public class OutputMusic
     public string? Name { get; set; }
     public int ReleaseYear { get; set; }
     public long ArtistaId { get; set; }
-    public ICollection<OutputMusicGenre>? ListMusicGenre { get; set; }
+    public long MusicGenreId { get; set; }
 }

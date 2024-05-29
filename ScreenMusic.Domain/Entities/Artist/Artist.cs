@@ -9,7 +9,7 @@ public class Artist : BaseEntity<Artist>
 
     public Artist() { }
 
-    public Artist(string? name, string? profilePhoto, string? biography)
+    public Artist(string name, string profilePhoto, string biography)
     {
         Name = name;
         ProfilePhoto = profilePhoto;

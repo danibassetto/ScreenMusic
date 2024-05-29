@@ -1,8 +1,10 @@
-﻿namespace ScreenMusic.Arguments;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class InputUpdateUser(string username, string password, DateTime? tokenExpirationDate)
+namespace ScreenMusic.Arguments;
+
+public class InputUpdateUser(string username, string password)
 {
-    public string Username { get; private set; } = username;
-    public string Password { get; private set; } = password;
-    public DateTime? TokenExpirationDate { get; private set; } = tokenExpirationDate;
+    [MaxLength(50)] public string Username { get; private set; } = username;
+    [MaxLength(100)] public string Password { get; private set; } = password;
+    public DateTime? TokenExpirationDate { get; set; }
 }
