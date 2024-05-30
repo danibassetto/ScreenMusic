@@ -17,7 +17,7 @@ public class BaseRepository<TEntity, TInputIdentifier>(ScreenMusicContext contex
         IQueryable<TEntity> query = _context.Set<TEntity>().AsNoTracking();
         query = BaseRepository<TEntity, TInputIdentifier>.IncludeVirtualProperties(query);
         return [.. query];
-    }    
+    }
 
     public TEntity? Get(long id)
     {

@@ -1,0 +1,27 @@
+﻿@using ScreenMusic.Arguments
+﻿<MudCard>
+    <MudCardMedia Image="@Imagem"></MudCardMedia>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Artista!.Name</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body2">@Artista!.Biography</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Color="Color.Warning" Variant="Variant.Outlined" Href=@($"/EditarArtista/{Artista!.Name}")>Detalhes</MudButton>
+        </MudCardActions>
+    </MudCard>
+
+    @code {
+    [Parameter]
+    public OutputArtist? Artista { get; set; }
+
+    public string? Imagem { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Imagem = Artista!.ProfilePhoto!.Contains("Foto") ? $"https://localhost:7089/{Artista!.ProfilePhoto}" : "images/cardArtista.png";
+    }
+}

@@ -1,9 +1,9 @@
-﻿using ScreenMusic.Arguments;
-using ScreenMusic.Domain.Interfaces.Service;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
+using ScreenMusic.Arguments;
+using ScreenMusic.Domain.Interfaces.Service;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using System.Text;
 
 namespace ScreenMusic.Domain.Services;
@@ -31,13 +31,13 @@ public class AuthenticationService(IHttpContextAccessor httpContext, IUserServic
                         var filePath = Path.Combine(desktopPath, "ScreenMusic-BearerToken.txt");
                         File.WriteAllText(filePath, fileContent);
                     }
-                    catch(Exception ex) 
+                    catch (Exception ex)
                     {
                         return new OutputAuthentication($"Usúario autorizado, porém ocorreram problemas para salvar um arquivo do Token: '{ex.Message}'. Configure seu novo Bearer Token.", token, DateTime.UtcNow.AddDays(7));
                     }
                 }
 
-                _userService.Update(user.Id, new InputUpdateUser(user.Username!, user.Password) { TokenExpirationDate = DateTime.UtcNow.AddDays(7) } );
+                _userService.Update(user.Id, new InputUpdateUser(user.Username!, user.Password) { TokenExpirationDate = DateTime.UtcNow.AddDays(7) });
 
                 return new OutputAuthentication("Usúario autorizado. Configure seu novo Bearer Token.", token, DateTime.UtcNow.AddDays(7));
             }

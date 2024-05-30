@@ -1,5 +1,4 @@
-﻿using ScreenMusic.Arguments;
-using ScreenMusic.Domain.Services;
+﻿using ScreenMusic.Domain.Services;
 
 namespace ScreenMusic.Domain.Interfaces.Service;
 

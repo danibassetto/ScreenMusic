@@ -1,7 +1,7 @@
-﻿using ScreenMusic.Arguments;
+﻿using Microsoft.AspNetCore.Mvc;
+using ScreenMusic.Arguments;
 using ScreenMusic.Domain.ApiManagement;
 using ScreenMusic.Domain.Interfaces.Service;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ScreenMusic.Api.Controllers;
 

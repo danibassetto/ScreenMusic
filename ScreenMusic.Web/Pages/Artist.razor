@@ -1,0 +1,49 @@
+﻿@page "/Artistas"
+@using ScreenMusic.Arguments
+@inject ArtistAPI artistasAPI
+
+<MudStack Class="mt-4 mb-4" Row="true" Justify="Justify.SpaceBetween">
+    <MudText Class="mb-4" Typo="Typo.h4">Artistas cadastrados</MudText>
+    <MudPagination Count="@totalPage" SelectedChanged="PaginaMudou"></MudPagination>
+</MudStack>
+
+@if (ListArtistByPage is not null)
+{
+    <MudGrid>
+        @foreach (var artista in ListArtistByPage)
+        {
+            <MudItem xs="3">
+                <CardArtist Artista="artista" />
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    private ICollection<OutputArtist>? ListArtist;
+    private int tamanho = 8;
+    private int totalItem;
+    private int totalPage;
+    private ICollection<OutputArtist>? ListArtistByPage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListArtist = await artistasAPI.GetAll();
+        if (ListArtist is not null)
+        {
+            ListArtist = ListArtist.OrderByDescending(a => a.Id).ToList();
+            totalItem = ListArtist.Count();
+            totalPage = Convert.ToInt32(Math.Ceiling((totalItem * 1.0) / tamanho));
+            this.PaginaMudou(1);
+        }
+    }
+
+    private void PaginaMudou(int pageNumber)
+    {
+        var indice = pageNumber - 1;
+        ListArtistByPage = ListArtist!
+            .Skip(tamanho * indice)
+            .Take(tamanho)
+            .ToList();
+    }
+}

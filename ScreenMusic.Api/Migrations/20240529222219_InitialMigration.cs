@@ -7,7 +7,7 @@ namespace ScreenMusic.Api.Migrations;
 
 public partial class InitialMigration : Migration
 {
-   
+
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.AlterDatabase()
@@ -115,7 +115,7 @@ public partial class InitialMigration : Migration
             table: "musica",
             column: "id_genero_musical");
     }
-    
+
     protected override void Down(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.DropTable(

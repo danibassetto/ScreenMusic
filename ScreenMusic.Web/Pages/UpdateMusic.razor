@@ -1,0 +1,106 @@
+﻿@page "/EditarMusica/{NomeMusica}"
+@using ScreenMusic.Arguments
+@inject ArtistAPI artistasAPI
+@inject MusicGenreAPI generoAPI
+@inject MusicAPI musicaAPI
+@inject NavigationManager navigationManager
+
+<MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
+
+    <MudText Class="mt-8" Typo="Typo.h4">Edição de Música</MudText>
+
+    <MudForm>
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Nome da música/canção"
+                      @bind-Value="name"
+                      Variant="Variant.Outlined"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudSelect Class="mt-4" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" ValueChanged="ArtistaSelecionado" AnchorOrigin="Origin.BottomCenter">
+            @if (ListArtist is not null)
+                @foreach (var artista in ListArtist)
+                {
+                    <MudSelectItem Value="artista" />
+                }
+        </MudSelect>
+
+        <MudNumericField Class="mt-4" Placeholder="Ano de lançamento"
+                         @bind-Value="releaseYear"
+                         Variant="Variant.Outlined"
+                         Lines="1"
+                         Required="true"
+                         RequiredError="Campo obrigatório." />
+
+        <MudSelect Class="mt-4" T="OutputMusicGenre" Label="Gêneros" Variant="Variant.Outlined" ValueChanged="GeneroSelecionado" AnchorOrigin="Origin.BottomCenter">
+            @if (ListMusicGenre is not null)
+                @foreach (var generos in ListMusicGenre)
+                {
+                    <MudSelectItem Value="generos" />
+                }
+            @if (GenerosSelecionados is not null)
+                foreach (var genero in GenerosSelecionados)
+                {
+                    <MudAlert Severity="Severity.Info">@(genero.Name) adicionado como gênero da música.</MudAlert>
+                }
+        </MudSelect>
+
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       @onclick="Deletar"
+                       Class="ml-auto">
+                Deletar
+            </MudButton>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Info"
+                       Class="ml-3">
+                Voltar
+            </MudButton>
+        </div>
+
+    </MudForm>
+
+</MudPaper>
+
+@code {
+    private int? releaseYear;
+    private string? name;
+
+    private ICollection<OutputArtist>? ListArtist;
+    private ICollection<OutputMusicGenre>? ListMusicGenre;
+
+    private List<OutputMusicGenre>? GenerosSelecionados { get; set; } = new();
+    private OutputArtist? ArtistaDaMusica { get; set; }
+
+    public OutputMusic? Music { get; set; }
+
+    [Parameter]
+    public string? NomeMusica { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Music = await musicaAPI.GetByName(new InputIdentifierMusic(NomeMusica!));
+        releaseYear = Music!.ReleaseYear;
+        name = Music!.Name;
+        ArtistaDaMusica = new OutputArtist() { Id = Music.ArtistaId, Name = Music.Name };
+    }
+    
+    private void ArtistaSelecionado(OutputArtist artista)
+    {
+        ArtistaDaMusica = artista;
+    }
+
+    private void GeneroSelecionado(OutputMusicGenre genero)
+    {
+        if (GenerosSelecionados is not null)
+            if (!GenerosSelecionados.Contains(genero))
+                GenerosSelecionados.Add(genero);
+    }
+
+    public async Task Deletar()
+    {
+        await musicaAPI.Delete(Music!.Id);
+        navigationManager.NavigateTo("/MusicasPorArtista");
+    }
+}
