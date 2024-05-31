@@ -8,8 +8,6 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.SeedMongoConfiguration();
-
 builder.Services.AddCors(c => { c.AddPolicy("CorsPolicy", options => { options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); }); });
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -54,13 +52,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
+//app.UseAuthentication();
 
 app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
 

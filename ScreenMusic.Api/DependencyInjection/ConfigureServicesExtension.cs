@@ -28,7 +28,7 @@ public static class ConfigureServicesExtension
         AddSingleton();
         AddSwaggerGen();
         AddCors();
-        AddToken();
+        //AddToken();
         AddMySql();
 
         return ServiceCollection;
@@ -71,34 +71,34 @@ public static class ConfigureServicesExtension
         {
             x.SwaggerDoc("pt-br", new OpenApiInfo { Title = "ScreenMusic", Version = "pt-br", Contact = contact });
 
-            x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-            {
-                Name = "JWT Authentication",
-                Description = "Digitar somente JWT Bearer token",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-                Reference = new OpenApiReference
-                {
-                    Id = JwtBearerDefaults.AuthenticationScheme,
-                    Type = ReferenceType.SecurityScheme
-                }
-            });
-            x.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
+            //x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            //{
+            //    Name = "JWT Authentication",
+            //    Description = "Digitar somente JWT Bearer token",
+            //    In = ParameterLocation.Header,
+            //    Type = SecuritySchemeType.Http,
+            //    Scheme = "Bearer",
+            //    BearerFormat = "JWT",
+            //    Reference = new OpenApiReference
+            //    {
+            //        Id = JwtBearerDefaults.AuthenticationScheme,
+            //        Type = ReferenceType.SecurityScheme
+            //    }
+            //});
+            //x.AddSecurityRequirement(new OpenApiSecurityRequirement
+            //{
+            //    {
+            //        new OpenApiSecurityScheme
+            //        {
+            //            Reference = new OpenApiReference
+            //            {
+            //                Type = ReferenceType.SecurityScheme,
+            //                Id = "Bearer"
+            //            }
+            //        },
+            //        Array.Empty<string>()
+            //    }
+            //});
         });
 
         ServiceCollection.AddSwaggerGenNewtonsoftSupport();

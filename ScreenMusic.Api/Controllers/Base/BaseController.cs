@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using ScreenMusic.Arguments;
 using ScreenMusic.Domain.ApiManagement;
 using ScreenMusic.Domain.Interfaces.Service;
 using ScreenMusic.Domain.Services;
 
 namespace ScreenMusic.Api.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInputIdentifier> : Controller
     where TIService : IBaseService<TInputCreate, TInputUpdate, TOutput, TInputIdentifier>
@@ -30,7 +31,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
 
     #region Read
     [HttpGet]
-    public virtual async Task<ActionResult<BaseResponse<TOutput>>> GetAll()
+    public virtual async Task<ActionResult<BaseResponseApi<TOutput>>> GetAll()
     {
         try
         {
@@ -47,7 +48,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
     }
 
     [HttpGet("{id}")]
-    public virtual async Task<ActionResult<BaseResponse<TOutput>>> Get(long id)
+    public virtual async Task<ActionResult<BaseResponseApi<TOutput>>> Get(long id)
     {
         try
         {
@@ -64,7 +65,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
     }
 
     [HttpPost("GetByIdentifier")]
-    public virtual async Task<ActionResult<BaseResponse<TOutput>>> GetByIdentifier(TInputIdentifier inputIdentifier)
+    public virtual async Task<ActionResult<BaseResponseApi<TOutput>>> GetByIdentifier(TInputIdentifier inputIdentifier)
     {
         try
         {
@@ -83,7 +84,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
 
     #region Create
     [HttpPost]
-    public virtual async Task<ActionResult<BaseResponse<long>>> Create(TInputCreate inputCreate)
+    public virtual async Task<ActionResult<BaseResponseApi<long>>> Create(TInputCreate inputCreate)
     {
         try
         {
@@ -102,7 +103,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
 
     #region Update
     [HttpPut("{id}")]
-    public virtual async Task<ActionResult<BaseResponse<long>>> Update(long id, TInputUpdate inputUpdate)
+    public virtual async Task<ActionResult<BaseResponseApi<long>>> Update(long id, TInputUpdate inputUpdate)
     {
         try
         {
@@ -121,7 +122,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
 
     #region Delete
     [HttpDelete]
-    public virtual async Task<ActionResult<BaseResponse<bool>>> Delete(long id)
+    public virtual async Task<ActionResult<BaseResponseApi<bool>>> Delete(long id)
     {
         try
         {
@@ -144,13 +145,13 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
         if (_service != null)
             ListNotification.AddRange(_service?.ListNotification!);
 
-        List<Notification> listNegativeNotification = (from i in ListNotification ?? [] where i.MessageType == EnumMessageType.Negative select i).ToList();
+        List<Notification> listNegativeNotification = (from i in ListNotification ?? [] where i.MessageType == Arguments.EnumMessageType.Negative select i).ToList();
 
         if (listNegativeNotification.Count == 0)
         {
             try
             {
-                return StatusCode(statusCode == 0 ? 200 : statusCode, new BaseResponseApi<ResponseType, string> { Value = new BaseResponseApiContent<ResponseType, string>() { Result = result } });
+                return StatusCode(statusCode == 0 ? 200 : statusCode, new BaseResponseApi<ResponseType> { Value = new BaseResponseApiContent<ResponseType>() { Result = result } });
             }
             catch (BaseResponseException ex)
             {

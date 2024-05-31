@@ -15,7 +15,7 @@ public class AuthenticationController(IApiDataService apiDataService, IAuthentic
     /// </summary>
     [AllowAnonymous]
     [HttpPost("Authenticate")]
-    public async Task<ActionResult<BaseResponseApi<OutputAuthentication, string>>> Authenticate(InputAuthentication inputAuthentication)
+    public async Task<ActionResult<BaseResponseApi<OutputAuthentication>>> Authenticate(InputAuthentication inputAuthentication)
     {
         try
         {
@@ -33,37 +33,37 @@ public class AuthenticationController(IApiDataService apiDataService, IAuthentic
 
     #region IgnoreApi
     [ApiExplorerSettings(IgnoreApi = true)]
-    public override Task<ActionResult<BaseResponse<object>>> GetAll()
+    public override Task<ActionResult<BaseResponseApi<object>>> GetAll()
     {
         return base.GetAll();
     }
 
     [ApiExplorerSettings(IgnoreApi = true)]
-    public override Task<ActionResult<BaseResponse<object>>> Get(long id)
+    public override Task<ActionResult<BaseResponseApi<object>>> Get(long id)
     {
         return base.Get(id);
     }
 
     [ApiExplorerSettings(IgnoreApi = true)]
-    public override Task<ActionResult<BaseResponse<object>>> GetByIdentifier(object inputIdentifier)
+    public override Task<ActionResult<BaseResponseApi<object>>> GetByIdentifier(object inputIdentifier)
     {
         return base.GetByIdentifier(inputIdentifier);
     }
 
     [ApiExplorerSettings(IgnoreApi = true)]
-    public override Task<ActionResult<BaseResponse<long>>> Create(object inputCreate)
+    public override Task<ActionResult<BaseResponseApi<long>>> Create(object inputCreate)
     {
         return base.Create(inputCreate);
     }
 
     [ApiExplorerSettings(IgnoreApi = true)]
-    public override Task<ActionResult<BaseResponse<long>>> Update(long id, object inputUpdate)
+    public override Task<ActionResult<BaseResponseApi<long>>> Update(long id, object inputUpdate)
     {
         return base.Update(id, inputUpdate);
     }
 
     [ApiExplorerSettings(IgnoreApi = true)]
-    public override Task<ActionResult<BaseResponse<bool>>> Delete(long id)
+    public override Task<ActionResult<BaseResponseApi<bool>>> Delete(long id)
     {
         return base.Delete(id);
     }

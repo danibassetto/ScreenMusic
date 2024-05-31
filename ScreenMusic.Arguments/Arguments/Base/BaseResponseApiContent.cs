@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
 
-namespace ScreenMusic.Domain.Services;
+namespace ScreenMusic.Arguments;
 
-public class BaseResponseApiContent<TTypeResult, TTypeException>
+public class BaseResponseApiContent<TTypeResult>
 {
     public TTypeResult? Result { get; set; }
-    public TTypeException? Exception { get; set; }
     public List<Notification>? ListNotification { get; set; }
     [JsonIgnore] public int StatusCode { get; set; }
 }

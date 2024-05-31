@@ -1,4 +1,4 @@
-﻿namespace ScreenMusic.Domain.Services;
+﻿namespace ScreenMusic.Arguments;
 
 public enum EnumMessageType
 {

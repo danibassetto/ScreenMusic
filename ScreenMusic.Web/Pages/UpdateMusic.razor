@@ -1,8 +1,8 @@
 ﻿@page "/EditarMusica/{NomeMusica}"
 @using ScreenMusic.Arguments
-@inject ArtistAPI artistasAPI
-@inject MusicGenreAPI generoAPI
-@inject MusicAPI musicaAPI
+@inject ArtistServiceClient artistasAPI
+@inject MusicGenreServiceClient generoAPI
+@inject MusicServiceClient musicaAPI
 @inject NavigationManager navigationManager
 
 <MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
