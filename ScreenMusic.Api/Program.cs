@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ScreenMusic.Api;
 using ScreenMusic.Domain.ApiManagement;
+using ScreenMusic.Domain.Entities;
 using ScreenMusic.Domain.Mapping;
 using System.Reflection;
 
@@ -66,7 +67,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseAuthorization();
+app.UseAuthorization();
+
+app.MapGroup("auth").MapIdentityApi<User>().WithTags("Authorization");
 
 app.UseCors("wasm");
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ScreenMusic.Domain.ApiManagement;
+using ScreenMusic.Domain.Entities;
 using ScreenMusic.Domain.Interfaces.Repository;
 using ScreenMusic.Domain.Interfaces.Service;
 using ScreenMusic.Domain.Services;
@@ -41,7 +42,6 @@ public static class ConfigureServicesExtension
 
     public static void AddTransient()
     {
-        ServiceCollection.AddTransient<IAuthenticationService, AuthenticationService>();
         ServiceCollection.AddTransient<IArtistService, ArtistService>();
         ServiceCollection.AddTransient<IArtistRepository, ArtistRepository>();
         ServiceCollection.AddTransient<IMusicService, MusicService>();
@@ -134,5 +134,6 @@ public static class ConfigureServicesExtension
     {
         var connectionString = Configuration!.GetConnectionString("DataBase");
         ServiceCollection.AddDbContext<ScreenMusicContext>(opts => opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), b => b.MigrationsAssembly("ScreenMusic.Api")));
+        ServiceCollection.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<ScreenMusicContext>();
     }
 }

@@ -5,11 +5,15 @@ using ScreenMusic.Infraestructure.Maps;
 
 namespace ScreenMusic.Infraestructure;
 
-public class ScreenMusicContext(DbContextOptions<ScreenMusicContext> options) : IdentityDbContext<User, UserRole, long>(options)
+public class ScreenMusicContext : IdentityDbContext<User, UserRole, long>
 {
     public DbSet<Artist> Artist { get; set; }
     public DbSet<Music> Music { get; set; }
     public DbSet<MusicGenre> MusicGenre { get; set; }
+
+    public ScreenMusicContext()    {    }
+
+    public ScreenMusicContext(DbContextOptions options) : base(options)    {    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
