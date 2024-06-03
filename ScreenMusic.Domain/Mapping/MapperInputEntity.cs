@@ -22,10 +22,5 @@ public class MapperInputEntity : Profile
         CreateMap<InputCreateMusicGenre, MusicGenre>().ReverseMap();
         CreateMap<InputUpdateMusicGenre, MusicGenre>().ReverseMap();
         #endregion
-
-        #region User
-        CreateMap<InputCreateUser, User>().ReverseMap();
-        CreateMap<InputUpdateUser, User>().ReverseMap();
-        #endregion
     }
 }

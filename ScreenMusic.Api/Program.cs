@@ -22,7 +22,7 @@ builder.Services.ConfigureDependencyInjection(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BrasilApi", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ScreenMusic", Version = "v1" });
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
@@ -35,6 +35,14 @@ var configure = new MapperConfiguration(config =>
 IMapper mapper = configure.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
+builder.Services.AddCors(
+    options => options.AddPolicy(
+        "wasm",
+        policy => policy.WithOrigins("https://localhost:7089", "https://localhost:7072")
+            .AllowAnyMethod()
+            .SetIsOriginAllowed(pol => true)
+            .AllowAnyHeader()
+            .AllowCredentials()));
 #region ApiData
 ApiData.SetMapper(new ScreenMusic.Domain.Mapping.Mapper(new MapperConfiguration(config => { config.AddProfile(new MapperEntityOutput()); }).CreateMapper(), new MapperConfiguration(config => { config.AddProfile(new MapperInputEntity()); }).CreateMapper()));
 #endregion
@@ -46,7 +54,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(x =>
     {
-        x.SwaggerEndpoint("/swagger/pt-br/swagger.json", "BrasilApi");
+        x.SwaggerEndpoint("/swagger/pt-br/swagger.json", "ScreenMusic");
     });
 }
 
@@ -60,7 +68,7 @@ app.UseRouting();
 
 //app.UseAuthorization();
 
-app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+app.UseCors("wasm");
 
 app.MapControllers();
 

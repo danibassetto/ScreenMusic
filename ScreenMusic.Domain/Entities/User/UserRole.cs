@@ -2,7 +2,7 @@
 
 namespace ScreenMusic.Domain.Entities;
 
-public class User : IdentityUser<long>
+public class UserRole : IdentityRole<long>
 {
 
 }

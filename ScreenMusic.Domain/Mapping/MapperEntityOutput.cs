@@ -19,9 +19,5 @@ public class MapperEntityOutput : Profile
         #region MusicGenre
         CreateMap<MusicGenre, OutputMusicGenre>().ReverseMap();
         #endregion
-
-        #region User
-        CreateMap<User, OutputUser>().ReverseMap();
-        #endregion
     }
 }
