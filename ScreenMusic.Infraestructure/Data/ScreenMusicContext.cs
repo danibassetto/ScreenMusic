@@ -11,9 +11,9 @@ public class ScreenMusicContext : IdentityDbContext<User, UserRole, long>
     public DbSet<Music> Music { get; set; }
     public DbSet<MusicGenre> MusicGenre { get; set; }
 
-    public ScreenMusicContext()    {    }
+    public ScreenMusicContext() { }
 
-    public ScreenMusicContext(DbContextOptions options) : base(options)    {    }
+    public ScreenMusicContext(DbContextOptions options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

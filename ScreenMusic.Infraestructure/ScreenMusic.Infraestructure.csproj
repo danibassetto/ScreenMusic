@@ -8,13 +8,13 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6"/>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.6" />
 	  <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ScreenMusic.Domain\ScreenMusic.Domain.csproj" />
+	  <ProjectReference Include="..\ScreenMusic.Domain\ScreenMusic.Domain.csproj" />
 	</ItemGroup>
 
 </Project>

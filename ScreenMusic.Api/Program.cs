@@ -36,14 +36,14 @@ var configure = new MapperConfiguration(config =>
 IMapper mapper = configure.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-builder.Services.AddCors(
-    options => options.AddPolicy(
-        "wasm",
-        policy => policy.WithOrigins("https://localhost:7089", "https://localhost:7072")
-            .AllowAnyMethod()
-            .SetIsOriginAllowed(pol => true)
-            .AllowAnyHeader()
-            .AllowCredentials()));
+//builder.Services.AddCors(
+//    options => options.AddPolicy(
+//        "wasm",
+//        policy => policy.WithOrigins("https://localhost:7000", "https://localhost:7001")
+//            .AllowAnyMethod()
+//            .SetIsOriginAllowed(pol => true)
+//            .AllowAnyHeader()
+//            .AllowCredentials()));
 #region ApiData
 ApiData.SetMapper(new ScreenMusic.Domain.Mapping.Mapper(new MapperConfiguration(config => { config.AddProfile(new MapperEntityOutput()); }).CreateMapper(), new MapperConfiguration(config => { config.AddProfile(new MapperInputEntity()); }).CreateMapper()));
 #endregion
@@ -71,7 +71,7 @@ app.UseAuthorization();
 
 app.MapGroup("auth").MapIdentityApi<User>().WithTags("Authorization");
 
-app.UseCors("wasm");
+//app.UseCors("wasm");
 
 app.MapControllers();
 

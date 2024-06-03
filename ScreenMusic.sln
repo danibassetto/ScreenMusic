@@ -11,9 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScreenMusic.Infraestructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScreenMusic.Api", "ScreenMusic.Api\ScreenMusic.Api.csproj", "{25FA5E01-B83D-48F4-A6B7-1DDD1473A6D3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CC845CE3-F092-42C3-8B84-2AAAC1BA8F31}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenMusic.Web", "ScreenMusic.Web\ScreenMusic.Web.csproj", "{69AE9752-11BE-42DC-BD55-EA9371EFE4D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScreenMusic.Web", "ScreenMusic.Web\ScreenMusic.Web.csproj", "{69AE9752-11BE-42DC-BD55-EA9371EFE4D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

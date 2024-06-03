@@ -10,19 +10,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ScreenMusic.Arguments\ScreenMusic.Arguments.csproj" />
-    <ProjectReference Include="..\ScreenMusic.Domain\ScreenMusic.Domain.csproj" />
-    <ProjectReference Include="..\ScreenMusic.Infraestructure\ScreenMusic.Infraestructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ScreenMusic.Arguments\ScreenMusic.Arguments.csproj" />
+    <ProjectReference Include="..\ScreenMusic.Domain\ScreenMusic.Domain.csproj" />
+    <ProjectReference Include="..\ScreenMusic.Infraestructure\ScreenMusic.Infraestructure.csproj" />
   </ItemGroup>
 
 </Project>
