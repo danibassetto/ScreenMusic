@@ -22,7 +22,7 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
     }
 
     #region Read
-    public List<TOutput>? GetAll()
+    public virtual List<TOutput>? GetAll()
     {
         var entity = _repository!.GetAll();
 
@@ -32,7 +32,7 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
             return default;
     }
 
-    public TOutput? Get(long id)
+    public virtual TOutput? Get(long id)
     {
         var entity = _repository!.Get(id);
 
@@ -42,7 +42,7 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
             return default;
     }
 
-    public TOutput? GetByIdentifier(TInputIdentifier inputIdentifier)
+    public virtual TOutput? GetByIdentifier(TInputIdentifier inputIdentifier)
     {
         var entity = _repository!.GetByIdentifier(inputIdentifier);
 
@@ -54,22 +54,22 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
     #endregion
 
     #region Create
-    public long? Create(TInputCreate inputCreate)
+    public virtual long? Create(TInputCreate inputCreate)
     {
         return _repository!.Create(FromInputCreateToEntity(inputCreate) ?? new TEntity());
     }
     #endregion
 
     #region Update
-    public long? Update(long id, TInputUpdate inputUpdate)
+    public virtual long? Update(long id, TInputUpdate inputUpdate)
     {
         var oldEntity = Get(id) ?? throw new Exception("Id inválido ou inexistente. Processo: Update");
 
-        var entity = UpdateEntity(FromOutputToEntity(oldEntity), inputUpdate);
+        var entity = BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, TOutput, TInputIdentifier>.UpdateEntity(FromOutputToEntity(oldEntity), inputUpdate);
         return _repository!.Update(entity ?? new TEntity());
     }
 
-    protected TEntity? UpdateEntity(TEntity oldEntity, TInputUpdate inputUpdate)
+    private static TEntity? UpdateEntity(TEntity oldEntity, TInputUpdate inputUpdate)
     {
         foreach (var property in typeof(TInputUpdate).GetProperties())
         {
@@ -86,7 +86,7 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
     #endregion
 
     #region Delete
-    public bool Delete(long id)
+    public virtual bool Delete(long id)
     {
         var entity = Get(id) ?? throw new Exception("Id inválido ou inexistente. Processo: Delete");
         _repository!.Delete(FromOutputToEntity(entity));
