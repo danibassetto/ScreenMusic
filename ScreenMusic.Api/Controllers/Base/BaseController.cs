@@ -118,7 +118,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
     #endregion
 
     #region Delete
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public virtual async Task<ActionResult<BaseResponseApi<bool>>> Delete(long id)
     {
         try

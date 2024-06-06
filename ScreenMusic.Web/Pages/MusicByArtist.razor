@@ -1,10 +1,10 @@
 ﻿@page "/MusicByArtist"
 @using ScreenMusic.Arguments
-@inject MusicServiceClient musicasAPI
+@inject MusicServiceClient musicServiceClient
 
 <MudStack Class="mt-4 mb-4" Row="true" Justify="Justify.SpaceBetween">
     <MudText Class="mb-4" Typo="Typo.h4">Músicas cadastradas</MudText>
-    <MudPagination Count="@totalPage" SelectedChanged="PaginaMudou"></MudPagination>
+    <MudPagination Count="@totalPage" SelectedChanged="PageChange"></MudPagination>
 </MudStack>
 
 @if (ListMusicByPage is not null)
@@ -29,22 +29,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListMusic = await musicasAPI.GetAll();
+        ListMusic = await musicServiceClient.GetAll();
         if (ListMusic is not null)
         {
             ListMusic = ListMusic.OrderByDescending(a => a.Id).ToList();
             totalItem = ListMusic.Count();
             totalPage = Convert.ToInt32(Math.Ceiling((totalItem * 1.0) / tamanho));
-            this.PaginaMudou(1);
+            this.PageChange(1);
         }
     }
 
-    private void PaginaMudou(int pageNumber)
+    private void PageChange(int pageNumber)
     {
         var indice = pageNumber - 1;
-        ListMusicByPage = ListMusic!
-            .Skip(tamanho * indice)
-            .Take(tamanho)
-            .ToList();
+        ListMusicByPage = ListMusic!.Skip(tamanho * indice).Take(tamanho).ToList();
     }
 }

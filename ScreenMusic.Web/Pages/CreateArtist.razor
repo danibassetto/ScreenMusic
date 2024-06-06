@@ -1,6 +1,6 @@
 ﻿@page "/CreateArtist"
 @using ScreenMusic.Arguments
-@inject ArtistServiceClient artistasAPI
+@inject ArtistServiceClient artistServiceClient
 @inject NavigationManager navigationManager
 
 <MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
@@ -9,18 +9,9 @@
 
     <MudForm>
 
-        <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista"
-                      Variant="Variant.Outlined"
-                      @bind-Value="name"
-                      Required="true"
-                      RequiredError="Campo obrigatório." />
+        <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista" Variant="Variant.Outlined" @bind-Value="name" Required="true" RequiredError="Campo obrigatório." />
 
-        <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista"
-                      Variant="Variant.Outlined"
-                      @bind-Value="biography"
-                      Lines="4"
-                      Required="true"
-                      RequiredError="Campo obrigatório." />
+        <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista" Variant="Variant.Outlined" @bind-Value="biography" Lines="4" Required="true" RequiredError="Campo obrigatório." />
 
         <MudImage Class="mt-4" src="@fileImage" />
         <MudFileUpload T="IBrowserFile" Accept=".jpeg" FilesChanged="UploadFile">
@@ -36,18 +27,9 @@
         </MudFileUpload>
 
         <div class="d-flex justify-space-between align-center mt-4">
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Info"
-                       @onclick="Return">
-                Voltar
-            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Return">Voltar</MudButton>
             <div>
-                <MudButton Variant="Variant.Filled"
-                           @onclick="Cadastrar"
-                           Color="Color.Primary"
-                           Class="ml-auto">
-                    Cadastrar
-                </MudButton>
+                <MudButton Variant="Variant.Filled" @onclick="Create" Color="Color.Primary" Class="ml-auto">Cadastrar</MudButton>
             </div>
         </div>
 
@@ -57,15 +39,14 @@
 @code {
     private string? name;
     private string? biography;
-
     private string? fileImage;
     private string? profilePhoto;
 
-    private async Task Cadastrar()
+    private async Task Create()
     {
         var request = new InputCreateArtist(name!, biography!, profilePhoto!);
-        await artistasAPI.Create(request);
-        navigationManager.NavigateTo("/Artistas");
+        await artistServiceClient.Create(request);
+        navigationManager.NavigateTo("/Artist");
     }
 
     private async Task UploadFile(IBrowserFile file)

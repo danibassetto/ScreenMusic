@@ -15,6 +15,22 @@ public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>
         return result?.Value?.Result;
     }
 
+    public async Task<TOutput?> GetById(long id)
+    {
+        HttpResponseMessage response = await _httpClient.GetAsync($"api/{NameService}/{id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            string content = await response.Content.ReadAsStringAsync();
+
+            TOutput? outputArtist = JsonConvert.DeserializeObject<BaseResponseApi<TOutput>>(content)!.Value!.Result;
+
+            return outputArtist;
+        }
+        else
+            return default;
+    }
+
     public async Task<TOutput?> GetByName(TIdentifier inputIdentifier)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"api/{NameService}/GetByIdentifier", inputIdentifier);

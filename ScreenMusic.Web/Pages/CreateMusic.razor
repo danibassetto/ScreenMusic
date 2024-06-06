@@ -1,8 +1,8 @@
 ﻿@page "/CreateMusic"
 @using ScreenMusic.Arguments
-@inject ArtistServiceClient artistasAPI
-@inject MusicGenreServiceClient generoAPI
-@inject MusicServiceClient musicaAPI
+@inject ArtistServiceClient artistServiceClient
+@inject MusicGenreServiceClient musicGenreServiceClient
+@inject MusicServiceClient musicServiceClient
 @inject NavigationManager navigationManager
 
 <MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
@@ -11,53 +11,29 @@
 
     <MudForm>
 
-        <MudTextField Class="mt-4" T="string" Placeholder="Nome da música/canção"
-                      @bind-Value="name"
-                      Variant="Variant.Outlined"
-                      Required="true"
-                      RequiredError="Campo obrigatório." />
-
-        <MudSelect Class="mt-4" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" ValueChanged="ArtistaSelecionado" AnchorOrigin="Origin.BottomCenter">
+        <MudTextField Class="mt-4" T="string" Placeholder="Nome da música/canção" @bind-Value="name" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
+        <MudSelect Class="mt-4" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="Artist">
             @if (ListArtist is not null)
                 @foreach (var artista in ListArtist)
                 {
-                    <MudSelectItem Value="artista" />
+                    <MudSelectItem Value="artista">@artista.Name</MudSelectItem>
                 }
         </MudSelect>
 
-        <MudNumericField Class="mt-4" Placeholder="Ano de lançamento"
-                         @bind-Value="releaseYear"
-                         Variant="Variant.Outlined"
-                         Lines="1"
-                         Required="true"
-                         RequiredError="Campo obrigatório." />
+        <MudNumericField Class="mt-4" T="int" Placeholder="Ano de lançamento" @bind-Value="releaseYear" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
 
-        <MudSelect Class="mt-4" T="OutputMusicGenre" Label="Gêneros" Variant="Variant.Outlined" ValueChanged="GeneroSelecionado" AnchorOrigin="Origin.BottomCenter">
+        <MudSelect Class="mt-4" T="OutputMusicGenre" Label="Gêneros" Variant="Variant.Outlined" @bind-Value="MusicGenre">
             @if (ListMusicGenre is not null)
-                @foreach (var generos in ListMusicGenre)
+                @foreach (var genero in ListMusicGenre)
                 {
-                    <MudSelectItem Value="generos" />
-                }
-            @if (GenerosSelecionados is not null)
-                foreach (var genero in GenerosSelecionados)
-                {
-                    <MudAlert Severity="Severity.Info">@(genero.Name) adicionado como gênero da música.</MudAlert>
+                    <MudSelectItem Value="genero">@genero.Name</MudSelectItem>
                 }
         </MudSelect>
 
         <div class="d-flex justify-space-between align-center mt-4">
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Info"
-                       @onclick="Return">
-                Voltar
-            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Return">Voltar</MudButton>
             <div>
-                <MudButton Variant="Variant.Filled"
-                           @onclick="Create"
-                           Color="Color.Primary"
-                           Class="ml-auto">
-                    Cadastrar
-                </MudButton>
+                <MudButton Variant="Variant.Filled" @onclick="Create" Color="Color.Primary" Class="ml-auto">Cadastrar</MudButton>
             </div>
         </div>
 
@@ -69,36 +45,26 @@
     private int releaseYear;
     private string? name;
 
-    private ICollection<OutputArtist>? ListArtist;    
+    private ICollection<OutputArtist>? ListArtist;
     private ICollection<OutputMusicGenre>? ListMusicGenre;
 
-    private List<OutputMusicGenre>? GenerosSelecionados { get; set; } = new();
-    private OutputArtist? ArtistaDaMusica { get; set; }
-    private OutputMusicGenre? GeneroDaMusica { get; set; }
+    private OutputArtist? Artist { get; set; }
+    private OutputMusicGenre? MusicGenre { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ListArtist = await artistasAPI.GetAll();
-        ListMusicGenre = await generoAPI.GetAll();
-    }
-
-    private void ArtistaSelecionado(OutputArtist artista)
-    {
-        ArtistaDaMusica = artista;
-    }
-
-    private void GeneroSelecionado(OutputMusicGenre genero)
-    {
-        if (GenerosSelecionados is not null)
-            if (!GenerosSelecionados.Contains(genero))
-                GenerosSelecionados.Add(genero);
+        ListArtist = await artistServiceClient.GetAll();
+        ListMusicGenre = await musicGenreServiceClient.GetAll();
     }
 
     public async Task Create()
     {
-        var musicaRequest = new InputCreateMusic(name!, releaseYear, ArtistaDaMusica!.Id, GeneroDaMusica!.Id);
-        await musicaAPI.Create(musicaRequest);
-        navigationManager.NavigateTo("/MusicByArtist");
+        if (Artist != null && MusicGenre != null)
+        {
+            var musicaRequest = new InputCreateMusic(name!, releaseYear, Artist.Id, MusicGenre.Id);
+            await musicServiceClient.Create(musicaRequest);
+            navigationManager.NavigateTo("/MusicByArtist");
+        }
     }
 
     private void Return()

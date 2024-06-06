@@ -1,6 +1,6 @@
 ﻿@page "/UpdateArtist/{Name}"
 @using ScreenMusic.Arguments
-@inject ArtistServiceClient artistasAPI
+@inject ArtistServiceClient artistServiceClient
 @inject NavigationManager navigationManager
 
 @if (Artist is not null)
@@ -11,38 +11,15 @@
 
         <MudForm>
 
-            <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista"
-                          Variant="Variant.Outlined"
-                          @bind-Value="name"
-                          Required="true"
-                          RequiredError="Campo obrigatório." />
+            <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista" Variant="Variant.Outlined" @bind-Value="name" Required="true" RequiredError="Campo obrigatório." />
 
-            <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista"
-                          Variant="Variant.Outlined"
-                          @bind-Value="biography"
-                          Lines="4"
-                          Required="true"
-                          RequiredError="Campo obrigatório." />
+            <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista" Variant="Variant.Outlined" @bind-Value="biography" Lines="4" Required="true" RequiredError="Campo obrigatório." />
 
             <div class="d-flex justify-space-between align-center mt-4">
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Info"
-                           @onclick="Return">
-                    Voltar
-                </MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Return">Voltar</MudButton>
                 <div>
-                    <MudButton Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               Class="ml-3"
-                               @onclick="Update">
-                        Salvar
-                    </MudButton>
-                    <MudButton Variant="Variant.Filled"
-                               Color="Color.Secondary"
-                               Class="ml-3"
-                               @onclick="Delete">
-                        Deletar
-                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" Class="ml-3" @onclick="Delete">Deletar</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-3" @onclick="Update"> Salvar</MudButton>
                 </div>
             </div>
 
@@ -64,21 +41,21 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Artist = await artistasAPI.GetByName(new InputIdentifierArtist(Name!));
+        Artist = await artistServiceClient.GetByName(new InputIdentifierArtist(Name!));
         name = Artist!.Name;
         biography = Artist!.Biography;
     }
 
     private async Task Delete()
     {
-        await artistasAPI.Delete(Artist!.Id);
+        await artistServiceClient.Delete(Artist!.Id);
         navigationManager.NavigateTo("/Artist");
     }
 
     private async Task Update()
     {
-        var requestEdit = new InputUpdateArtist(name!, biography!, Artist!.ProfilePhoto!);
-        await artistasAPI.Update(Artist!.Id, requestEdit);
+        var requestEdit = new InputUpdateArtist(name!, Artist!.ProfilePhoto!, biography!);
+        await artistServiceClient.Update(Artist!.Id, requestEdit);
         navigationManager.NavigateTo("/Artist");
     }
 
