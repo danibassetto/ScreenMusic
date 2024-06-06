@@ -17,7 +17,7 @@ public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>
 
     public async Task<TOutput?> GetByName(TIdentifier inputIdentifier)
     {
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"api/{NameService}", inputIdentifier);
+        HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"api/{NameService}/GetByIdentifier", inputIdentifier);
 
         if (response.IsSuccessStatusCode)
         {

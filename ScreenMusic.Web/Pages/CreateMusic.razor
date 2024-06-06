@@ -1,4 +1,4 @@
-﻿@page "/CadastrarMusica"
+﻿@page "/CreateMusic"
 @using ScreenMusic.Arguments
 @inject ArtistServiceClient artistasAPI
 @inject MusicGenreServiceClient generoAPI
@@ -45,18 +45,20 @@
                 }
         </MudSelect>
 
-        <div class="d-flex align-center justify-space-between mt-4">
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       @onclick="Cadastrar"
-                       Class="ml-auto">
-                Cadastrar
-            </MudButton>
+        <div class="d-flex justify-space-between align-center mt-4">
             <MudButton Variant="Variant.Filled"
                        Color="Color.Info"
-                       Class="ml-3">
+                       @onclick="Return">
                 Voltar
             </MudButton>
+            <div>
+                <MudButton Variant="Variant.Filled"
+                           @onclick="Create"
+                           Color="Color.Primary"
+                           Class="ml-auto">
+                    Cadastrar
+                </MudButton>
+            </div>
         </div>
 
     </MudForm>
@@ -92,10 +94,15 @@
                 GenerosSelecionados.Add(genero);
     }
 
-    public async Task Cadastrar()
+    public async Task Create()
     {
         var musicaRequest = new InputCreateMusic(name!, releaseYear, ArtistaDaMusica!.Id, GeneroDaMusica!.Id);
         await musicaAPI.Create(musicaRequest);
-        navigationManager.NavigateTo("/MusicasPorArtista");
+        navigationManager.NavigateTo("/MusicByArtist");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/MusicByArtist");
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/EditarMusica/{NomeMusica}"
+﻿@page "/UpdateMusic/{Name}"
 @using ScreenMusic.Arguments
 @inject ArtistServiceClient artistasAPI
 @inject MusicGenreServiceClient generoAPI
@@ -32,31 +32,34 @@
                          Required="true"
                          RequiredError="Campo obrigatório." />
 
-        <MudSelect Class="mt-4" T="OutputMusicGenre" Label="Gêneros" Variant="Variant.Outlined" ValueChanged="GeneroSelecionado" AnchorOrigin="Origin.BottomCenter">
+        <MudSelect Class="mt-4" T="OutputMusicGenre" Label="Gênero" Variant="Variant.Outlined" @bind-Value="GeneroDaMusica" AnchorOrigin="Origin.BottomCenter">
             @if (ListMusicGenre is not null)
-                @foreach (var generos in ListMusicGenre)
+                @foreach (var genero in ListMusicGenre)
                 {
-                    <MudSelectItem Value="generos" />
-                }
-            @if (GenerosSelecionados is not null)
-                foreach (var genero in GenerosSelecionados)
-                {
-                    <MudAlert Severity="Severity.Info">@(genero.Name) adicionado como gênero da música.</MudAlert>
+                    <MudSelectItem Value="genero" />
                 }
         </MudSelect>
 
-        <div class="d-flex align-center justify-space-between mt-4">
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       @onclick="Deletar"
-                       Class="ml-auto">
-                Deletar
-            </MudButton>
+        <div class="d-flex justify-space-between align-center mt-4">
             <MudButton Variant="Variant.Filled"
                        Color="Color.Info"
-                       Class="ml-3">
+                       @onclick="Return">
                 Voltar
             </MudButton>
+            <div>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Class="ml-3"
+                           @onclick="Update">
+                    Salvar
+                </MudButton>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Secondary"
+                           Class="ml-3"
+                           @onclick="Delete">
+                    Deletar
+                </MudButton>
+            </div>
         </div>
 
     </MudForm>
@@ -64,28 +67,31 @@
 </MudPaper>
 
 @code {
-    private int? releaseYear;
-    private string? name;
+    private int releaseYear;
+    private string name;
 
     private ICollection<OutputArtist>? ListArtist;
     private ICollection<OutputMusicGenre>? ListMusicGenre;
 
-    private List<OutputMusicGenre>? GenerosSelecionados { get; set; } = new();
+    private OutputMusicGenre? GeneroDaMusica { get; set; }
     private OutputArtist? ArtistaDaMusica { get; set; }
 
     public OutputMusic? Music { get; set; }
 
     [Parameter]
-    public string? NomeMusica { get; set; }
+    public string? Name { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Music = await musicaAPI.GetByName(new InputIdentifierMusic(NomeMusica!));
+        Music = await musicaAPI.GetByName(new InputIdentifierMusic(Name!));
         releaseYear = Music!.ReleaseYear;
         name = Music!.Name;
         ArtistaDaMusica = new OutputArtist() { Id = Music.ArtistaId, Name = Music.Name };
+        GeneroDaMusica = new OutputMusicGenre() { Id = Music.MusicGenreId };
+        ListArtist = await artistasAPI.GetAll();
+        ListMusicGenre = await generoAPI.GetAll();
     }
-    
+
     private void ArtistaSelecionado(OutputArtist artista)
     {
         ArtistaDaMusica = artista;
@@ -93,14 +99,24 @@
 
     private void GeneroSelecionado(OutputMusicGenre genero)
     {
-        if (GenerosSelecionados is not null)
-            if (!GenerosSelecionados.Contains(genero))
-                GenerosSelecionados.Add(genero);
+        GeneroDaMusica = genero;
     }
 
-    public async Task Deletar()
+    private async Task Update()
+    {
+        var requestEdit = new InputUpdateMusic(name, releaseYear, ArtistaDaMusica!.Id, GeneroDaMusica!.Id);
+        await musicaAPI.Update(Music!.Id, requestEdit);
+        navigationManager.NavigateTo("/MusicByArtist");
+    }
+
+    public async Task Delete()
     {
         await musicaAPI.Delete(Music!.Id);
-        navigationManager.NavigateTo("/MusicasPorArtista");
+        navigationManager.NavigateTo("/MusicByArtist");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/MusicByArtist");
     }
 }

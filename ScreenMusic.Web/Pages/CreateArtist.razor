@@ -1,4 +1,4 @@
-﻿@page "/CadastrarArtista"
+﻿@page "/CreateArtist"
 @using ScreenMusic.Arguments
 @inject ArtistServiceClient artistasAPI
 @inject NavigationManager navigationManager
@@ -35,13 +35,20 @@
             </ButtonTemplate>
         </MudFileUpload>
 
-        <div class="d-flex align-center justify-space-between mt-4">
+        <div class="d-flex justify-space-between align-center mt-4">
             <MudButton Variant="Variant.Filled"
-                       @onclick="Cadastrar"
-                       Color="Color.Primary"
-                       Class="ml-auto">
-                Cadastrar
+                       Color="Color.Info"
+                       @onclick="Return">
+                Voltar
             </MudButton>
+            <div>
+                <MudButton Variant="Variant.Filled"
+                           @onclick="Cadastrar"
+                           Color="Color.Primary"
+                           Class="ml-auto">
+                    Cadastrar
+                </MudButton>
+            </div>
         </div>
 
     </MudForm>
@@ -73,5 +80,10 @@
         var imageUpload = Convert.ToBase64String(memoryStream.ToArray());
         fileImage = $"data:{format};base64,{imageUpload}";
         profilePhoto = imageUpload;
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/Artist");
     }
 }
