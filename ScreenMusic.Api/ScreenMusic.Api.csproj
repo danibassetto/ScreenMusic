@@ -25,4 +25,8 @@
     <ProjectReference Include="..\ScreenMusic.Infraestructure\ScreenMusic.Infraestructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\ProfilePhotos\" />
+  </ItemGroup>
+
 </Project>

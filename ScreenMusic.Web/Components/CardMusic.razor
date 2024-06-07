@@ -3,21 +3,20 @@
     <MudCardMedia Image="images/cardArtista.png"></MudCardMedia>
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h6">@Musica!.Name</MudText>
+            <MudText Typo="Typo.h6">@Music!.Name</MudText>
             </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudText Typo="Typo.body2">Artista/Banda:@Musica!.Name</MudText>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Color="Color.Warning"
-                       Variant="Variant.Outlined"
-                       Href=@($"/UpdateMusic/{Musica!.Name}")>Detalhes</MudButton>
-        </MudCardActions>
-    </MudCard>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.body2">Artista/Banda:@Music!.Name</MudText>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Color="Color.Warning"
+                    Variant="Variant.Outlined"
+                    Href=@($"/UpdateMusic/{Music!.Name}")>Detalhes</MudButton>
+    </MudCardActions>
+</MudCard>
 
-    @code {
+@code {
     [Parameter]
-    public OutputMusic? Musica { get; set; }
-
+    public OutputMusic? Music { get; set; }
 }

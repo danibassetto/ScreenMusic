@@ -11,7 +11,7 @@ public class MusicMap : IEntityTypeConfiguration<Music>
         builder.ToTable("musica");
 
         builder.HasKey(x => x.Id);
-        builder.HasOne(x => x.Artist).WithMany(x => x.ListMusic).HasForeignKey(x => x.ArtistaId).HasPrincipalKey(x => x.Id);
+        builder.HasOne(x => x.Artist).WithMany(x => x.ListMusic).HasForeignKey(x => x.ArtistId).HasPrincipalKey(x => x.Id);
         builder.HasOne(x => x.MusicGenre).WithMany(x => x.ListMusic).HasForeignKey(x => x.MusicGenreId).HasPrincipalKey(x => x.Id);
 
         builder.Property(x => x.Id).HasColumnName("id");
@@ -39,10 +39,10 @@ public class MusicMap : IEntityTypeConfiguration<Music>
         builder.Property(x => x.ReleaseYear).HasColumnType("INT");
         builder.Property(x => x.ReleaseYear).ValueGeneratedNever();
 
-        builder.Property(x => x.ArtistaId).HasColumnName("id_artista");
-        builder.Property(x => x.ArtistaId).IsRequired();
-        builder.Property(x => x.ArtistaId).HasColumnType("BIGINT");
-        builder.Property(x => x.ArtistaId).ValueGeneratedNever();
+        builder.Property(x => x.ArtistId).HasColumnName("id_artista");
+        builder.Property(x => x.ArtistId).IsRequired();
+        builder.Property(x => x.ArtistId).HasColumnType("BIGINT");
+        builder.Property(x => x.ArtistId).ValueGeneratedNever();
 
         builder.Property(x => x.MusicGenreId).HasColumnName("id_genero_musical");
         builder.Property(x => x.MusicGenreId).IsRequired();

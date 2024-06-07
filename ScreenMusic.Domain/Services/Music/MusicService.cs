@@ -5,4 +5,4 @@ using ScreenMusic.Domain.Interfaces.Service;
 
 namespace ScreenMusic.Domain.Services;
 
-public class MusicService(IMusicRepository repository) : BaseService_1<IMusicRepository, InputCreateMusic, InputUpdateMusic, Music, OutputMusic, InputIdentifierMusic>(repository), IMusicService { }
+public class MusicService(IMusicRepository repository) : BaseService<IMusicRepository, InputCreateMusic, InputUpdateMusic, Music, OutputMusic, InputIdentifierMusic>(repository), IMusicService { }

@@ -93,7 +93,3 @@ public class BaseRepository<TEntity, TInputIdentifier>(ScreenMusicContext contex
     }
     #endregion
 }
-
-#region AllParameters
-public class BaseRepository_0(ScreenMusicContext context) : BaseRepository<BaseEntity_0, object>(context) { }
-#endregion

@@ -1,6 +1,6 @@
 ﻿@page "/Artist"
 @using ScreenMusic.Arguments
-@inject ArtistServiceClient artistasAPI
+@inject ArtistServiceClient artistServiceClient
 
 <MudStack Class="mt-4 mb-4" Row="true" Justify="Justify.SpaceBetween">
     <MudText Class="mb-4" Typo="Typo.h4">Artistas cadastrados</MudText>
@@ -10,10 +10,10 @@
 @if (ListArtistByPage is not null)
 {
     <MudGrid>
-        @foreach (var artista in ListArtistByPage)
+        @foreach (var artist in ListArtistByPage)
         {
             <MudItem xs="3">
-                <CardArtist Artista="artista" />
+                <CardArtist Artist="artist" />
             </MudItem>
         }
     </MudGrid>
@@ -28,7 +28,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListArtist = await artistasAPI.GetAll();
+        ListArtist = await artistServiceClient.GetAll();
         if (ListArtist is not null)
         {
             ListArtist = ListArtist.OrderByDescending(a => a.Id).ToList();

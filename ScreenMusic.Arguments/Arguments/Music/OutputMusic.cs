@@ -7,6 +7,6 @@ public class OutputMusic
     public DateTime? ChangeDate { get; set; }
     public string? Name { get; set; }
     public int ReleaseYear { get; set; }
-    public long ArtistaId { get; set; }
+    public long ArtistId { get; set; }
     public long MusicGenreId { get; set; }
 }

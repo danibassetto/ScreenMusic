@@ -12,7 +12,3 @@ public interface IBaseRepository<TEntity, TInputIdentifier>
     long? Update(TEntity entity);
     bool Delete(TEntity entity);
 }
-
-#region All Parameters 
-public interface IBaseRepository_0 : IBaseRepository<BaseEntity_0, object> { }
-#endregion

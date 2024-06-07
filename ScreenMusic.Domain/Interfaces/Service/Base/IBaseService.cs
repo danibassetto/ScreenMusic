@@ -12,7 +12,3 @@ public interface IBaseService<TInputCreate, TInputUpdate, TOutput, TInputIdentif
     long? Update(long id, TInputUpdate inputUpdate);
     bool Delete(long id);
 }
-
-#region AllParameters
-public interface IBaseService_0 : IBaseService<object, object, object, object> { }
-#endregion

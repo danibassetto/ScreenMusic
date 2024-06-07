@@ -202,9 +202,3 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
         }
     }
 }
-
-#region TInputUpdate, TEntity, TInputIdentifier
-public class BaseController_1<TIService>(IApiDataService apiDataService, TIService service) : BaseController<TIService, object, object, object, object>(apiDataService, service)
-    where TIService : IBaseService_0
-{ }
-#endregion

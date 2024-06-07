@@ -44,7 +44,7 @@
 
     private async Task Create()
     {
-        var request = new InputCreateArtist(name!, biography!, profilePhoto!);
+        var request = new InputCreateArtist(name!, profilePhoto!, biography!);
         await artistServiceClient.Create(request);
         navigationManager.NavigateTo("/Artist");
     }

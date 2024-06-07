@@ -4,7 +4,7 @@ public class Music : BaseEntity<Music>
 {
     public string? Name { get; set; }
     public int? ReleaseYear { get; set; }
-    public long? ArtistaId { get; set; }
+    public long? ArtistId { get; set; }
     public long? MusicGenreId { get; set; }
 
     public virtual Artist? Artist { get; set; }
@@ -12,11 +12,11 @@ public class Music : BaseEntity<Music>
 
     public Music() { }
 
-    public Music(string name, int releaseYear, long artistaId, long musicGenreId)
+    public Music(string name, int releaseYear, long artistId, long musicGenreId)
     {
         Name = name;
         ReleaseYear = releaseYear;
-        ArtistaId = artistaId;
+        ArtistId = artistId;
         MusicGenreId = musicGenreId;
     }
 

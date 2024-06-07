@@ -16,9 +16,9 @@
         <MudSelect Class="mt-4" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="Artist" ToStringFunc="GetArtistName">
             @if (ListArtist is not null)
             {
-                @foreach (var artista in ListArtist)
+                @foreach (var artist in ListArtist)
                 {
-                    <MudSelectItem Value="artista">@artista.Name</MudSelectItem>
+                    <MudSelectItem Value="artist">@artist.Name</MudSelectItem>
                 }
             }
         </MudSelect>
@@ -28,9 +28,9 @@
         <MudSelect Class="mt-4" T="OutputMusicGenre" Label="Gênero" Variant="Variant.Outlined" @bind-Value="MusicGenre" ToStringFunc="GetMusicGenreName">
             @if (ListMusicGenre is not null)
             {
-                @foreach (var genero in ListMusicGenre)
+                @foreach (var musicGenre in ListMusicGenre)
                 {
-                    <MudSelectItem Value="genero">@genero.Name</MudSelectItem>
+                    <MudSelectItem Value="musicGenre">@musicGenre.Name</MudSelectItem>
                 }
             }
         </MudSelect>
@@ -64,7 +64,7 @@
         Music = await musicServiceClient.GetByName(new InputIdentifierMusic(Name!));
         releaseYear = Music!.ReleaseYear;
         name = Music.Name!;
-        Artist = await artistServiceClient.GetById(Music.ArtistaId);
+        Artist = await artistServiceClient.GetById(Music.ArtistId);
         MusicGenre = await musicGenreServiceClient.GetById(Music.MusicGenreId);
         ListArtist = await artistServiceClient.GetAll();
         ListMusicGenre = await musicGenreServiceClient.GetAll();
@@ -91,6 +91,6 @@
         navigationManager.NavigateTo("/MusicByArtist");
     }
 
-    private string GetArtistName(OutputArtist artist) => artist.Name;
-    private string GetMusicGenreName(OutputMusicGenre genre) => genre.Name;
+    private string GetArtistName(OutputArtist artist) => artist.Name!;
+    private string GetMusicGenreName(OutputMusicGenre musicGenre) => musicGenre.Name!;
 }

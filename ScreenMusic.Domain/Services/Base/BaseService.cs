@@ -121,12 +121,3 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
     }
     #endregion
 }
-
-#region All Parameters
-public class BaseService_0() : BaseService<IBaseRepository_0, object, object, BaseEntity_0, object, object>(default) { }
-#endregion
-
-public class BaseService_1<TBaseRepository, TInputCreate, TInputUpdate, TEntity, TOutput, TInputIdentifier>(TBaseRepository? repository) : BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, TOutput, TInputIdentifier>(repository)
-    where TBaseRepository : IBaseRepository<TEntity, TInputIdentifier>
-    where TEntity : BaseEntity<TEntity>, new()
-{ }

@@ -14,9 +14,9 @@
         <MudTextField Class="mt-4" T="string" Placeholder="Nome da música/canção" @bind-Value="name" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
         <MudSelect Class="mt-4" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="Artist">
             @if (ListArtist is not null)
-                @foreach (var artista in ListArtist)
+                @foreach (var artist in ListArtist)
                 {
-                    <MudSelectItem Value="artista">@artista.Name</MudSelectItem>
+                    <MudSelectItem Value="artist">@artist.Name</MudSelectItem>
                 }
         </MudSelect>
 
@@ -24,9 +24,9 @@
 
         <MudSelect Class="mt-4" T="OutputMusicGenre" Label="Gêneros" Variant="Variant.Outlined" @bind-Value="MusicGenre">
             @if (ListMusicGenre is not null)
-                @foreach (var genero in ListMusicGenre)
+                @foreach (var musicGenre in ListMusicGenre)
                 {
-                    <MudSelectItem Value="genero">@genero.Name</MudSelectItem>
+                    <MudSelectItem Value="musicGenre">@musicGenre.Name</MudSelectItem>
                 }
         </MudSelect>
 
