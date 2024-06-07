@@ -17,4 +17,10 @@
 		<ProjectReference Include="..\ScreenMusic.Arguments\ScreenMusic.Arguments.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Update="Pages\CreateMusicGenre.razor">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
+	</ItemGroup>
+
 </Project>

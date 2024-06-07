@@ -16,13 +16,7 @@
         <MudImage Class="mt-4" src="@fileImage" />
         <MudFileUpload T="IBrowserFile" Accept=".jpeg" FilesChanged="UploadFile">
             <ButtonTemplate>
-                <MudButton HtmlTag="label"
-                           Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@Icons.Material.Filled.PhotoCamera"
-                           for="@context">
-                    Foto de Perfil
-                </MudButton>
+                <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileUpload" for="@context">Foto de Perfil</MudButton>
             </ButtonTemplate>
         </MudFileUpload>
 
