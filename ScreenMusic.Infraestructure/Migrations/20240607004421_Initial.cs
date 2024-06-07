@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ScreenMusic.Api.Migrations
+namespace ScreenMusic.Infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -75,11 +75,11 @@ namespace ScreenMusic.Api.Migrations
                 {
                     id = table.Column<long>(type: "BIGINT", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    nome = table.Column<string>(type: "VARCHAR(80)", maxLength: 80, nullable: false)
+                    nome = table.Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    foto_perfil = table.Column<string>(type: "VARCHAR(250)", maxLength: 250, nullable: true)
+                    foto_perfil = table.Column<string>(type: "VARCHAR(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    biografia = table.Column<string>(type: "VARCHAR(350)", maxLength: 350, nullable: false)
+                    biografia = table.Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     data_cadastro = table.Column<DateTime>(type: "DATETIME", nullable: false),
                     data_alteracao = table.Column<DateTime>(type: "DATETIME", nullable: true)
@@ -96,9 +96,9 @@ namespace ScreenMusic.Api.Migrations
                 {
                     id = table.Column<long>(type: "BIGINT", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    nome = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                    nome = table.Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    descricao = table.Column<string>(type: "VARCHAR(150)", maxLength: 150, nullable: false)
+                    descricao = table.Column<string>(type: "VARCHAR(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     data_cadastro = table.Column<DateTime>(type: "DATETIME", nullable: false),
                     data_alteracao = table.Column<DateTime>(type: "DATETIME", nullable: true)
@@ -236,7 +236,7 @@ namespace ScreenMusic.Api.Migrations
                 {
                     id = table.Column<long>(type: "BIGINT", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    nome = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                    nome = table.Column<string>(type: "VARCHAR(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ano_lancamento = table.Column<int>(type: "INT", nullable: false),
                     id_artista = table.Column<long>(type: "BIGINT", nullable: false),

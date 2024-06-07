@@ -9,11 +9,11 @@ using ScreenMusic.Infraestructure;
 
 #nullable disable
 
-namespace ScreenMusic.Api.Migrations
+namespace ScreenMusic.Infraestructure.Migrations
 {
     [DbContext(typeof(ScreenMusicContext))]
-    [Migration("20240603031144_initial")]
-    partial class initial
+    [Migration("20240607004421_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,8 +139,8 @@ namespace ScreenMusic.Api.Migrations
 
                     b.Property<string>("Biography")
                         .IsRequired()
-                        .HasMaxLength(350)
-                        .HasColumnType("VARCHAR(350)")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
                         .HasColumnName("biografia");
 
                     b.Property<DateTime?>("ChangeDate")
@@ -154,13 +154,13 @@ namespace ScreenMusic.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("VARCHAR(80)")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(100)")
                         .HasColumnName("nome");
 
                     b.Property<string>("ProfilePhoto")
-                        .HasMaxLength(250)
-                        .HasColumnType("VARCHAR(250)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("VARCHAR(1000)")
                         .HasColumnName("foto_perfil");
 
                     b.HasKey("Id");
@@ -177,7 +177,7 @@ namespace ScreenMusic.Api.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long?>("Id"));
 
-                    b.Property<long?>("ArtistaId")
+                    b.Property<long?>("ArtistId")
                         .IsRequired()
                         .HasColumnType("BIGINT")
                         .HasColumnName("id_artista");
@@ -198,8 +198,8 @@ namespace ScreenMusic.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasMaxLength(200)
+                        .HasColumnType("VARCHAR(200)")
                         .HasColumnName("nome");
 
                     b.Property<int?>("ReleaseYear")
@@ -209,7 +209,7 @@ namespace ScreenMusic.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArtistaId");
+                    b.HasIndex("ArtistId");
 
                     b.HasIndex("MusicGenreId");
 
@@ -236,14 +236,14 @@ namespace ScreenMusic.Api.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("VARCHAR(150)")
+                        .HasMaxLength(300)
+                        .HasColumnType("VARCHAR(300)")
                         .HasColumnName("descricao");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("VARCHAR(50)")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(100)")
                         .HasColumnName("nome");
 
                     b.HasKey("Id");
@@ -402,7 +402,7 @@ namespace ScreenMusic.Api.Migrations
                 {
                     b.HasOne("ScreenMusic.Domain.Entities.Artist", "Artist")
                         .WithMany("ListMusic")
-                        .HasForeignKey("ArtistaId")
+                        .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

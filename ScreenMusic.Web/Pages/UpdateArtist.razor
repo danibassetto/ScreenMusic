@@ -54,7 +54,7 @@ else
 
     private async Task Update()
     {
-        var requestEdit = new InputUpdateArtist(name!, Artist!.ProfilePhoto!, biography!);
+        var requestEdit = new InputUpdateArtist(Artist!.ProfilePhoto!, biography!);
         await artistServiceClient.Update(Artist!.Id, requestEdit);
         navigationManager.NavigateTo("/Artist");
     }

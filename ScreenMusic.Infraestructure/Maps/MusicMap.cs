@@ -30,8 +30,8 @@ public class MusicMap : IEntityTypeConfiguration<Music>
 
         builder.Property(x => x.Name).HasColumnName("nome");
         builder.Property(x => x.Name).IsRequired();
-        builder.Property(x => x.Name).HasMaxLength(50);
-        builder.Property(x => x.Name).HasColumnType("VARCHAR(50)");
+        builder.Property(x => x.Name).HasMaxLength(200);
+        builder.Property(x => x.Name).HasColumnType("VARCHAR(200)");
         builder.Property(x => x.Name).ValueGeneratedNever();
 
         builder.Property(x => x.ReleaseYear).HasColumnName("ano_lancamento");

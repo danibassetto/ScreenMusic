@@ -29,19 +29,19 @@ public class ArtistMap : IEntityTypeConfiguration<Artist>
 
         builder.Property(x => x.Name).HasColumnName("nome");
         builder.Property(x => x.Name).IsRequired();
-        builder.Property(x => x.Name).HasMaxLength(80);
-        builder.Property(x => x.Name).HasColumnType("VARCHAR(80)");
+        builder.Property(x => x.Name).HasMaxLength(100);
+        builder.Property(x => x.Name).HasColumnType("VARCHAR(100)");
         builder.Property(x => x.Name).ValueGeneratedNever();
 
         builder.Property(x => x.ProfilePhoto).HasColumnName("foto_perfil");
-        builder.Property(x => x.ProfilePhoto).HasMaxLength(250);
-        builder.Property(x => x.ProfilePhoto).HasColumnType("VARCHAR(250)");
+        builder.Property(x => x.ProfilePhoto).HasMaxLength(1000);
+        builder.Property(x => x.ProfilePhoto).HasColumnType("VARCHAR(1000)");
         builder.Property(x => x.ProfilePhoto).ValueGeneratedNever();
 
         builder.Property(x => x.Biography).HasColumnName("biografia");
         builder.Property(x => x.Biography).IsRequired();
-        builder.Property(x => x.Biography).HasMaxLength(350);
-        builder.Property(x => x.Biography).HasColumnType("VARCHAR(350)");
+        builder.Property(x => x.Biography).HasMaxLength(500);
+        builder.Property(x => x.Biography).HasColumnType("VARCHAR(500)");
         builder.Property(x => x.Biography).ValueGeneratedNever();
     }
 }
