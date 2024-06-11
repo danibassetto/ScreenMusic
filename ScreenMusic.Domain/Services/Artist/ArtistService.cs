@@ -6,12 +6,19 @@ using ScreenMusic.Domain.Interfaces.Service;
 
 namespace ScreenMusic.Domain.Services;
 
-public class ArtistService(IArtistRepository repository, IHostEnvironment hostEnviroment) : BaseService<IArtistRepository, InputCreateArtist, InputUpdateArtist, Artist, OutputArtist, InputIdentifierArtist>(repository), IArtistService 
+public class ArtistService(IArtistRepository repository, IHostEnvironment hostEnviroment) : BaseService<IArtistRepository, InputCreateArtist, InputUpdateArtist, Artist, OutputArtist, InputIdentifierArtist>(repository), IArtistService
 {
     private readonly IHostEnvironment _hostEnviroment = hostEnviroment;
 
     public override long? Create(InputCreateArtist inputCreate)
     {
+        Artist? originalArtist = _repository!.GetByIdentifier(new InputIdentifierArtist(inputCreate.Name));
+
+        if(originalArtist is not null)
+        {
+            throw new InvalidOperationException($"Artista com o nome '{inputCreate.Name}' já existe.");
+        }
+
         var name = inputCreate.Name.Trim();
         var biography = inputCreate.Biography.Trim();
         var profilePhoto = DateTime.Now.ToString("ddMMyyyyhhss") + "." + name + ".jpeg";

@@ -14,11 +14,16 @@
         <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista" Variant="Variant.Outlined" @bind-Value="biography" Lines="4" Required="true" RequiredError="Campo obrigatório." />
 
         <MudImage Class="mt-4" src="@fileImage" />
-        <MudFileUpload T="IBrowserFile" Accept=".jpeg" FilesChanged="UploadFile">
+        <MudFileUpload T="IBrowserFile" Accept=".jpeg;,.jpg,.png" FilesChanged="UploadFile">
             <ButtonTemplate>
                 <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileUpload" for="@context">Foto de Perfil</MudButton>
             </ButtonTemplate>
         </MudFileUpload>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <MudText Class="mt-4" Color="Color.Error">@errorMessage</MudText>
+        }
 
         <div class="d-flex justify-space-between align-center mt-4">
             <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Return">Voltar</MudButton>
@@ -35,12 +40,23 @@
     private string? biography;
     private string? fileImage;
     private string? profilePhoto;
+    private string? errorMessage;
 
     private async Task Create()
     {
+        errorMessage = null; // Reset error message
+
         var request = new InputCreateArtist(name!, profilePhoto!, biography!);
-        await artistServiceClient.Create(request);
-        navigationManager.NavigateTo("/Artist");
+        bool success = await artistServiceClient.Create(request);
+
+        if (success)
+        {
+            navigationManager.NavigateTo("/Artist");
+        }
+        else
+        {
+            errorMessage = "Erro ao criar artista. Verifique se o artista já existe.";
+        }
     }
 
     private async Task UploadFile(IBrowserFile file)

@@ -47,9 +47,18 @@ public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>
             return default;
     }
 
-    public async Task Create(TInputCreate inputCreate)
+    public async Task<bool> Create(TInputCreate inputCreate)
     {
-        await _httpClient.PostAsJsonAsync($"api/{NameService}", inputCreate);
+        try
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"api/{NameService}", inputCreate);
+            response.EnsureSuccessStatusCode(); // Lança exceção se a resposta não for bem-sucedida
+            return true;
+        }
+        catch (HttpRequestException)
+        {
+            return false;
+        }
     }
 
     public async Task Delete(long id)
