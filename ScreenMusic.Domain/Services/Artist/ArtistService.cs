@@ -6,9 +6,10 @@ using ScreenMusic.Domain.Interfaces.Service;
 
 namespace ScreenMusic.Domain.Services;
 
-public class ArtistService(IArtistRepository repository, IHostEnvironment hostEnviroment) : BaseService<IArtistRepository, InputCreateArtist, InputUpdateArtist, Artist, OutputArtist, InputIdentifierArtist>(repository), IArtistService
+public class ArtistService(IArtistRepository repository, IHostEnvironment hostEnviroment, IMusicRepository musicRepository) : BaseService<IArtistRepository, InputCreateArtist, InputUpdateArtist, Artist, OutputArtist, InputIdentifierArtist>(repository), IArtistService
 {
     private readonly IHostEnvironment _hostEnviroment = hostEnviroment;
+    private readonly IMusicRepository _musicRepository = musicRepository;
 
     public override long? Create(InputCreateArtist inputCreate)
     {
@@ -32,5 +33,18 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
         Artist artist = new(name, $"/ProfilePhotos/{profilePhoto}", biography);
 
         return _repository!.Create(artist);
+    }
+
+    public override bool Delete(long id)
+    {
+        var entity = Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: Delete");
+
+        var musicRelation = (from i in _musicRepository.GetListByArtistId(id) select i).Any();
+
+        if(musicRelation)
+            throw new InvalidOperationException("Não é possível excluir o artista porque existem músicas relacionadas a ele.");
+
+        _repository!.Delete(FromOutputToEntity(entity));
+        return true;
     }
 }

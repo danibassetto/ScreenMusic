@@ -63,7 +63,7 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
     #region Update
     public virtual long? Update(long id, TInputUpdate inputUpdate)
     {
-        var oldEntity = Get(id) ?? throw new Exception("Id inválido ou inexistente. Processo: Update");
+        var oldEntity = Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: Update");
 
         var entity = BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, TOutput, TInputIdentifier>.UpdateEntity(FromOutputToEntity(oldEntity), inputUpdate);
         return _repository!.Update(entity ?? new TEntity());
@@ -88,7 +88,7 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
     #region Delete
     public virtual bool Delete(long id)
     {
-        var entity = Get(id) ?? throw new Exception("Id inválido ou inexistente. Processo: Delete");
+        var entity = Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: Delete");
         _repository!.Delete(FromOutputToEntity(entity));
         return true;
     }

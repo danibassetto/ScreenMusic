@@ -28,7 +28,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
 
     #region Read
     [HttpGet]
-    public virtual async Task<ActionResult<BaseResponseApi<TOutput>>> GetAll()
+    public virtual async Task<ActionResult<BaseResponseApi<List<TOutput>>>> GetAll()
     {
         try
         {
