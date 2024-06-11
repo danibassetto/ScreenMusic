@@ -16,9 +16,7 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
         Artist? originalArtist = _repository!.GetByIdentifier(new InputIdentifierArtist(inputCreate.Name));
 
         if(originalArtist is not null)
-        {
             throw new InvalidOperationException($"Artista com o nome '{inputCreate.Name}' já existe.");
-        }
 
         var name = inputCreate.Name.Trim();
         var biography = inputCreate.Biography.Trim();

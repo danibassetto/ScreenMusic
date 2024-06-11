@@ -61,13 +61,31 @@ public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>
         }
     }
 
-    public async Task Delete(long id)
+    public async Task<bool> Delete(long id)
     {
-        await _httpClient.DeleteAsync($"api/{NameService}/{id}");
+        try
+        {
+            HttpResponseMessage response = await _httpClient.DeleteAsync($"api/{NameService}/{id}");
+            response.EnsureSuccessStatusCode(); // Lança exceção se a resposta não for bem-sucedida
+            return true;
+        }
+        catch (HttpRequestException)
+        {
+            return false;
+        }
     }
 
-    public async Task Update(long id, TInputUpdate inputUpdate)
+    public async Task<bool> Update(long id, TInputUpdate inputUpdate)
     {
-        await _httpClient.PutAsJsonAsync($"api/{NameService}/{id}", inputUpdate);
+        try
+        {
+            HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"api/{NameService}/{id}", inputUpdate);
+            response.EnsureSuccessStatusCode(); // Lança exceção se a resposta não for bem-sucedida
+            return true;
+        }
+        catch (HttpRequestException)
+        {
+            return false;
+        }
     }
 }

@@ -22,7 +22,7 @@
 
         @if (!string.IsNullOrEmpty(errorMessage))
         {
-            <MudText Class="mt-4" Color="Color.Error">@errorMessage</MudText>
+            <MudAlert Severity="Severity.Error" Class="mt-4">@errorMessage</MudAlert>
         }
 
         <div class="d-flex justify-space-between align-center mt-4">
@@ -50,13 +50,9 @@
         bool success = await artistServiceClient.Create(request);
 
         if (success)
-        {
             navigationManager.NavigateTo("/Artist");
-        }
         else
-        {
             errorMessage = "Erro ao criar artista. Verifique se o artista já existe.";
-        }
     }
 
     private async Task UploadFile(IBrowserFile file)
