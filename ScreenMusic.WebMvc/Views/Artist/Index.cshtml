@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ScreenMusic.Arguments.OutputArtist>
+@{
+    ViewBag.Title = "Artistas";
+}
+
+<h2>Artistas</h2>
+
+<div class="mb-4">
+    <a class="btn btn-primary" asp-action="Create">Criar Novo Artista</a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="row">
+        @foreach (var artist in Model)
+        {
+            <div class="col-md-3">
+                <div class="card mb-4 shadow-sm">
+                    <img src="@(!string.IsNullOrEmpty(artist.ProfilePhoto) ? artist.ProfilePhoto : "images/cardArtista.png")" class="card-img-top" alt="@artist.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@artist.Name</h5>
+                        <p class="card-text">@artist.Biography</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@artist.Id">Detalhes</a>
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@artist.Id">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Nenhum artista cadastrado.</p>
+}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @for (int i = 1; i <= ViewBag.TotalPage; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
