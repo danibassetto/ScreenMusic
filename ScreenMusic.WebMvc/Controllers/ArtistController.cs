@@ -10,27 +10,18 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
 
     public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
     {
-        var artists = await _artistServiceClient.GetAll();
-        if (artists == null)
-            return View(new List<OutputArtist>());
+        var allArtists = await _artistServiceClient.GetAll();
+        allArtists ??= new List<OutputArtist>();
 
-        int totalItem = artists.Count;
-        int totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
-        var pagedArtists = artists.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        var totalItem = allArtists.Count;
+        var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
+
+        var artistsByPage = allArtists.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         ViewBag.TotalPage = totalPage;
         ViewBag.CurrentPage = pageNumber;
 
-        return View(pagedArtists);
-    }
-
-    public async Task<IActionResult> Details(long id)
-    {
-        var artist = await _artistServiceClient.GetById(id);
-        if (artist == null)
-            return NotFound();
-
-        return View(artist);
+        return View(artistsByPage);
     }
 
     [HttpGet]
@@ -40,52 +31,27 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(InputCreateArtist inputCreateArtist)
+    public async Task<IActionResult> Create(InputCreateArtist model, IFormFile profilePhotoFile)
     {
         if (!ModelState.IsValid)
-            return View(inputCreateArtist);
+            return View(model);
 
-        var result = await _artistServiceClient.Create(inputCreateArtist);
-        if (result)
-            return RedirectToAction(nameof(Index));
+        string? profilePhoto = null;
+        if (profilePhotoFile != null && profilePhotoFile.Length > 0)
+        {
+            using var memoryStream = new MemoryStream();
+            await profilePhotoFile.CopyToAsync(memoryStream);
+            profilePhoto = Convert.ToBase64String(memoryStream.ToArray());
+        }
 
-        ModelState.AddModelError("", "Erro ao criar artista");
-        return View(inputCreateArtist);
-    }
+        var request = new InputCreateArtist(model.Name, profilePhoto, model.Biography);
 
-    [HttpGet]
-    public async Task<IActionResult> Update(long id)
-    {
-        var artist = await _artistServiceClient.GetById(id);
-        if (artist == null)
-            return NotFound();
+        bool success = await _artistServiceClient.Create(request);
 
-        var inputUpdateArtist = new InputUpdateArtist(artist.ProfilePhoto!, artist.Biography!);
+        if (success)
+            return RedirectToAction("Index");
 
-        return View(inputUpdateArtist);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Update(long id, InputUpdateArtist inputUpdateArtist)
-    {
-        if (!ModelState.IsValid)
-            return View(inputUpdateArtist);
-
-        var result = await _artistServiceClient.Update(id, inputUpdateArtist);
-        if (result)
-            return RedirectToAction(nameof(Index));
-
-        ModelState.AddModelError("", "Erro ao atualizar artista");
-        return View(inputUpdateArtist);
-    }
-
-    public async Task<IActionResult> Delete(long id)
-    {
-        var result = await _artistServiceClient.Delete(id);
-        if (result)
-            return RedirectToAction(nameof(Index));
-
-        ModelState.AddModelError("", "Erro ao deletar artista");
-        return RedirectToAction(nameof(Index));
+        ModelState.AddModelError(string.Empty, "Erro ao criar artista. Verifique se o artista já existe.");
+        return View(model);
     }
 }

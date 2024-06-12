@@ -15,7 +15,7 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
     {
         Artist? originalArtist = _repository!.GetByIdentifier(new InputIdentifierArtist(inputCreate.Name));
 
-        if(originalArtist is not null)
+        if (originalArtist is not null)
             throw new InvalidOperationException($"Artista com o nome '{inputCreate.Name}' já existe.");
 
         var name = inputCreate.Name.Trim();
@@ -39,7 +39,7 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
 
         var musicRelation = (from i in _musicRepository.GetListByArtistId(id) select i).Any();
 
-        if(musicRelation)
+        if (musicRelation)
             throw new InvalidOperationException("Não é possível excluir o artista porque existem músicas relacionadas a ele.");
 
         _repository!.Delete(FromOutputToEntity(entity));

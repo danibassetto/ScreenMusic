@@ -1,27 +1,39 @@
 ﻿@model ScreenMusic.Arguments.InputCreateArtist
 @{
-    ViewBag.Title = "Criar Artista";
+    ViewData["Title"] = "Cadastro do Artista";
 }
 
-<h2>Criar Artista</h2>
+<div class="px-8 pt-2 pb-4 mx-12 my-8 justify-content-center">
+    <h4 class="mt-8">Cadastro do Artista</h4>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Biography" class="control-label"></label>
-        <textarea asp-for="Biography" class="form-control"></textarea>
-        <span asp-validation-for="Biography" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ProfilePhoto" class="control-label"></label>
-        <input asp-for="ProfilePhoto" class="form-control" />
-        <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Criar" class="btn btn-primary" />
-    </div>
-</form>
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="form-group mt-4">
+            <label for="name">Nome do Artista</label>
+            <input type="text" class="form-control" id="name" name="Name" placeholder="Nome do Artista" required />
+        </div>
+
+        <div class="form-group mt-4">
+            <label for="biography">Biografia do artista</label>
+            <textarea class="form-control" id="biography" name="Biography" placeholder="Biografia do artista" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group mt-4">
+            <label for="profilePhotoFile">Foto de Perfil</label>
+            <input type="file" class="form-control-file" id="profilePhotoFile" name="profilePhotoFile" accept=".jpeg,.jpg,.png" />
+        </div>
+
+        <div class="mt-4">
+            @if (ViewData.ModelState[""] != null && ViewData.ModelState[""]!.Errors.Count > 0)
+            {
+                <div class="alert alert-danger">
+                    @ViewData.ModelState[""]!.Errors[0].ErrorMessage
+                </div>
+            }
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a class="btn btn-info" href="@Url.Action("Index", "Artist")">Voltar</a>
+            <button type="submit" class="btn btn-primary ml-auto">Cadastrar</button>
+        </div>
+    </form>
+</div>

@@ -5,7 +5,7 @@ using ScreenMusic.Domain.Interfaces.Repository;
 
 namespace ScreenMusic.Infraestructure.Repository;
 
-public class MusicRepository(ScreenMusicContext context) : BaseRepository<Music, InputIdentifierMusic>(context), IMusicRepository 
+public class MusicRepository(ScreenMusicContext context) : BaseRepository<Music, InputIdentifierMusic>(context), IMusicRepository
 {
     public List<Music>? GetListByArtistId(long artistId)
     {

@@ -5,7 +5,7 @@ using ScreenMusic.Domain.Interfaces.Service;
 
 namespace ScreenMusic.Domain.Services;
 
-public class MusicGenreService(IMusicGenreRepository repository, IMusicRepository musicRepository) : BaseService<IMusicGenreRepository, InputCreateMusicGenre, InputUpdateMusicGenre, MusicGenre, OutputMusicGenre, InputIdentifierMusicGenre>(repository), IMusicGenreService 
+public class MusicGenreService(IMusicGenreRepository repository, IMusicRepository musicRepository) : BaseService<IMusicGenreRepository, InputCreateMusicGenre, InputUpdateMusicGenre, MusicGenre, OutputMusicGenre, InputIdentifierMusicGenre>(repository), IMusicGenreService
 {
     private readonly IMusicRepository _musicRepository = musicRepository;
 
