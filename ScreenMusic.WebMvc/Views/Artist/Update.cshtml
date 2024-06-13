@@ -1,22 +1,46 @@
-﻿@model ScreenMusic.Arguments.InputUpdateArtist
+﻿@model ScreenMusic.Arguments.OutputArtist
 @{
-    ViewBag.Title = "Editar Artista";
+    ViewData["Title"] = "Edição de Artista";
 }
 
-<h2>Editar Artista</h2>
+<div class="container mt-5">
+    <h4 class="mb-4 text-center">Edição de Artista</h4>
 
-<form asp-action="Edit" method="post">
-    <div class="form-group">
-        <label asp-for="Biography" class="control-label"></label>
-        <textarea asp-for="Biography" class="form-control"></textarea>
-        <span asp-validation-for="Biography" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ProfilePhoto" class="control-label"></label>
-        <input asp-for="ProfilePhoto" class="form-control" />
-        <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Salvar" class="btn btn-primary" />
-    </div>
-</form>
+    <form asp-action="Update" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" placeholder="Nome do Artista" required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Biography"></label>
+            <textarea asp-for="Biography" class="form-control" placeholder="Biografia do artista" rows="4" required></textarea>
+            <span asp-validation-for="Biography" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="profilePhotoFile">Foto de Perfil Atual</label>
+            <div>
+                <img src="@(Model.ProfilePhoto != null ? $"https://localhost:7089/{Model.ProfilePhoto}" : "images/cardArtista.png")" alt="@Model.Name" class="img-thumbnail" style="max-width: 200px;" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="newProfilePhotoFile">Nova Foto de Perfil (opcional)</label>
+            <input type="file" class="form-control-file" id="newProfilePhotoFile" name="newProfilePhotoFile" accept=".jpeg,.jpg,.png" />
+        </div>
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a class="btn btn-info" asp-action="Index" asp-controller="Artist">Voltar</a>
+            <button type="submit" class="btn btn-primary ml-auto">Salvar</button>
+        </div>
+    </form>
+</div>

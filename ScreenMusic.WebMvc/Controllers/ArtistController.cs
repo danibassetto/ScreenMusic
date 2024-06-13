@@ -44,7 +44,7 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
             profilePhoto = Convert.ToBase64String(memoryStream.ToArray());
         }
 
-        var request = new InputCreateArtist(model.Name, profilePhoto, model.Biography);
+        var request = new InputCreateArtist(model.Name!, profilePhoto!, model.Biography!);
 
         bool success = await _artistServiceClient.Create(request);
 
@@ -52,6 +52,43 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
             return RedirectToAction("Index");
 
         ModelState.AddModelError(string.Empty, "Erro ao criar artista. Verifique se o artista já existe.");
+        return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Update(int id)
+    {
+        var artist = await _artistServiceClient.GetById(id);
+
+        if (artist == null)
+            return NotFound();
+
+        return View(artist);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Update(int id, OutputArtist model, IFormFile newProfilePhotoFile)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        string? profilePhoto = model.ProfilePhoto; 
+
+        if (newProfilePhotoFile != null && newProfilePhotoFile.Length > 0)
+        {
+            using var memoryStream = new MemoryStream();
+            await newProfilePhotoFile.CopyToAsync(memoryStream);
+            profilePhoto = Convert.ToBase64String(memoryStream.ToArray());
+        }
+
+        var requestEdit = new InputUpdateArtist(profilePhoto!, model.Biography!);
+
+        bool success = await _artistServiceClient.Update(id, requestEdit);
+
+        if (success)
+            return RedirectToAction("Index");
+
+        TempData["ErrorMessage"] = "Erro ao atualizar o artista. Verifique se o artista ainda existe.";
         return View(model);
     }
 }
