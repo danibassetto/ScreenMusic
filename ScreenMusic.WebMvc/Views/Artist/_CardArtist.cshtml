@@ -1,7 +1,7 @@
 ﻿@model ScreenMusic.Arguments.OutputArtist
 
 <div class="card h-100">
-    <img class="card-img-top" src="@(Model.ProfilePhoto!.Contains("Photo") ? $"https://localhost:7089/{Model.ProfilePhoto}" : "images/cardArtista.png")" alt="@Model.Name">
+    <img class="card-img-top" src="@(Model.ProfilePhoto!.Contains("Photo") ? $"https://localhost:7089{Model.ProfilePhoto}" : "images/cardArtista.png")" alt="@Model.Name">
     <div class="card-header">
         <h6 class="card-title">@Model.Name</h6>
     </div>
@@ -13,7 +13,7 @@
             <i class="bi bi-pencil-square"></i>
         </a>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-            <i class="bi bi-trash"></i> 
+            <i class="bi bi-trash"></i>
         </button>
 
         <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">

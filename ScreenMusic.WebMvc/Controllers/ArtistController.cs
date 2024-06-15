@@ -65,6 +65,7 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
 
         var model = new InputUpdateArtist(artist.ProfilePhoto!, artist.Biography!);
 
+        ViewBag.Id = id;
         return View(model);
     }
 

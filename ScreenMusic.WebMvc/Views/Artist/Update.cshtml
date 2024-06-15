@@ -8,10 +8,10 @@
     <h4 class="mb-4 text-center">Edição de Artista</h4>
 
     <form asp-action="Update" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="id" value="@ViewData["Id"]" />
+        <input type="hidden" name="id" value="@ViewBag.Id" />
 
         <div class="form-group">
-            <label asp-for="Biography"></label>
+            <label asp-for="Biography">Biografia</label>
             <textarea asp-for="Biography" class="form-control" placeholder="Biografia do artista" rows="4" required>@Model.Biography</textarea>
             <span asp-validation-for="Biography" class="text-danger"></span>
         </div>
@@ -19,7 +19,7 @@
         <div class="form-group">
             <label for="profilePhotoFile">Foto de Perfil Atual</label>
             <div>
-                <img id="profilePhotoPreview" src="@(Model.ProfilePhoto != null ? $"https://localhost:7089/{Model.ProfilePhoto}" : "images/cardArtista.png")" class="img-thumbnail" style="max-width: 200px;" />
+                <img id="profilePhotoPreview" src="@(Model.ProfilePhoto != null ? $"https://localhost:7089{Model.ProfilePhoto}" : "images/cardArtista.png")" class="img-thumbnail" style="max-width: 200px;" />
             </div>
         </div>
 

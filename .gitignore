@@ -1,4 +1,5 @@
 ﻿/.vs
+/ScreenMusic.Api/wwwwroot
 /ScreenMusic.Api/bin
 /ScreenMusic.Api/obj
 /ScreenMusic.Arguments/bin
