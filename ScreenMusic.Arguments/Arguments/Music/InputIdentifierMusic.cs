@@ -4,7 +4,7 @@ namespace ScreenMusic.Arguments;
 
 public class InputIdentifierMusic
 {
-    [Required][MaxLength(200, ErrorMessage = "Quantidade de caracteres inválida")] public string? Name { get; private set; }
+    [Required][MaxLength(200, ErrorMessage = "Quantidade de caracteres inválida")] public string? Name { get; set; }
 
     public InputIdentifierMusic() { }
 

@@ -4,8 +4,8 @@ namespace ScreenMusic.Arguments;
 
 public class InputUpdateArtist
 {
-    public string? ProfilePhoto { get; private set; }
-    [Required][MaxLength(500, ErrorMessage = "Quantidade de caracteres inválida")] public string? Biography { get; private set; }
+    public string? ProfilePhoto { get; set; }
+    [Required][MaxLength(500, ErrorMessage = "Quantidade de caracteres inválida")] public string? Biography { get; set; }
 
     public InputUpdateArtist() { }
 
