@@ -1,4 +1,5 @@
-﻿@model ScreenMusic.Arguments.OutputArtist
+﻿@using ScreenMusic.Arguments
+@model InputUpdateArtist
 @{
     ViewData["Title"] = "Edição de Artista";
 }
@@ -6,29 +7,25 @@
 <div class="container mt-5">
     <h4 class="mb-4 text-center">Edição de Artista</h4>
 
-    <form asp-action="Update" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" placeholder="Nome do Artista" required />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
+    <form asp-action="Update" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="@ViewData["Id"]" />
 
         <div class="form-group">
             <label asp-for="Biography"></label>
-            <textarea asp-for="Biography" class="form-control" placeholder="Biografia do artista" rows="4" required></textarea>
+            <textarea asp-for="Biography" class="form-control" placeholder="Biografia do artista" rows="4" required>@Model.Biography</textarea>
             <span asp-validation-for="Biography" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label for="profilePhotoFile">Foto de Perfil Atual</label>
             <div>
-                <img src="@(Model.ProfilePhoto != null ? $"https://localhost:7089/{Model.ProfilePhoto}" : "images/cardArtista.png")" alt="@Model.Name" class="img-thumbnail" style="max-width: 200px;" />
+                <img id="profilePhotoPreview" src="@(Model.ProfilePhoto != null ? $"https://localhost:7089/{Model.ProfilePhoto}" : "images/cardArtista.png")" class="img-thumbnail" style="max-width: 200px;" />
             </div>
         </div>
 
         <div class="form-group">
             <label for="newProfilePhotoFile">Nova Foto de Perfil (opcional)</label>
-            <input type="file" class="form-control-file" id="newProfilePhotoFile" name="newProfilePhotoFile" accept=".jpeg,.jpg,.png" />
+            <input type="file" class="form-control-file" id="newProfilePhotoFile" name="newProfilePhotoFile" accept=".jpeg,.jpg,.png" onchange="previewImage(event)" />
         </div>
 
         @if (TempData["ErrorMessage"] != null)
@@ -44,3 +41,14 @@
         </div>
     </form>
 </div>
+
+<script type="text/javascript">
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('profilePhotoPreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

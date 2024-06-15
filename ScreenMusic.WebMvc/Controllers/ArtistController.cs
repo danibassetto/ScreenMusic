@@ -31,10 +31,10 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(InputCreateArtist model, IFormFile profilePhotoFile)
+    public async Task<IActionResult> Create(InputCreateArtist inputCreate, IFormFile profilePhotoFile)
     {
         if (!ModelState.IsValid)
-            return View(model);
+            return View(inputCreate);
 
         string? profilePhoto = null;
         if (profilePhotoFile != null && profilePhotoFile.Length > 0)
@@ -44,7 +44,7 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
             profilePhoto = Convert.ToBase64String(memoryStream.ToArray());
         }
 
-        var request = new InputCreateArtist(model.Name!, profilePhoto!, model.Biography!);
+        var request = new InputCreateArtist(inputCreate.Name!, profilePhoto!, inputCreate.Biography!);
 
         bool success = await _artistServiceClient.Create(request);
 
@@ -52,7 +52,7 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
             return RedirectToAction("Index");
 
         ModelState.AddModelError(string.Empty, "Erro ao criar artista. Verifique se o artista já existe.");
-        return View(model);
+        return View(inputCreate);
     }
 
     [HttpGet]
@@ -63,16 +63,18 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
         if (artist == null)
             return NotFound();
 
-        return View(artist);
+        var model = new InputUpdateArtist(artist.ProfilePhoto!, artist.Biography!);
+
+        return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(int id, OutputArtist model, IFormFile newProfilePhotoFile)
+    public async Task<IActionResult> Update(int id, InputUpdateArtist model, IFormFile newProfilePhotoFile)
     {
         if (!ModelState.IsValid)
             return View(model);
 
-        string? profilePhoto = model.ProfilePhoto; 
+        string? profilePhoto = model.ProfilePhoto;
 
         if (newProfilePhotoFile != null && newProfilePhotoFile.Length > 0)
         {
@@ -90,5 +92,17 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
 
         TempData["ErrorMessage"] = "Erro ao atualizar o artista. Verifique se o artista ainda existe.";
         return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        bool success = await _artistServiceClient.Delete(id);
+
+        if (success)
+            return RedirectToAction("Index");
+
+        TempData["ErrorMessage"] = "Erro ao excluir o artista. Verifique se o artista ainda existe.";
+        return RedirectToAction("Index");
     }
 }

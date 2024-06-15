@@ -8,7 +8,32 @@
     <div class="card-body">
         <p class="card-text">@Model.Biography</p>
     </div>
-    <div class="card-footer">
-        <a class="btn btn-warning" href="@Url.Action("Update", "Artist", new { id = Model.Id })">Detalhes</a>
+    <div class="card-footer d-flex justify-content-between">
+        <a class="btn btn-warning" asp-action="Update" asp-controller="Artist" asp-route-id="@Model.Id">
+            <i class="bi bi-pencil-square"></i>
+        </a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+            <i class="bi bi-trash"></i> 
+        </button>
+
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Tem certeza que deseja excluir o artista <strong>@Model.Name</strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form asp-action="Delete" asp-controller="Artist" asp-route-id="@Model.Id">
+                            <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

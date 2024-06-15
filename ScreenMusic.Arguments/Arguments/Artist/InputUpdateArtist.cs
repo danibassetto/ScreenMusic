@@ -2,8 +2,16 @@
 
 namespace ScreenMusic.Arguments;
 
-public class InputUpdateArtist(string profilePhoto, string biography)
+public class InputUpdateArtist
 {
-    public string ProfilePhoto { get; private set; } = profilePhoto;
-    [Required][MaxLength(500, ErrorMessage = "Quantidade de caracteres inválida")] public string Biography { get; private set; } = biography;
+    public string? ProfilePhoto { get; private set; }
+    [Required][MaxLength(500, ErrorMessage = "Quantidade de caracteres inválida")] public string? Biography { get; private set; }
+
+    public InputUpdateArtist() { }
+
+    public InputUpdateArtist(string profilePhoto, string biography)
+    {
+        ProfilePhoto = profilePhoto;
+        Biography = biography;
+    }
 }

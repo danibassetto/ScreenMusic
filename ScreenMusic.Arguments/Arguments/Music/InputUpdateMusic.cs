@@ -2,10 +2,20 @@
 
 namespace ScreenMusic.Arguments;
 
-public class InputUpdateMusic(string name, int releaseYear, long artistId, long musicGenreId)
+public class InputUpdateMusic
 {
-    [Required][MaxLength(200, ErrorMessage = "Quantidade de caracteres inválida")] public string Name { get; private set; } = name;
-    [Required] public int ReleaseYear { get; private set; } = releaseYear;
-    [Required] public long ArtistId { get; private set; } = artistId;
-    [Required] public long MusicGenreId { get; private set; } = musicGenreId;
+    [Required][MaxLength(200, ErrorMessage = "Quantidade de caracteres inválida")] public string? Name { get; private set; }
+    [Required] public int? ReleaseYear { get; private set; }
+    [Required] public long? ArtistId { get; private set; }
+    [Required] public long? MusicGenreId { get; private set; }
+
+    public InputUpdateMusic() { }
+
+    public InputUpdateMusic(string? name, int? releaseYear, long? artistId, long? musicGenreId)
+    {
+        Name = name;
+        ReleaseYear = releaseYear;
+        ArtistId = artistId;
+        MusicGenreId = musicGenreId;
+    }
 }
