@@ -4,7 +4,7 @@
 }
 
 <div class="container mt-5">
-    <h4 class="mb-4 text-center">Cadastro do Música</h4>
+    <h4 class="mb-4 text-center">Cadastro de Música</h4>
 
     <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="form-group">
@@ -15,16 +15,33 @@
 
         <div class="form-group">
             <label asp-for="ReleaseYear"></label>
-            <input asp-for="ReleaseYear" class="form-control" placeholder="Ano de Lançamento" required />
+            <input asp-for="ReleaseYear" class="form-control" type="number" min="1900" max="2100" placeholder="Ano de Lançamento" required />
             <span asp-validation-for="ReleaseYear" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="ArtistId"></label>
-            <input asp-for="ArtistId" class="form-control" placeholder="Ano de Lançamento" required />
+            <label asp-for="ArtistId">Artista</label>
+            <select asp-for="ArtistId" class="form-control" required>
+                <option value="">Selecione um Artista</option>
+                @foreach (var artist in ViewBag.Artists)
+                {
+                    <option value="@artist.Id">@artist.Name</option>
+                }
+            </select>
             <span asp-validation-for="ArtistId" class="text-danger"></span>
         </div>
-        
+
+        <div class="form-group">
+            <label asp-for="MusicGenreId">Gênero Musical</label>
+            <select asp-for="MusicGenreId" class="form-control" required>
+                <option value="">Selecione um Gênero</option>
+                @foreach (var genre in ViewBag.Genres)
+                {
+                    <option value="@genre.Id">@genre.Name</option>
+                }
+            </select>
+            <span asp-validation-for="MusicGenreId" class="text-danger"></span>
+        </div>
 
         @if (ViewData.ModelState.ErrorCount > 0)
         {
