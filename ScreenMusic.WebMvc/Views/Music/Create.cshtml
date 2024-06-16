@@ -1,0 +1,44 @@
+﻿@model ScreenMusic.Arguments.InputCreateMusic
+@{
+    ViewData["Title"] = "Cadastro de Música";
+}
+
+<div class="container mt-5">
+    <h4 class="mb-4 text-center">Cadastro do Música</h4>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" placeholder="Nome da Música" required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ReleaseYear"></label>
+            <input asp-for="ReleaseYear" class="form-control" placeholder="Ano de Lançamento" required />
+            <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ArtistId"></label>
+            <input asp-for="ArtistId" class="form-control" placeholder="Ano de Lançamento" required />
+            <span asp-validation-for="ArtistId" class="text-danger"></span>
+        </div>
+        
+
+        @if (ViewData.ModelState.ErrorCount > 0)
+        {
+            <div class="alert alert-danger">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
+        }
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a class="btn btn-info" href="@Url.Action("Index", "Music")">Voltar</a>
+            <button type="submit" class="btn btn-primary ml-auto">Cadastrar</button>
+        </div>
+    </form>
+</div>

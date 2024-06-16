@@ -10,6 +10,8 @@ builder.Services.AddHttpClient("API", client =>
 });
 
 builder.Services.AddTransient<ArtistServiceClient>();
+builder.Services.AddTransient<MusicServiceClient>();
+builder.Services.AddTransient<MusicGenreServiceClient>();
 
 var app = builder.Build();
 

@@ -1,0 +1,31 @@
+﻿@using ScreenMusic.Arguments
+@model InputUpdateMusicGenre
+@{
+    ViewData["Title"] = "Edição de Gênero Musical";
+}
+
+<div class="container mt-5">
+    <h4 class="mb-4 text-center">Edição de Gênero Musical</h4>
+
+    <form asp-action="Update" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="@ViewBag.Id" />
+
+        <div class="form-group">
+            <label asp-for="Description">Descrição</label>
+            <textarea asp-for="Description" class="form-control" placeholder="Biografia do artista" rows="4" required>@Model.Description</textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>        
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a class="btn btn-info" asp-action="Index" asp-controller="MusicGenre">Voltar</a>
+            <button type="submit" class="btn btn-primary ml-auto">Salvar</button>
+        </div>
+    </form>
+</div>
