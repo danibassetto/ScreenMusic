@@ -15,6 +15,11 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
         var listMusic = await _musicServiceClient.GetAll();
         listMusic ??= new List<OutputMusic>();
 
+        foreach (var music in listMusic)
+        {
+            music.YoutubeLink = ConvertToEmbedUrl(music.YoutubeLink);
+        }
+
         var totalItem = listMusic.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
@@ -60,7 +65,7 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
         if (music == null)
             return NotFound();
 
-        var model = new InputUpdateMusic(music.Name, music.ReleaseYear, music.ArtistId, music.MusicGenreId);
+        var model = new InputUpdateMusic(music.Name!, music.ReleaseYear, music.ArtistId, music.MusicGenreId, music.YoutubeLink!);
 
         ViewBag.Id = id;
         return View(model);
@@ -97,5 +102,13 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
     {
         ViewBag.Artists = await _artistServiceClient.GetAll();
         ViewBag.Genres = await _musicGenreServiceClient.GetAll();
+    }
+
+    private string ConvertToEmbedUrl(string url)
+    {
+        var uri = new Uri(url);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var videoId = query["v"];
+        return $"https://www.youtube.com/embed/{videoId}";
     }
 }

@@ -12,6 +12,7 @@
     <MudForm>
 
         <MudTextField Class="mt-4" T="string" Placeholder="Nome da música/canção" @bind-Value="name" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
+        <MudTextField Class="mt-4" T="string" Placeholder="Link do Youtube" @bind-Value="youtubeLink" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
         <MudSelect Class="mt-4" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="Artist">
             @if (ListArtist is not null)
                 @foreach (var artist in ListArtist)
@@ -43,6 +44,7 @@
 
 @code {
     private int releaseYear;
+    private string? youtubeLink;
     private string? name;
 
     private ICollection<OutputArtist>? ListArtist;
@@ -61,7 +63,7 @@
     {
         if (Artist != null && MusicGenre != null)
         {
-            var musicaRequest = new InputCreateMusic(name!, releaseYear, Artist.Id, MusicGenre.Id);
+            var musicaRequest = new InputCreateMusic(name!, releaseYear, Artist.Id, MusicGenre.Id, youtubeLink!);
             await musicServiceClient.Create(musicaRequest);
             navigationManager.NavigateTo("/MusicByArtist");
         }

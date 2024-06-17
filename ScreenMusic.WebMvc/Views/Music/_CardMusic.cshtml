@@ -1,9 +1,9 @@
 ﻿@model OutputMusic
 
 <div class="card h-100">
-    <img class="card-img-top" src="@(Model.Artist!.ProfilePhoto!.Contains("Photo") ? $"https://localhost:7089{Model.Artist.ProfilePhoto}" : "images/cardArtista.png")" alt="@Model.Artist.Name">
+    <iframe class="card-video" src="@Model.YoutubeLink" allowfullscreen></iframe>
     <div class="card-header">
-        <h6 class="card-title">@Model.Name</h6>
+        <h6 class="card-title">@Model.Artist!.Name - @Model.Name</h6>
     </div>
     <div class="card-footer d-flex justify-content-between">
         <a class="btn btn-warning" asp-action="Update" asp-controller="Music" asp-route-id="@Model.Id">

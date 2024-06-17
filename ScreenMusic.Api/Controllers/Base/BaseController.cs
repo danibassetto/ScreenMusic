@@ -13,7 +13,6 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
     protected readonly IApiDataService? _apiDataService;
     public Guid _guidApiDataRequest;
     public TIService? _service;
-    public List<Notification> ListNotification = [];
 
     public BaseController(IApiDataService apiDataService, TIService service)
     {
@@ -34,10 +33,6 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
         {
             return await ResponseAsync(_service!.GetAll());
         }
-        catch (BaseResponseException ex)
-        {
-            return await BaseResponseExceptionAsync(ex);
-        }
         catch (Exception ex)
         {
             return await ResponseExceptionAsync(ex);
@@ -51,10 +46,6 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
         {
             return await ResponseAsync(_service!.Get(id));
         }
-        catch (BaseResponseException ex)
-        {
-            return await BaseResponseExceptionAsync(ex);
-        }
         catch (Exception ex)
         {
             return await ResponseExceptionAsync(ex);
@@ -67,10 +58,6 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
         try
         {
             return await ResponseAsync(_service!.GetByIdentifier(inputIdentifier));
-        }
-        catch (BaseResponseException ex)
-        {
-            return await BaseResponseExceptionAsync(ex);
         }
         catch (Exception ex)
         {
@@ -87,10 +74,6 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
         {
             return await ResponseAsync(_service?.Create(inputCreate), 201);
         }
-        catch (BaseResponseException ex)
-        {
-            return await BaseResponseExceptionAsync(ex);
-        }
         catch (Exception ex)
         {
             return await ResponseExceptionAsync(ex);
@@ -105,10 +88,6 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
         try
         {
             return await ResponseAsync(_service?.Update(id, inputUpdate));
-        }
-        catch (BaseResponseException ex)
-        {
-            return await BaseResponseExceptionAsync(ex);
         }
         catch (Exception ex)
         {
@@ -125,10 +104,6 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
         {
             return await ResponseAsync(_service?.Delete(id));
         }
-        catch (BaseResponseException ex)
-        {
-            return await BaseResponseExceptionAsync(ex);
-        }
         catch (Exception ex)
         {
             return await ResponseExceptionAsync(ex);
@@ -139,34 +114,14 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
     [NonAction]
     public async Task<ActionResult> ResponseAsync<ResponseType>(ResponseType result, int statusCode = 0)
     {
-        if (_service != null)
-            ListNotification.AddRange(_service?.ListNotification!);
-
-        List<Notification> listNegativeNotification = (from i in ListNotification ?? [] where i.MessageType == Arguments.EnumMessageType.Negative select i).ToList();
-
-        if (listNegativeNotification.Count == 0)
+        try
         {
-            try
-            {
-                return StatusCode(statusCode == 0 ? 200 : statusCode, new BaseResponseApi<ResponseType> { Value = new BaseResponseApiContent<ResponseType>() { Result = result } });
-            }
-            catch (BaseResponseException ex)
-            {
-                return await BaseResponseExceptionAsync(ex);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Houve um problema interno com o servidor. Entre em contato com o Administrador do sistema caso o problema persista. Erro interno: {ex.Message}");
-            }
+            return StatusCode(statusCode == 0 ? 200 : statusCode, new BaseResponseApi<ResponseType> { Value = new BaseResponseApiContent<ResponseType>() { Result = result } });
         }
-        else
-            return BadRequest(listNegativeNotification);
-    }
-
-    [NonAction]
-    public async Task<ActionResult> BaseResponseExceptionAsync(BaseResponseException ex)
-    {
-        return await Task.FromResult(BadRequest(new { Value = new { Result = (object?)default, ListNotification = ex.Incidents } }));
+        catch (Exception ex)
+        {
+            return BadRequest($"Houve um problema interno com o servidor. Entre em contato com o Administrador do sistema caso o problema persista. Erro interno: {ex.Message}");
+        }
     }
 
     [NonAction]

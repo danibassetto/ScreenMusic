@@ -15,10 +15,6 @@ public class MusicController(IApiDataService apiDataService, IMusicService servi
         {
             return await ResponseAsync(_service?.GetListByArtistId(artistId));
         }
-        catch (BaseResponseException ex)
-        {
-            return await BaseResponseExceptionAsync(ex);
-        }
         catch (Exception ex)
         {
             return await ResponseExceptionAsync(ex);
@@ -31,10 +27,6 @@ public class MusicController(IApiDataService apiDataService, IMusicService servi
         try
         {
             return await ResponseAsync(_service?.GetListByMusicGenreId(musicGenreId));
-        }
-        catch (BaseResponseException ex)
-        {
-            return await BaseResponseExceptionAsync(ex);
         }
         catch (Exception ex)
         {

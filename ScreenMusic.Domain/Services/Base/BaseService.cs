@@ -12,9 +12,6 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
 {
     public Guid _guidApiDataRequest;
     protected TBaseRepository? _repository = repository;
-    private readonly List<Notification>? _listNotification;
-    public IReadOnlyCollection<Notification> ListNotification => _listNotification ?? [];
-
     public void SetGuid(Guid guidApiDataRequest)
     {
         _guidApiDataRequest = guidApiDataRequest;

@@ -48,5 +48,11 @@ public class MusicMap : IEntityTypeConfiguration<Music>
         builder.Property(x => x.MusicGenreId).IsRequired();
         builder.Property(x => x.MusicGenreId).HasColumnType("BIGINT");
         builder.Property(x => x.MusicGenreId).ValueGeneratedNever();
+
+        builder.Property(x => x.YoutubeLink).HasColumnName("link_youtube");
+        builder.Property(x => x.YoutubeLink).IsRequired();
+        builder.Property(x => x.YoutubeLink).HasMaxLength(500);
+        builder.Property(x => x.YoutubeLink).HasColumnType("VARCHAR(500)");
+        builder.Property(x => x.YoutubeLink).ValueGeneratedNever();
     }
 }

@@ -4,7 +4,6 @@ namespace ScreenMusic.Domain.Interfaces.Service;
 
 public interface IBaseService<TInputCreate, TInputUpdate, TOutput, TInputIdentifier>
 {
-    IReadOnlyCollection<Notification> ListNotification { get; }
     List<TOutput>? GetAll();
     TOutput? Get(long id);
     TOutput? GetByIdentifier(TInputIdentifier inputIdentifier);
