@@ -3,23 +3,23 @@
     ViewData["Title"] = "Cadastro do Artista";
 }
 
-<div class="container mt-5">
+<div class="container mt-5" style="background-color: #9820b0; padding: 25px; border-radius: 30px; color: white;">
     <h4 class="mb-4 text-center">Cadastro do Artista</h4>
 
-    <form asp-action="Create" method="post" enctype="multipart/form-data">
-        <div class="form-group">
+    <form asp-action="Create" method="post" enctype="multipart/form-data" style="font-size: 18px">
+        <div class="form-group mb-2">
             <label asp-for="Name">Nome</label>
             <input asp-for="Name" class="form-control" placeholder="Nome do Artista" required />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mb-2 tex">
             <label asp-for="Biography">Biografia</label>
             <textarea asp-for="Biography" class="form-control" placeholder="Biografia do artista" rows="4" required></textarea>
             <span asp-validation-for="Biography" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mb-2">
             <label for="profilePhotoFile">Foto de Perfil</label>
             <div class="custom-file">
                 <input type="file" class="custom-file-input" id="profilePhotoFile" name="profilePhotoFile" accept=".jpeg,.jpg,.png" onchange="previewImage(event)" />

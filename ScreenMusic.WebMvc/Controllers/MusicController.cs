@@ -17,7 +17,7 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
 
         foreach (var music in listMusic)
         {
-            music.YoutubeLink = ConvertToEmbedUrl(music.YoutubeLink);
+            music.YoutubeLink = ConvertToEmbedYoutubeUrl(music.YoutubeLink);
         }
 
         var totalItem = listMusic.Count;
@@ -68,6 +68,7 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
         var model = new InputUpdateMusic(music.Name!, music.ReleaseYear, music.ArtistId, music.MusicGenreId, music.YoutubeLink!);
 
         ViewBag.Id = id;
+        await LoadComboBoxList();
         return View(model);
     }
 
@@ -75,13 +76,17 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
     public async Task<IActionResult> Update(int id, InputUpdateMusic model)
     {
         if (!ModelState.IsValid)
+        {
+            await LoadComboBoxList();
             return View(model);
+        }
 
         bool success = await _musicServiceClient.Update(id, model);
 
         if (success)
             return RedirectToAction("Index");
 
+        await LoadComboBoxList();
         TempData["ErrorMessage"] = "Erro ao atualizar o musica.";
         return View(model);
     }
@@ -104,9 +109,9 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
         ViewBag.Genres = await _musicGenreServiceClient.GetAll();
     }
 
-    private string ConvertToEmbedUrl(string url)
+    private static string ConvertToEmbedYoutubeUrl(string youtubeLink)
     {
-        var uri = new Uri(url);
+        var uri = new Uri(youtubeLink);
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
         var videoId = query["v"];
         return $"https://www.youtube.com/embed/{videoId}";

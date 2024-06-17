@@ -1,4 +1,9 @@
-﻿a.navbar-brand {
+﻿body {
+    background-color: #3e3e3e;
+    color: white;
+}
+
+a.navbar-brand {
     white-space: normal;
     text-align: center;
     word-break: break-all;
@@ -14,7 +19,8 @@ a {
     border-color: #1861ac;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
@@ -55,33 +61,43 @@ button.accept-policy {
     overflow-x: hidden;
     overflow-y: auto;
     transition: all 0.3s;
-    background-color: #f8f9fa;
+    background-color: #9820b0;
     border-right: 1px solid #ddd;
+    color: white;
 }
 
-    .sidebar .nav-link {
-        padding: 15px 20px;
-        font-size: 2.0rem;
-    }
+.sidebar .nav-link {
+    padding: 15px 20px;
+    font-size: 2.0rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .sidebar .nav-link .bi,
-        .sidebar .nav-link .bi::before {
-            font-size: 2.5rem;
-        }
+.sidebar .nav-link .bi,
+.sidebar .nav-link .bi::before {
+    font-size: 2.5rem;
+    color: white;
+    margin-right: 10px;
+}
 
 .content {
     margin-left: 250px;
     transition: margin-left 0.3s;
     margin-top: 30px;
+    color: white;
 }
 
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
         padding-top: 56px;
+        color: white;
     }
 
     .content {
         margin-left: 0;
+        color: white;
     }
 }
