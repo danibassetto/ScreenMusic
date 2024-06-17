@@ -10,13 +10,13 @@ public class MusicGenreController(MusicGenreServiceClient musicGenreServiceClien
 
     public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
     {
-        var allMusicGenres = await _musicGenreServiceClient.GetAll();
-        allMusicGenres ??= new List<OutputMusicGenre>();
+        var listMusicGenre = await _musicGenreServiceClient.GetAll();
+        listMusicGenre ??= new List<OutputMusicGenre>();
 
-        var totalItem = allMusicGenres.Count;
+        var totalItem = listMusicGenre.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
-        var musicGenresByPage = allMusicGenres.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        var musicGenresByPage = listMusicGenre.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         ViewBag.TotalPage = totalPage;
         ViewBag.CurrentPage = pageNumber;
@@ -60,18 +60,18 @@ public class MusicGenreController(MusicGenreServiceClient musicGenreServiceClien
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(int id, InputUpdateMusicGenre model)
+    public async Task<IActionResult> Update(int id, InputUpdateMusicGenre inputUpdate)
     {
         if (!ModelState.IsValid)
-            return View(model);
+            return View(inputUpdate);
 
-        bool success = await _musicGenreServiceClient.Update(id, model);
+        bool success = await _musicGenreServiceClient.Update(id, inputUpdate);
 
         if (success)
             return RedirectToAction("Index");
 
         TempData["ErrorMessage"] = "Erro ao atualizar o gênero musical.";
-        return View(model);
+        return View(inputUpdate);
     }
 
     [HttpPost]
