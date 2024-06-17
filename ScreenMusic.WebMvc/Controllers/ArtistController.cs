@@ -10,13 +10,13 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
 
     public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
     {
-        var allArtists = await _artistServiceClient.GetAll();
-        allArtists ??= new List<OutputArtist>();
+        var listArtist = await _artistServiceClient.GetAll();
+        listArtist ??= new List<OutputArtist>();
 
-        var totalItem = allArtists.Count;
+        var totalItem = listArtist.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
-        var artistsByPage = allArtists.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        var artistsByPage = listArtist.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         ViewBag.TotalPage = totalPage;
         ViewBag.CurrentPage = pageNumber;
@@ -70,12 +70,12 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(int id, InputUpdateArtist model, IFormFile newProfilePhotoFile)
+    public async Task<IActionResult> Update(int id, InputUpdateArtist inputUpdate, IFormFile newProfilePhotoFile)
     {
         if (!ModelState.IsValid)
-            return View(model);
+            return View(inputUpdate);
 
-        string? profilePhoto = model.ProfilePhoto;
+        string? profilePhoto = inputUpdate.ProfilePhoto;
 
         if (newProfilePhotoFile != null && newProfilePhotoFile.Length > 0)
         {
@@ -84,7 +84,7 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
             profilePhoto = Convert.ToBase64String(memoryStream.ToArray());
         }
 
-        var requestEdit = new InputUpdateArtist(profilePhoto!, model.Biography!);
+        var requestEdit = new InputUpdateArtist(profilePhoto!, inputUpdate.Biography!);
 
         bool success = await _artistServiceClient.Update(id, requestEdit);
 
@@ -92,7 +92,7 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
             return RedirectToAction("Index");
 
         TempData["ErrorMessage"] = "Erro ao atualizar o artista. Verifique se o artista ainda existe.";
-        return View(model);
+        return View(inputUpdate);
     }
 
     [HttpPost]

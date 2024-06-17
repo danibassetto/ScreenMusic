@@ -1,30 +1,28 @@
-﻿@model List<ScreenMusic.Arguments.OutputMusic>
+﻿@model IEnumerable<ScreenMusic.Arguments.OutputMusic>
 @{
-    ViewData["Title"] = "Músicas Cadastradas";
-    int currentPage = ViewBag.CurrentPage;
-    int totalPage = ViewBag.TotalPage;
+    ViewData["Title"] = "Músicas";
 }
 
-<div class="container mt-5">
-    <h4 class="mb-4 text-center">Músicas</h4>
-
-    <div class="row">
-        @foreach (var music in Model)
-        {
-            <div class="col-md-3 mb-4">
-                @await Html.PartialAsync("_CardMusic", music)
-            </div>
-        }
-    </div>
-
+<div class="mt-4 mb-4 d-flex justify-content-between">
+    <h4>Músicas</h4>
     <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            @for (int i = 1; i <= totalPage; i++)
+        <ul class="pagination">
+            @for (int i = 1; i <= ViewBag.TotalPage; i++)
             {
-                <li class="page-item @(i == currentPage ? "active" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="8">@i</a>
+                <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
                 </li>
             }
         </ul>
     </nav>
+    <a href="@Url.Action("Create", "Music")" class="btn btn-primary btn-lg">Criar Música</a>
+</div>
+
+<div class="row">
+    @foreach (var music in Model)
+    {
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+            @await Html.PartialAsync("_CardMusic", music)
+        </div>
+    }
 </div>

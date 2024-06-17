@@ -1,5 +1,62 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using ScreenMusic.Arguments
+@model InputCreateMusic
 @{
+    ViewData["Title"] = "Atualização de Música";
 }
+
+<div class="container mt-5">
+    <h4 class="mb-4 text-center">Atualização de Música</h4>
+
+    <form asp-action="Update" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" placeholder="Nome da Música" required />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ReleaseYear"></label>
+            <input asp-for="ReleaseYear" class="form-control" type="number" min="1900" max="2100" placeholder="Ano de Lançamento" required />
+            <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ArtistId">Artista</label>
+            <select asp-for="ArtistId" class="form-control" required>
+                <option value="">Selecione um Artista</option>
+                @foreach (var artist in ViewBag.Artists)
+                {
+                    <option value="@artist.Id">@artist.Name</option>
+                }
+            </select>
+            <span asp-validation-for="ArtistId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MusicGenreId">Gênero Musical</label>
+            <select asp-for="MusicGenreId" class="form-control" required>
+                <option value="">Selecione um Gênero</option>
+                @foreach (var genre in ViewBag.Genres)
+                {
+                    <option value="@genre.Id">@genre.Name</option>
+                }
+            </select>
+            <span asp-validation-for="MusicGenreId" class="text-danger"></span>
+        </div>
+
+        @if (ViewData.ModelState.ErrorCount > 0)
+        {
+            <div class="alert alert-danger">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
+        }
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a class="btn btn-info" href="@Url.Action("Index", "Music")">Voltar</a>
+            <button type="submit" class="btn btn-primary ml-auto">Cadastrar</button>
+        </div>
+    </form>
+</div>

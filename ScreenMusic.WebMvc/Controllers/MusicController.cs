@@ -12,32 +12,24 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
 
     public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
     {
-        var allMusics = await _musicServiceClient.GetAll();
-        allMusics ??= new List<OutputMusic>();
+        var listMusic = await _musicServiceClient.GetAll();
+        listMusic ??= new List<OutputMusic>();
 
-        var listArtist = await _artistServiceClient.GetAll();
-        var artistDictionary = listArtist?.ToDictionary(a => a.Id, a => a.Name) ?? [];
-
-        var totalItem = allMusics.Count;
+        var totalItem = listMusic.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
-        var musicsByPage = allMusics
-            .OrderByDescending(a => a.Id)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
+        var artistsByPage = listMusic.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         ViewBag.TotalPage = totalPage;
         ViewBag.CurrentPage = pageNumber;
-        ViewBag.Artist = artistDictionary;
 
-        return View(musicsByPage);
+        return View(artistsByPage);
     }
 
     [HttpGet]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        LoadComboBoxList();
+        await LoadComboBoxList();
         return View();
     }
 
@@ -46,7 +38,7 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
     {
         if (!ModelState.IsValid)
         {
-            LoadComboBoxList();
+            await LoadComboBoxList();
             return View(inputCreate);
         }
 
@@ -55,7 +47,7 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
         if (success)
             return RedirectToAction("Index");
 
-        LoadComboBoxList();
+        await LoadComboBoxList();
         ModelState.AddModelError(string.Empty, "Erro ao criar musica.");
         return View(inputCreate);
     }
@@ -101,7 +93,7 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
         return RedirectToAction("Index");
     }
 
-    private async void LoadComboBoxList()
+    private async Task LoadComboBoxList()
     {
         ViewBag.Artists = await _artistServiceClient.GetAll();
         ViewBag.Genres = await _musicGenreServiceClient.GetAll();
