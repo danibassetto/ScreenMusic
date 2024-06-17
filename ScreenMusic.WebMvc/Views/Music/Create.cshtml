@@ -12,35 +12,48 @@
             <input asp-for="Name" class="form-control" placeholder="Nome da Música" required />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
+        
+        <br/>
 
-        <div class="form-group">
-            <label asp-for="ReleaseYear"></label>
-            <input asp-for="ReleaseYear" class="form-control" type="number" min="1900" max="2100" placeholder="Ano de Lançamento" required />
-            <span asp-validation-for="ReleaseYear" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="ArtistId">Artista</label>
-            <select asp-for="ArtistId" class="form-control" required>
-                <option value="">Selecione um Artista</option>
-                @foreach (var artist in ViewBag.Artists)
-                {
-                    <option value="@artist.Id">@artist.Name</option>
-                }
-            </select>
-            <span asp-validation-for="ArtistId" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="MusicGenreId">Gênero Musical</label>
-            <select asp-for="MusicGenreId" class="form-control" required>
-                <option value="">Selecione um Gênero</option>
-                @foreach (var genre in ViewBag.Genres)
-                {
-                    <option value="@genre.Id">@genre.Name</option>
-                }
-            </select>
-            <span asp-validation-for="MusicGenreId" class="text-danger"></span>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="ReleaseYear">Ano de Lançamento</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        </div>
+                        <input asp-for="ReleaseYear" id="releaseYear" class="form-control" type="number" min="1900" max="@DateTime.Now.Year" placeholder="Ano de Lançamento" required />
+                    </div>
+                    <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="ArtistId">Artista</label>
+                    <select asp-for="ArtistId" class="form-control" required>
+                        <option value="">Selecione um Artista</option>
+                        @foreach (var artist in ViewBag.Artists)
+                        {
+                            <option value="@artist.Id">@artist.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ArtistId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="MusicGenreId">Gênero Musical</label>
+                    <select asp-for="MusicGenreId" class="form-control" required>
+                        <option value="">Selecione um Gênero</option>
+                        @foreach (var genre in ViewBag.Genres)
+                        {
+                            <option value="@genre.Id">@genre.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="MusicGenreId" class="text-danger"></span>
+                </div>
+            </div>
         </div>
 
         @if (ViewData.ModelState.ErrorCount > 0)
@@ -59,3 +72,11 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('releaseYear').addEventListener('input', function (e) {
+            if (this.value.length > 4) this.value = this.value.slice(0, 4);
+        });
+    </script>
+}

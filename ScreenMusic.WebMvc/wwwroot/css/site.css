@@ -51,3 +51,8 @@ body {
     background-color: #f8f9fa;
     margin-top: auto;
 }
+
+.input-group-text {
+    height: calc(2.25rem + 2px); 
+    border-radius: 0.25rem;
+}
