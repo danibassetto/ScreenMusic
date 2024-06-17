@@ -1,5 +1,4 @@
-﻿@using ScreenMusic.Arguments
-@model OutputMusic
+﻿@model OutputMusic
 
 <div class="card h-100">
     <img class="card-img-top" src="@(Model.Artist!.ProfilePhoto!.Contains("Photo") ? $"https://localhost:7089{Model.Artist.ProfilePhoto}" : "images/cardArtista.png")" alt="@Model.Artist.Name">

@@ -1,5 +1,4 @@
-﻿@using ScreenMusic.Arguments
-@model InputUpdateMusic
+﻿@model InputUpdateMusic
 @{
     ViewData["Title"] = "Atualização de Música";
 }
@@ -9,7 +8,7 @@
 
     <form asp-action="Update" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label asp-for="Name"></label>
+            <label asp-for="Name">Nome</label>
             <input asp-for="Name" class="form-control" placeholder="Nome da Música" required />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>

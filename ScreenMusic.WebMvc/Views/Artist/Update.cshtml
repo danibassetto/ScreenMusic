@@ -1,5 +1,4 @@
-﻿@using ScreenMusic.Arguments
-@model InputUpdateArtist
+﻿@model InputUpdateArtist
 @{
     ViewData["Title"] = "Edição de Artista";
 }
@@ -24,8 +23,8 @@
         </div>
 
         <div class="form-group">
-            <label for="newProfilePhotoFile">Nova Foto de Perfil (opcional)</label>
-            <input type="file" class="form-control-file" id="newProfilePhotoFile" name="newProfilePhotoFile" accept=".jpeg,.jpg,.png" onchange="previewImage(event)" />
+            <label for="newProfilePhoto">Nova Foto de Perfil (opcional)</label>
+            <input type="file" class="form-control-file" id="newProfilePhoto" name="newProfilePhoto" accept=".jpeg,.jpg,.png" onchange="previewImage(event)" />
         </div>
 
         @if (TempData["ErrorMessage"] != null)

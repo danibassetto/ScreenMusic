@@ -17,7 +17,7 @@ public class MusicGenreService(IMusicGenreRepository repository, IMusicRepositor
             throw new InvalidOperationException($"Gênero Musical com o nome '{inputCreate.Name}' já existe.");
 
         var name = inputCreate.Name.Trim();
-        var description = inputCreate.Description.Trim();
+        var description = inputCreate.Description!.Trim();
 
         MusicGenre musicGenre = new(name, description);
 

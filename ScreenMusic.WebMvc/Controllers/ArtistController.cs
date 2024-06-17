@@ -70,17 +70,17 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(int id, InputUpdateArtist inputUpdate, IFormFile newProfilePhotoFile)
+    public async Task<IActionResult> Update(int id, InputUpdateArtist inputUpdate, IFormFile newProfilePhoto)
     {
         if (!ModelState.IsValid)
             return View(inputUpdate);
 
         string? profilePhoto = inputUpdate.ProfilePhoto;
 
-        if (newProfilePhotoFile != null && newProfilePhotoFile.Length > 0)
+        if (newProfilePhoto != null && newProfilePhoto.Length > 0)
         {
             using var memoryStream = new MemoryStream();
-            await newProfilePhotoFile.CopyToAsync(memoryStream);
+            await newProfilePhoto.CopyToAsync(memoryStream);
             profilePhoto = Convert.ToBase64String(memoryStream.ToArray());
         }
 

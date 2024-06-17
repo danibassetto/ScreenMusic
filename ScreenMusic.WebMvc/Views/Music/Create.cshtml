@@ -1,4 +1,4 @@
-﻿@model ScreenMusic.Arguments.InputCreateMusic
+﻿@model InputCreateMusic
 @{
     ViewData["Title"] = "Cadastro de Música";
 }
@@ -8,7 +8,7 @@
 
     <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label asp-for="Name"></label>
+            <label asp-for="Name">Nome</label>
             <input asp-for="Name" class="form-control" placeholder="Nome da Música" required />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>

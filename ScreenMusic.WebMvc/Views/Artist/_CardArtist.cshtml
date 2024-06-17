@@ -1,13 +1,13 @@
-﻿@model ScreenMusic.Arguments.OutputArtist
+﻿@model OutputArtist
 
 <div class="card h-100">
     <img class="card-img-top" src="@(Model.ProfilePhoto!.Contains("Photo") ? $"https://localhost:7089{Model.ProfilePhoto}" : "images/cardArtista.png")" alt="@Model.Name">
     <div class="card-header">
         <h6 class="card-title">@Model.Name</h6>
     </div>
-    <div class="card-body">
+    @* <div class="card-body">
         <p class="card-text">@Model.Biography</p>
-    </div>
+    </div> *@
     <div class="card-footer d-flex justify-content-between">
         <a class="btn btn-warning" asp-action="Update" asp-controller="Artist" asp-route-id="@Model.Id">
             <i class="bi bi-pencil-square"></i>
