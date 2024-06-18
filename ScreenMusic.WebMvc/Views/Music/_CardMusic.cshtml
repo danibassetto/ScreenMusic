@@ -9,7 +9,7 @@
         <a class="btn btn-warning" asp-action="Update" asp-controller="Music" asp-route-id="@Model.Id">
             <i class="bi bi-pencil-square"></i>
         </a>
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@Model.Id">
             <i class="bi bi-trash"></i>
         </button>
 

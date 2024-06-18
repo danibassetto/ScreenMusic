@@ -9,7 +9,7 @@ public class MusicService(IMusicRepository repository) : BaseService<IMusicRepos
 {
     public override long? Create(InputCreateMusic inputCreate)
     {
-        if(inputCreate.ReleaseYear > DateTime.Now.Year)
+        if (inputCreate.ReleaseYear > DateTime.Now.Year)
             throw new InvalidOperationException($"Ano de lançamento inválido!");
 
         return _repository!.Create(FromInputCreateToEntity(inputCreate));

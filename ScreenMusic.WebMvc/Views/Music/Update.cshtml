@@ -1,4 +1,14 @@
-﻿@model InputUpdateMusic
+﻿@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+@model InputUpdateMusic
 @{
     ViewData["Title"] = "Edição de Música";
 }
@@ -67,16 +77,6 @@
                 </div>
             </div>
         </div>
-
-        @if (ViewData.ModelState.ErrorCount > 0)
-        {
-            <div class="alert alert-danger">
-                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <p>@error.ErrorMessage</p>
-                }
-            </div>
-        }
     </form>
 </div>
 

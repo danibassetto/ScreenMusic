@@ -16,7 +16,7 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
 
         if (!response.Success)
         {
-            TempData["ErrorMessage"] = response.ErrorMessage;
+            TempData["ErrorMessage"] = response.ErrorMessage ?? "Erro ao listar músicas.";
             return View(new List<OutputMusic>());
         }
 
@@ -30,10 +30,7 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
         var totalItem = listMusic.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
-        var musicByPage = listMusic.OrderByDescending(a => a.Id)
-                                   .Skip((pageNumber - 1) * pageSize)
-                                   .Take(pageSize)
-                                   .ToList();
+        var musicByPage = listMusic.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         ViewBag.TotalPage = totalPage;
         ViewBag.CurrentPage = pageNumber;
@@ -116,22 +113,22 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
 
     private async Task LoadComboBoxList()
     {
-        var artistsResponse = await _artistServiceClient.GetAll();
-        var genresResponse = await _musicGenreServiceClient.GetAll();
+        var listArtist = await _artistServiceClient.GetAll();
+        var listMusicGenre = await _musicGenreServiceClient.GetAll();
 
-        if (artistsResponse.Success && genresResponse.Success)
+        if (listArtist.Success && listMusicGenre.Success)
         {
-            ViewBag.Artists = artistsResponse.Data;
-            ViewBag.Genres = genresResponse.Data;
+            ViewBag.Artists = listArtist.Data;
+            ViewBag.Genres = listMusicGenre.Data;
         }
         else
         {
             ViewBag.Artists = new List<OutputArtist>();
             ViewBag.Genres = new List<OutputMusicGenre>();
-            if (!artistsResponse.Success)
-                TempData["ErrorMessage"] = artistsResponse.ErrorMessage;
-            if (!genresResponse.Success)
-                TempData["ErrorMessage"] = genresResponse.ErrorMessage;
+            if (!listArtist.Success)
+                TempData["ErrorMessage"] = listArtist.ErrorMessage ?? "Erro ao carregar combo box de artistas.";
+            if (!listMusicGenre.Success)
+                TempData["ErrorMessage"] = listArtist.ErrorMessage ?? "Erro ao carregar combo box de gênero musical.";
         }
     }
 

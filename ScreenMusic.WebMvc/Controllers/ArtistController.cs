@@ -14,7 +14,7 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
 
         if (!response.Success)
         {
-            TempData["ErrorMessage"] = response.ErrorMessage;
+            TempData["ErrorMessage"] = response.ErrorMessage ?? "Erro ao listar artistas.";
             return View(new List<OutputArtist>());
         }
 
