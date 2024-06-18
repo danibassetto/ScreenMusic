@@ -127,7 +127,7 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
     [NonAction]
     public async Task<ActionResult> ResponseExceptionAsync(Exception ex)
     {
-        return await Task.FromResult(BadRequest(new { Value = ex.Message }));
+        return await Task.FromResult(BadRequest(ex.Message));
     }
 
     [NonAction]
