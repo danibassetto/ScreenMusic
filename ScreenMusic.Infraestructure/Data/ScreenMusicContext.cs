@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ScreenMusic.Domain.Entities;
 using ScreenMusic.Infraestructure.Maps;
 
 namespace ScreenMusic.Infraestructure;
 
-public class ScreenMusicContext : IdentityDbContext<User, UserRole, long>
+public class ScreenMusicContext : DbContext
 {
     public DbSet<Artist> Artist { get; set; }
     public DbSet<Music> Music { get; set; }

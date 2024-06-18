@@ -104,6 +104,5 @@ public static class ConfigureServicesExtension
     {
         var connectionString = Configuration!.GetConnectionString("DataBase");
         ServiceCollection.AddDbContext<ScreenMusicContext>(opts => opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-        ServiceCollection.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<ScreenMusicContext>();
     }
 }
