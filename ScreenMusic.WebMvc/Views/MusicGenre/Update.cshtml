@@ -29,7 +29,7 @@
 
         <div class="form-group mb-2">
             <label asp-for="Description">Descrição</label>
-            <textarea asp-for="Description" class="form-control" placeholder="Biografia do artista" rows="4" required>@Model.Description</textarea>
+            <textarea asp-for="Description" class="form-control" maxlength="300" placeholder="Biografia do artista" rows="4" required>@Model.Description</textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
     </form>
