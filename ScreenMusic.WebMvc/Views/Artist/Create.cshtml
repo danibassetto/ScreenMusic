@@ -3,10 +3,18 @@
     ViewData["Title"] = "Cadastro do Artista";
 }
 
-<div class="container mt-5" style="background-color: #9820b0; padding: 25px; border-radius: 30px; color: white;">
-    <h4 class="mb-4 text-center">Cadastro do Artista</h4>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a class="btn btn-info d-flex align-items-center btn-icon" asp-action="Index" asp-controller="Artist">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h4 class="mb-2 text-center flex-grow-1">Cadastro de Artista</h4>
+        <button type="submit" form="artistForm" class="btn btn-primary d-flex align-items-center btn-icon">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
 
-    <form asp-action="Create" method="post" enctype="multipart/form-data" style="font-size: 18px">
+    <form id="artistForm" asp-action="Create" method="post" enctype="multipart/form-data" style="font-size: 18px">
         <div class="form-group mb-2">
             <label asp-for="Name">Nome</label>
             <input asp-for="Name" class="form-control" placeholder="Nome do Artista" required />
@@ -40,10 +48,10 @@
             </div>
         }
 
-        <div class="d-flex justify-content-between align-items-center mt-4">
+        @* <div class="d-flex justify-content-between align-items-center mt-4">
             <a class="btn btn-info" asp-action="Index" asp-controller="Artist">Voltar</a>
             <button type="submit" class="btn btn-primary ml-auto">Cadastrar</button>
-        </div>
+        </div> *@
     </form>
 </div>
 

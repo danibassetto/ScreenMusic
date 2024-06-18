@@ -4,9 +4,17 @@
 }
 
 <div class="container mt-5">
-    <h4 class="mb-4 text-center">Cadastro do Gênero Musical</h4>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a class="btn btn-info d-flex align-items-center btn-icon" asp-action="Index" asp-controller="MusicGenre">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h4 class="mb-2 text-center flex-grow-1">Cadastro de Gênero Musical</h4>
+        <button type="submit" form="musicGenreForm" class="btn btn-primary d-flex align-items-center btn-icon">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
 
-    <form asp-action="Create" method="post" enctype="multipart/form-data">
+    <form id="musicGenreForm" asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label asp-for="Name">Nome</label>
             <input asp-for="Name" class="form-control" placeholder="Nome do gênero musical" required />
@@ -28,10 +36,5 @@
                 }
             </div>
         }
-
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <a class="btn btn-info" asp-action="Index" asp-controller="MusicGenre">Voltar</a>
-            <button type="submit" class="btn btn-primary ml-auto">Cadastrar</button>
-        </div>
     </form>
 </div>

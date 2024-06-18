@@ -4,13 +4,15 @@
 }
 
 <div class="text-center">
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-1">
-        <a class="btn btn-success" role="button" asp-controller="MusicGenre" asp-action="Create">Adicionar</a>
+    <h1 class="display-4">Listagem de Gêneros Musicais</h1>    
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+        <a class="btn btn-primary d-flex align-items-center justify-content-center btn-icon" asp-action="Create" asp-controller="MusicGenre">
+            <i class="fas fa-plus"></i>
+        </a>
     </div>
 
-    <h1 class="display-4">Listagem de Gêneros Musicais</h1>
-
-    <table class="table" id="table">
+    <table class="table text-white" id="table">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -37,7 +39,7 @@
                                     <i class="bi bi-trash"></i>
                                 </button>
 
-                                <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                                <div class="modal fade text-black" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">

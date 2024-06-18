@@ -56,6 +56,7 @@ public class MusicGenreController(MusicGenreServiceClient musicGenreServiceClien
         var model = new InputUpdateMusicGenre(musicGenre.Description!);
 
         ViewBag.Id = id;
+        ViewBag.Name = musicGenre.Name;
         return View(model);
     }
 

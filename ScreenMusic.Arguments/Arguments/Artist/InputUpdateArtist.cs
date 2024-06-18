@@ -9,7 +9,7 @@ public class InputUpdateArtist
 
     public InputUpdateArtist() { }
 
-    public InputUpdateArtist(string profilePhoto, string biography)
+    public InputUpdateArtist(string? profilePhoto, string biography)
     {
         ProfilePhoto = profilePhoto;
         Biography = biography;

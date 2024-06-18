@@ -3,19 +3,27 @@
     ViewData["Title"] = "Edição de Artista";
 }
 
-<div class="container mt-5">
-    <h4 class="mb-4 text-center">Edição de Artista</h4>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a class="btn btn-info d-flex align-items-center btn-icon" asp-action="Index" asp-controller="Artist">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h4 class="mb-2 text-center flex-grow-1">Edição de Artista - @ViewBag.Name</h4>
+        <button type="submit" form="artistForm" class="btn btn-primary d-flex align-items-center btn-icon">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
 
-    <form asp-action="Update" method="post" enctype="multipart/form-data">
+    <form id="artistForm" asp-action="Update" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" value="@ViewBag.Id" />
 
-        <div class="form-group">
+        <div class="form-group mb-2">
             <label asp-for="Biography">Biografia</label>
-            <textarea asp-for="Biography" class="form-control" placeholder="Biografia do artista" rows="4" required>@Model.Biography</textarea>
+            <textarea asp-for="Biography" class="form-control" placeholder="Biografia do artista" rows="4" maxlength="500" required>@Model.Biography</textarea>
             <span asp-validation-for="Biography" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mb-2">
             <label for="profilePhotoFile">Foto de Perfil Atual</label>
             <div>
                 <img id="profilePhotoPreview" src="@(Model.ProfilePhoto != null ? $"https://localhost:7089{Model.ProfilePhoto}" : "images/cardArtista.png")" class="img-thumbnail" style="max-width: 200px;" />
@@ -33,11 +41,6 @@
                 @TempData["ErrorMessage"]
             </div>
         }
-
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <a class="btn btn-info" asp-action="Index" asp-controller="Artist">Voltar</a>
-            <button type="submit" class="btn btn-primary ml-auto">Salvar</button>
-        </div>
     </form>
 </div>
 

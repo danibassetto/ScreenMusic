@@ -4,12 +4,20 @@
 }
 
 <div class="container mt-5">
-    <h4 class="mb-4 text-center">Edição de Gênero Musical</h4>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a class="btn btn-info d-flex align-items-center btn-icon" asp-action="Index" asp-controller="MusicGenre">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h4 class="mb-2 text-center flex-grow-1">Edição de Gênero Musical</h4>
+        <button type="submit" form="musicGenreForm" class="btn btn-primary d-flex align-items-center btn-icon">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
 
-    <form asp-action="Update" method="post" enctype="multipart/form-data">
+    <form id="musicGenreForm" asp-action="Update" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" value="@ViewBag.Id" />
 
-        <div class="form-group">
+        <div class="form-group mb-2">
             <label asp-for="Description">Descrição</label>
             <textarea asp-for="Description" class="form-control" placeholder="Biografia do artista" rows="4" required>@Model.Description</textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
@@ -21,10 +29,5 @@
                 @TempData["ErrorMessage"]
             </div>
         }
-
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <a class="btn btn-info" asp-action="Index" asp-controller="MusicGenre">Voltar</a>
-            <button type="submit" class="btn btn-primary ml-auto">Salvar</button>
-        </div>
     </form>
 </div>

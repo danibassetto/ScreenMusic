@@ -4,9 +4,17 @@
 }
 
 <div class="container mt-5">
-    <h4 class="mb-4 text-center">Cadastro de Música</h4>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a class="btn btn-info d-flex align-items-center btn-icon" asp-action="Index" asp-controller="Music">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h4 class="mb-2 text-center flex-grow-1">Cadastro de Música</h4>
+        <button type="submit" form="musicForm" class="btn btn-primary d-flex align-items-center btn-icon">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
 
-    <form asp-action="Create" method="post" enctype="multipart/form-data">
+    <form id="musicForm" asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label asp-for="Name">Nome</label>
             <input asp-for="Name" class="form-control" placeholder="Nome da Música" required />
@@ -73,11 +81,6 @@
                 }
             </div>
         }
-
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <a class="btn btn-info" href="@Url.Action("Index", "Music")">Voltar</a>
-            <button type="submit" class="btn btn-primary ml-auto">Cadastrar</button>
-        </div>
     </form>
 </div>
 

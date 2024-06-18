@@ -10,12 +10,14 @@
             @for (int i = 1; i <= ViewBag.TotalPage; i++)
             {
                 <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
+                    <a class="page-link" style="background-color: #9820b0; border-color: #9820b0;" asp-action="Index" asp-route-pageNumber="@i">@i</a>
                 </li>
             }
         </ul>
     </nav>
-    <a class="btn btn-primary btn-lg" asp-action="Create" asp-controller="Music">Criar Música</a>
+    <a class="btn btn-primary d-flex align-items-center justify-content-center btn-icon" asp-action="Create" asp-controller="Music">
+        <i class="fas fa-plus"></i>
+    </a>
 </div>
 
 <div class="row">

@@ -37,16 +37,20 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
     {
         var output = Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: Update");
 
-        DeletePhoto(output.ProfilePhoto!);
+        if (!string.IsNullOrEmpty(inputUpdate.ProfilePhoto))
+        {
+            DeletePhoto(output.ProfilePhoto!);
 
-        var profilePhoto = "artista_" + output.Name + ".jpeg";
-        var path = Path.Combine(_hostEnviroment.ContentRootPath, "wwwroot", "ProfilePhotos", profilePhoto);
+            var profilePhoto = "artista_" + output.Name + ".jpeg";
+            var path = Path.Combine(_hostEnviroment.ContentRootPath, "wwwroot", "ProfilePhotos", profilePhoto);
 
-        using MemoryStream ms = new(Convert.FromBase64String(inputUpdate.ProfilePhoto!));
-        using FileStream fs = new(path, FileMode.Create);
-        ms.CopyTo(fs);
+            using MemoryStream ms = new(Convert.FromBase64String(inputUpdate.ProfilePhoto!));
+            using FileStream fs = new(path, FileMode.Create);
+            ms.CopyTo(fs);
 
-        output.ProfilePhoto = $"/ProfilePhotos/{profilePhoto}";
+            output.ProfilePhoto = $"/ProfilePhotos/{profilePhoto}";
+        }
+        
         output.Biography = inputUpdate.Biography;
 
         return _repository!.Update(FromOutputToEntity(output));

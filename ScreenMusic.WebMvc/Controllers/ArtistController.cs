@@ -66,11 +66,12 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
         var model = new InputUpdateArtist(artist.ProfilePhoto!, artist.Biography!);
 
         ViewBag.Id = id;
+        ViewBag.Name = artist.Name;
         return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(int id, InputUpdateArtist inputUpdate, IFormFile newProfilePhoto)
+    public async Task<IActionResult> Update(int id, InputUpdateArtist inputUpdate, IFormFile? newProfilePhoto)
     {
         if (!ModelState.IsValid)
             return View(inputUpdate);
@@ -84,14 +85,14 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
             profilePhoto = Convert.ToBase64String(memoryStream.ToArray());
         }
 
-        var requestEdit = new InputUpdateArtist(profilePhoto!, inputUpdate.Biography!);
+        var requestEdit = new InputUpdateArtist(profilePhoto, inputUpdate.Biography!);
 
         bool success = await _artistServiceClient.Update(id, requestEdit);
 
         if (success)
             return RedirectToAction("Index");
 
-        TempData["ErrorMessage"] = "Erro ao atualizar o artista. Verifique se o artista ainda existe.";
+        TempData["ErrorMessage"] = "Erro ao atualizar o artista.";
         return View(inputUpdate);
     }
 
@@ -103,7 +104,7 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
         if (success)
             return RedirectToAction("Index");
 
-        TempData["ErrorMessage"] = "Erro ao excluir o artista. Verifique se o artista ainda existe.";
+        TempData["ErrorMessage"] = "Erro ao excluir o artista.";
         return RedirectToAction("Index");
     }
 }

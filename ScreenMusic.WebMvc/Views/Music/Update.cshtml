@@ -1,31 +1,35 @@
 ﻿@model InputUpdateMusic
 @{
-    ViewData["Title"] = "Atualização de Música";
+    ViewData["Title"] = "Edição de Música";
 }
 
 <div class="container mt-5">
-    <h4 class="mb-4 text-center">Atualização de Música</h4>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a class="btn btn-info d-flex align-items-center btn-icon" asp-action="Index" asp-controller="Music">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h4 class="mb-2 text-center flex-grow-1">Edição de Música</h4>
+        <button type="submit" form="musicForm" class="btn btn-primary d-flex align-items-center btn-icon">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
 
-    <form asp-action="Update" method="post" enctype="multipart/form-data">
-        <div class="form-group">
+    <form id="musicForm" asp-action="Update" method="post" enctype="multipart/form-data">
+        <div class="form-group  mb-2">
             <label asp-for="Name">Nome</label>
             <input asp-for="Name" class="form-control" placeholder="Nome da Música" required />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-        <br />
-
-        <div class="form-group">
+        <div class="form-group mb-2">
             <label asp-for="YoutubeLink">Link do Youtube</label>
             <input asp-for="YoutubeLink" class="form-control" placeholder="Link do Youtube" required />
             <span asp-validation-for="YoutubeLink" class="text-danger"></span>
         </div>
 
-        <br/>
-
         <div class="row">
             <div class="col-md-4">
-                <div class="form-group">
+                <div class="form-group mb-2">
                     <label asp-for="ReleaseYear">Ano de Lançamento</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -37,7 +41,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-group">
+                <div class="form-group mb-2">
                     <label asp-for="ArtistId">Artista</label>
                     <select asp-for="ArtistId" class="form-control" required>
                         <option value="">Selecione um Artista</option>
@@ -50,7 +54,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-group">
+                <div class="form-group mb-2">
                     <label asp-for="MusicGenreId">Gênero Musical</label>
                     <select asp-for="MusicGenreId" class="form-control" required>
                         <option value="">Selecione um Gênero</option>
@@ -73,11 +77,6 @@
                 }
             </div>
         }
-
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <a class="btn btn-info" href="@Url.Action("Index", "Music")">Voltar</a>
-            <button type="submit" class="btn btn-primary ml-auto">Salvar</button>
-        </div>
     </form>
 </div>
 
