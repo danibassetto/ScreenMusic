@@ -22,7 +22,7 @@
 </div>
 
 <div class="row">
-    @foreach (var artist in Model)
+    @foreach (var artist in Model.ToList())
     {
         <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
             @await Html.PartialAsync("_CardArtist", artist)
