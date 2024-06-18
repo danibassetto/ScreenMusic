@@ -12,7 +12,7 @@ public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>
     public async Task<ICollection<TOutput>?> GetAll()
     {
         var result = await _httpClient.GetFromJsonAsync<BaseResponseApi<ICollection<TOutput>>>($"api/{NameService}");
-        return result?.Value?.Result;
+        return result?.Result;
     }
 
     public async Task<TOutput?> GetById(long id)
@@ -23,7 +23,7 @@ public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>
         {
             string content = await response.Content.ReadAsStringAsync();
 
-            TOutput? outputArtist = JsonConvert.DeserializeObject<BaseResponseApi<TOutput>>(content)!.Value!.Result;
+            TOutput? outputArtist = JsonConvert.DeserializeObject<BaseResponseApi<TOutput>>(content)!.Result;
 
             return outputArtist;
         }
@@ -39,7 +39,7 @@ public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>
         {
             string content = await response.Content.ReadAsStringAsync();
 
-            TOutput? outputArtist = JsonConvert.DeserializeObject<BaseResponseApi<TOutput>>(content)!.Value!.Result;
+            TOutput? outputArtist = JsonConvert.DeserializeObject<BaseResponseApi<TOutput>>(content)!.Result;
 
             return outputArtist;
         }

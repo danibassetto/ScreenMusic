@@ -1,5 +1,4 @@
-﻿using ScreenMusic.Arguments;
-using ScreenMusic.Domain.ApiManagement;
+﻿using ScreenMusic.Domain.ApiManagement;
 using ScreenMusic.Domain.Entities;
 using ScreenMusic.Domain.Interfaces.Repository;
 using ScreenMusic.Domain.Interfaces.Service;
@@ -66,7 +65,7 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
         return _repository!.Update(entity ?? new TEntity());
     }
 
-    private static TEntity? UpdateEntity(TEntity oldEntity, TInputUpdate inputUpdate)
+    protected static TEntity? UpdateEntity(TEntity oldEntity, TInputUpdate inputUpdate)
     {
         foreach (var property in typeof(TInputUpdate).GetProperties())
         {
@@ -110,11 +109,6 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
     public TEntity FromInputCreateToEntity(TInputCreate inputCreate)
     {
         return ApiData.Mapper.MapperInputEntity.Map<TInputCreate, TEntity>(inputCreate);
-    }
-
-    public TEntity FromInputUpdateToEntity(TInputUpdate inputUpdate)
-    {
-        return ApiData.Mapper.MapperInputEntity.Map<TInputUpdate, TEntity>(inputUpdate);
     }
     #endregion
 }

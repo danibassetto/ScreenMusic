@@ -116,18 +116,18 @@ public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInp
     {
         try
         {
-            return StatusCode(statusCode == 0 ? 200 : statusCode, new BaseResponseApi<ResponseType> { Value = new BaseResponseApiContent<ResponseType>() { Result = result } });
+            return await Task.FromResult(StatusCode(statusCode == 0 ? 200 : statusCode, new BaseResponseApi<ResponseType> { Result = result }));
         }
         catch (Exception ex)
         {
-            return BadRequest($"Houve um problema interno com o servidor. Entre em contato com o Administrador do sistema caso o problema persista. Erro interno: {ex.Message}");
+            return await Task.FromResult(BadRequest(new BaseResponseApi<string> { ErrorMessage = $"Houve um problema interno com o servidor. Entre em contato com o Administrador do sistema caso o problema persista. Erro interno: {ex.Message}" }));
         }
     }
 
     [NonAction]
     public async Task<ActionResult> ResponseExceptionAsync(Exception ex)
     {
-        return await Task.FromResult(BadRequest(new { Value = ex.Message }));
+        return await Task.FromResult(BadRequest(new BaseResponseApi<string> { ErrorMessage = ex.Message }));
     }
 
     [NonAction]

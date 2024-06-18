@@ -50,7 +50,7 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
 
             output.ProfilePhoto = $"/ProfilePhotos/{profilePhoto}";
         }
-        
+
         output.Biography = inputUpdate.Biography;
 
         return _repository!.Update(FromOutputToEntity(output));

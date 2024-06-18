@@ -11,12 +11,12 @@ public class MusicGenreService(IMusicGenreRepository repository, IMusicRepositor
 
     public override long? Create(InputCreateMusicGenre inputCreate)
     {
-        MusicGenre? originalMusicGenre = _repository!.GetByIdentifier(new InputIdentifierMusicGenre(inputCreate.Name));
+        MusicGenre? originalMusicGenre = _repository!.GetByIdentifier(new InputIdentifierMusicGenre(inputCreate.Name!));
 
         if (originalMusicGenre is not null)
             throw new InvalidOperationException($"Gênero Musical com o nome '{inputCreate.Name}' já existe.");
 
-        var name = inputCreate.Name.Trim();
+        var name = inputCreate.Name!.Trim();
         var description = inputCreate.Description!.Trim();
 
         MusicGenre musicGenre = new(name, description);

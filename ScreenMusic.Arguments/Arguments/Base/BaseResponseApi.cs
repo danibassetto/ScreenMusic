@@ -2,5 +2,6 @@
 
 public class BaseResponseApi<TTypeResult>
 {
-    public BaseResponseApiContent<TTypeResult>? Value { get; set; }
+    public TTypeResult? Result { get; set; }
+    public string? ErrorMessage { get; set; }
 }

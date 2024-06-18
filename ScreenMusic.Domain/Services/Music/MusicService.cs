@@ -9,7 +9,7 @@ public class MusicService(IMusicRepository repository) : BaseService<IMusicRepos
 {
     public override long? Create(InputCreateMusic inputCreate)
     {
-        if(inputCreate.ReleaseYear > DateTime.Now.Year)
+        if (inputCreate.ReleaseYear > DateTime.Now.Year)
             throw new InvalidOperationException($"Ano de lançamento inválido!");
 
         return _repository!.Create(FromInputCreateToEntity(inputCreate));
@@ -22,13 +22,9 @@ public class MusicService(IMusicRepository repository) : BaseService<IMusicRepos
         if (inputUpdate.ReleaseYear > DateTime.Now.Year)
             throw new InvalidOperationException($"Ano de lançamento inválido!");
 
-        output.ArtistId = inputUpdate.ArtistId!.Value;
-        output.MusicGenreId = inputUpdate.ArtistId!.Value;
-        output.ReleaseYear = inputUpdate.ReleaseYear!.Value;
-        output.Name = inputUpdate.Name;
-        output.YoutubeLink = inputUpdate.YoutubeLink;
+        Music entity = UpdateEntity(FromOutputToEntity(output), inputUpdate) ?? throw new Exception("Problemas para realizar atualização");
 
-        return _repository!.Update(FromOutputToEntity(output));
+        return _repository!.Update(entity);
     }
 
     public List<OutputMusic>? GetListByArtistId(long artistId)
