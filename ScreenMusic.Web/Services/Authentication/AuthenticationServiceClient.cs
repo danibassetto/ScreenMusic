@@ -11,28 +11,28 @@ public class AuthenticationServiceClient(IHttpClientFactory factory) : Authentic
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var person = new ClaimsPrincipal();
-
+        var pessoa = new ClaimsPrincipal();
         var response = await _httpClient.GetAsync("auth/manage/info");
 
-        if(response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
-            var information = await response.Content.ReadFromJsonAsync<OutputLoggedUser>();
-            Claim[] data = [
-                new Claim(ClaimTypes.Name, information.Email),
-                new Claim(ClaimTypes.Email, information.Email)
+            var info = await response.Content.ReadFromJsonAsync<OutputLoggedUser>();
+            Claim[] dados =
+            [
+                new Claim(ClaimTypes.Name, info.Email),
+                new Claim(ClaimTypes.Email, info.Email)
             ];
 
-            var identity = new ClaimsIdentity(data, "Cookies");
-            person = new ClaimsPrincipal(identity);
+            var identity = new ClaimsIdentity(dados, "Cookies");
+            pessoa = new ClaimsPrincipal(identity);
         }
 
-        return new AuthenticationState(person);
+        return new AuthenticationState(pessoa);
     }
 
     public async Task<OutputAuthentication> LoginAsync(string email, string senha)
     {
-        var response = await _httpClient.PostAsJsonAsync("auth/login", new
+        var response = await _httpClient.PostAsJsonAsync("auth/login?useCookies=true", new
         {
             email,
             password = senha

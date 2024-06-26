@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ScreenMusic.Arguments;
 using ScreenMusic.Domain.ApiManagement;
@@ -7,6 +8,7 @@ using ScreenMusic.Domain.Interfaces.Service;
 namespace ScreenMusic.Api.Controllers;
 
 [ApiController]
+[Authorize]
 public class BaseController<TIService, TInputCreate, TInputUpdate, TOutput, TInputIdentifier> : Controller
     where TIService : IBaseService<TInputCreate, TInputUpdate, TOutput, TInputIdentifier>
 {

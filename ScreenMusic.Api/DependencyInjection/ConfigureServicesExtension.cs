@@ -9,8 +9,6 @@ using ScreenMusic.Domain.Interfaces.Service;
 using ScreenMusic.Domain.Services;
 using ScreenMusic.Infraestructure;
 using ScreenMusic.Infraestructure.Repository;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 
 namespace ScreenMusic.Api;
 
@@ -28,7 +26,6 @@ public static class ConfigureServicesExtension
         AddTransient();
         AddSingleton();
         AddSwaggerGen();
-        AddCors();
         AddMySql();
 
         return ServiceCollection;
@@ -70,34 +67,6 @@ public static class ConfigureServicesExtension
         });
 
         ServiceCollection.AddSwaggerGenNewtonsoftSupport();
-    }
-
-    public static void AddToken()
-    {
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-        ServiceCollection.AddAuthentication((options) =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(c =>
-        {
-            c.RequireHttpsMetadata = false;
-            c.SaveToken = true;
-            c.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("63bcc5be-fa37-4290-b5a4-57a6a4e3afcb")),
-                ClockSkew = TimeSpan.Zero
-            };
-        });
-    }
-
-    public static void AddCors()
-    {
-        ServiceCollection.AddCors(options => { options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); });
     }
 
     public static void AddMySql()
