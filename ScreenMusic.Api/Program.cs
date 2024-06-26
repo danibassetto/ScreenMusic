@@ -64,13 +64,13 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+app.UseCors("wasm");
+
 app.UseRouting();
 
 app.UseAuthorization();
 
 app.MapGroup("auth").MapIdentityApi<User>().WithTags("Authorization");
-
-app.UseCors("wasm");
 
 app.MapControllers();
 
