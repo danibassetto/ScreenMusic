@@ -18,6 +18,9 @@ namespace ScreenMusic.Infraestructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -181,8 +184,6 @@ namespace ScreenMusic.Infraestructure.Migrations
                         .HasColumnName("classificacao");
 
                     b.HasKey("ArtistId", "UserId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("avaliacao_artista", (string)null);
                 });
@@ -431,15 +432,7 @@ namespace ScreenMusic.Infraestructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ScreenMusic.Domain.Entities.User", "User")
-                        .WithMany("ListArtistReview")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Artist");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ScreenMusic.Domain.Entities.Music", b =>
@@ -471,11 +464,6 @@ namespace ScreenMusic.Infraestructure.Migrations
             modelBuilder.Entity("ScreenMusic.Domain.Entities.MusicGenre", b =>
                 {
                     b.Navigation("ListMusic");
-                });
-
-            modelBuilder.Entity("ScreenMusic.Domain.Entities.User", b =>
-                {
-                    b.Navigation("ListArtistReview");
                 });
 #pragma warning restore 612, 618
         }

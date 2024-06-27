@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -230,6 +231,26 @@ namespace ScreenMusic.Infraestructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "avaliacao_artista",
+                columns: table => new
+                {
+                    id_artista = table.Column<long>(type: "BIGINT", nullable: false),
+                    id_usuario = table.Column<long>(type: "BIGINT", nullable: false),
+                    classificacao = table.Column<int>(type: "INT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_avaliacao_artista", x => new { x.id_artista, x.id_usuario });
+                    table.ForeignKey(
+                        name: "FK_avaliacao_artista_artista_id_artista",
+                        column: x => x.id_artista,
+                        principalTable: "artista",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "musica",
                 columns: table => new
                 {
@@ -240,6 +261,8 @@ namespace ScreenMusic.Infraestructure.Migrations
                     ano_lancamento = table.Column<int>(type: "INT", nullable: false),
                     id_artista = table.Column<long>(type: "BIGINT", nullable: false),
                     id_genero_musical = table.Column<long>(type: "BIGINT", nullable: false),
+                    link_youtube = table.Column<string>(type: "VARCHAR(500)", maxLength: 500, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     data_cadastro = table.Column<DateTime>(type: "DATETIME", nullable: false),
                     data_alteracao = table.Column<DateTime>(type: "DATETIME", nullable: true)
                 },
@@ -326,6 +349,9 @@ namespace ScreenMusic.Infraestructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "avaliacao_artista");
 
             migrationBuilder.DropTable(
                 name: "musica");

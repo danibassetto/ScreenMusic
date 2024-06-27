@@ -10,8 +10,8 @@ public class ArtistMap : IEntityTypeConfiguration<Artist>
     {
         builder.ToTable("artista");
         builder.HasMany(x => x.ListMusic).WithOne(x => x.Artist).HasForeignKey(x => x.ArtistId).HasPrincipalKey(x => x.Id);
-        builder.HasMany(x => x.ListArtistReview).WithOne(x => x.Artist).HasForeignKey(x => x.ArtistId).HasPrincipalKey(x => x.Id);
-
+        builder.HasMany(x => x.ListArtistReview).WithOne(x => x.Artist).HasForeignKey(x => x.ArtistId);
+        
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id).HasColumnName("id");

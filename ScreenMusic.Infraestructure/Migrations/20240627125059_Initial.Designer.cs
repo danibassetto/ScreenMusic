@@ -12,7 +12,7 @@ using ScreenMusic.Infraestructure;
 namespace ScreenMusic.Infraestructure.Migrations
 {
     [DbContext(typeof(ScreenMusicContext))]
-    [Migration("20240607004421_Initial")]
+    [Migration("20240627125059_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,6 +21,9 @@ namespace ScreenMusic.Infraestructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -168,6 +171,26 @@ namespace ScreenMusic.Infraestructure.Migrations
                     b.ToTable("artista", (string)null);
                 });
 
+            modelBuilder.Entity("ScreenMusic.Domain.Entities.ArtistReview", b =>
+                {
+                    b.Property<long?>("ArtistId")
+                        .HasColumnType("BIGINT")
+                        .HasColumnName("id_artista");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("BIGINT")
+                        .HasColumnName("id_usuario");
+
+                    b.Property<int?>("Rating")
+                        .IsRequired()
+                        .HasColumnType("INT")
+                        .HasColumnName("classificacao");
+
+                    b.HasKey("ArtistId", "UserId");
+
+                    b.ToTable("avaliacao_artista", (string)null);
+                });
+
             modelBuilder.Entity("ScreenMusic.Domain.Entities.Music", b =>
                 {
                     b.Property<long?>("Id")
@@ -206,6 +229,12 @@ namespace ScreenMusic.Infraestructure.Migrations
                         .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("ano_lancamento");
+
+                    b.Property<string>("YoutubeLink")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(500)")
+                        .HasColumnName("link_youtube");
 
                     b.HasKey("Id");
 
@@ -398,6 +427,17 @@ namespace ScreenMusic.Infraestructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ScreenMusic.Domain.Entities.ArtistReview", b =>
+                {
+                    b.HasOne("ScreenMusic.Domain.Entities.Artist", "Artist")
+                        .WithMany("ListArtistReview")
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
+                });
+
             modelBuilder.Entity("ScreenMusic.Domain.Entities.Music", b =>
                 {
                     b.HasOne("ScreenMusic.Domain.Entities.Artist", "Artist")
@@ -419,6 +459,8 @@ namespace ScreenMusic.Infraestructure.Migrations
 
             modelBuilder.Entity("ScreenMusic.Domain.Entities.Artist", b =>
                 {
+                    b.Navigation("ListArtistReview");
+
                     b.Navigation("ListMusic");
                 });
 
