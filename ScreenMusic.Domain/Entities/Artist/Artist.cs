@@ -16,10 +16,4 @@ public class Artist : BaseEntity<Artist>
         ProfilePhoto = profilePhoto;
         Biography = biography;
     }
-
-    public void AddReview(long userId, int rating)
-    {
-        rating = Math.Min(Math.Max(rating, 1), 5);
-        ListArtistReview?.Add(new ArtistReview(Id!.Value, userId, rating));
-    }
 }

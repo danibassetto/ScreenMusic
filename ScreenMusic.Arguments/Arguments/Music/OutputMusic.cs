@@ -11,5 +11,5 @@ public class OutputMusic
     public long MusicGenreId { get; set; }
     public string? YoutubeLink { get; set; }
     public OutputArtist? Artist { get; set; }
-    public OutputMusicGenre? MusicGenre  { get; set; }
+    public OutputMusicGenre? MusicGenre { get; set; }
 }

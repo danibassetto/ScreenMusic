@@ -10,6 +10,7 @@ public class MapperEntityOutput : Profile
     {
         #region Artist
         CreateMap<Artist, OutputArtist>().ReverseMap();
+        CreateMap<ArtistReview, OutputArtistReview>().ReverseMap();
         #endregion
 
         #region Music
