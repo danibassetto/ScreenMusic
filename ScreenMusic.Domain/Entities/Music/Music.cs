@@ -21,10 +21,4 @@ public class Music : BaseEntity<Music>
         MusicGenreId = musicGenreId;
         YoutubeLink = youtubeLink;
     }
-
-    public override string ToString()
-    {
-        return @$"Id: {Id}
-        Nome: {Name}";
-    }
 }

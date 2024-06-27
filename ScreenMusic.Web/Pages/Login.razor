@@ -1,6 +1,8 @@
 ﻿@page "/login"
 @using Microsoft.AspNetCore.Components.Authorization
-@inject AuthenticationServiceClient AuthAPI
+@inject AuthenticationServiceClient authenticationServiceClient
+@inject NavigationManager navigationManager
+@attribute [AllowAnonymous]
 
 <MudPaper Class="px-8 pt-2 pb-4 mx-16 my-8" Justify="Justify.Center">
     <AuthorizeView>
@@ -21,7 +23,7 @@
                               OnlyValidateIfDirty="true" />
 
                 <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                           Class="my-6" @onclick="FazerLogin">
+                           Class="my-6" @onclick="LogInto">
                     Login
                 </MudButton>
             </MudForm>
@@ -33,8 +35,13 @@
     private string? email;
     private string? password;
 
-    private async Task FazerLogin()
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
+    private async Task LogInto()
     {
-        await AuthAPI.LoginAsync(email, password);
+        var response = await authenticationServiceClient.LoginAsync(email!, password!);
+        if(response.IsSuccess && ReturnUrl is not null)
+            navigationManager.NavigateTo(ReturnUrl);
     }
 }

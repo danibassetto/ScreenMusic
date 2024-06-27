@@ -1,0 +1,12 @@
+﻿@page "/logout"
+@inject AuthenticationServiceClient authenticationServiceClient
+@attribute [AllowAnonymous]
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (await authenticationServiceClient.VerifyAuthenticated())
+            await authenticationServiceClient.LogoutAsync();
+        await base.OnInitializedAsync();
+    }
+}

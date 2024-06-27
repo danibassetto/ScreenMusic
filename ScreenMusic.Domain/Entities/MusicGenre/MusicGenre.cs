@@ -13,9 +13,4 @@ public class MusicGenre : BaseEntity<MusicGenre>
         Name = name;
         Description = description;
     }
-
-    public override string ToString()
-    {
-        return $"Nome: {Name} - Descrição: {Description}";
-    }
 }

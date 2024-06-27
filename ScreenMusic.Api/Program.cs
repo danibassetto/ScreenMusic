@@ -1,53 +1,11 @@
-using AutoMapper;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ScreenMusic.Api;
-using ScreenMusic.Domain.ApiManagement;
 using ScreenMusic.Domain.Entities;
-using ScreenMusic.Domain.Mapping;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-    options.SerializerSettings.Formatting = Formatting.Indented;
-    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-});
-
-builder.Services.AddAuthorization();
-
 builder.Services.ConfigureDependencyInjection(builder.Configuration);
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ScreenMusic", Version = "v1" });
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
-});
-
-var configure = new MapperConfiguration(config =>
-{
-    config.AddProfile(new MapperGeneric<string, string>());
-});
-IMapper mapper = configure.CreateMapper();
-builder.Services.AddSingleton(mapper);
-
-builder.Services.AddCors(
-    options => options.AddPolicy(
-        "wasm",
-        policy => policy.WithOrigins("https://localhost:7089", "https://localhost:7072")
-            .AllowAnyMethod()
-            .SetIsOriginAllowed(pol => true)
-            .AllowAnyHeader()
-            .AllowCredentials()));
-
-#region ApiData
-ApiData.SetMapper(new ScreenMusic.Domain.Mapping.Mapper(new MapperConfiguration(config => { config.AddProfile(new MapperEntityOutput()); }).CreateMapper(), new MapperConfiguration(config => { config.AddProfile(new MapperInputEntity()); }).CreateMapper()));
-#endregion
 
 var app = builder.Build();
 
@@ -71,6 +29,12 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapGroup("auth").MapIdentityApi<User>().WithTags("Authorization");
+
+app.MapPost("auth/logout", async ([FromServices] SignInManager<User> signInManager) =>
+{
+    await signInManager.SignOutAsync();
+    return Results.Ok();
+}).RequireAuthorization().WithTags("Authorization");
 
 app.MapControllers();
 

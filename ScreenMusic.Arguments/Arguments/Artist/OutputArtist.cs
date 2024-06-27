@@ -9,4 +9,5 @@ public class OutputArtist
     public string? ProfilePhoto { get; set; }
     public string? Biography { get; set; }
     public ICollection<OutputMusic>? ListMusic { get; set; }
+    public ICollection<OutputArtistReview>? ListArtistReview { get; set; }
 }

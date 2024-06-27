@@ -5,7 +5,8 @@ public class Artist : BaseEntity<Artist>
     public string? Name { get; set; }
     public string? ProfilePhoto { get; set; }
     public string? Biography { get; set; }
-    public virtual ICollection<Music>? ListMusic { get; set; } = new List<Music>();
+    public virtual ICollection<Music>? ListMusic { get; set; } = [];
+    public virtual ICollection<ArtistReview>? ListArtistReview { get; set; } = [];
 
     public Artist() { }
 
@@ -16,11 +17,9 @@ public class Artist : BaseEntity<Artist>
         Biography = biography;
     }
 
-    public override string ToString()
+    public void AddReview(long userId, int rating)
     {
-        return $@"Id: {Id}
-            Nome: {Name}
-            Foto de Perfil: {ProfilePhoto}
-            Bio: {Biography}";
+        rating = Math.Min(Math.Max(rating, 1), 5);
+        ListArtistReview?.Add(new ArtistReview(Id!.Value, userId, rating));
     }
 }

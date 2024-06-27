@@ -82,7 +82,7 @@ public class BaseRepository<TEntity, TInputIdentifier>(ScreenMusicContext contex
     protected static IQueryable<TEntity> IncludeVirtualProperties(IQueryable<TEntity> query)
     {
         var entityType = typeof(TEntity);
-        var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetGetMethod()?.IsVirtual == true);
+        var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetGetMethod()?.IsVirtual == true && (typeof(IEnumerable<>).IsAssignableFrom(p.PropertyType) || p.PropertyType.IsClass));
 
         foreach (var property in properties)
         {

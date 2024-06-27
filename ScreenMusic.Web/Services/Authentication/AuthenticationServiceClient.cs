@@ -8,9 +8,11 @@ namespace ScreenMusic.Web.Services;
 public class AuthenticationServiceClient(IHttpClientFactory factory) : AuthenticationStateProvider
 {
     private readonly HttpClient _httpClient = factory.CreateClient("API");
+    private bool authenticated = false;
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
+        authenticated = false;
         var pessoa = new ClaimsPrincipal();
         var response = await _httpClient.GetAsync("auth/manage/info");
 
@@ -25,6 +27,7 @@ public class AuthenticationServiceClient(IHttpClientFactory factory) : Authentic
 
             var identity = new ClaimsIdentity(dados, "Cookies");
             pessoa = new ClaimsPrincipal(identity);
+            authenticated = true;
         }
 
         return new AuthenticationState(pessoa);
@@ -45,5 +48,17 @@ public class AuthenticationServiceClient(IHttpClientFactory factory) : Authentic
         }
 
         return new OutputAuthentication { IsSuccess = false, ListError = ["Login/senha inválidos"] };
+    }
+
+    public async Task LogoutAsync()
+    {
+        await _httpClient.PostAsync("auth/logout", null);
+        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+    }
+
+    public async Task<bool> VerifyAuthenticated()
+    {
+        await GetAuthenticationStateAsync();
+        return authenticated;
     }
 }

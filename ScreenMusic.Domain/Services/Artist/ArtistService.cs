@@ -1,15 +1,20 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting;
 using ScreenMusic.Arguments;
 using ScreenMusic.Domain.Entities;
 using ScreenMusic.Domain.Interfaces.Repository;
 using ScreenMusic.Domain.Interfaces.Service;
+using System.Security.Claims;
 
 namespace ScreenMusic.Domain.Services;
 
-public class ArtistService(IArtistRepository repository, IHostEnvironment hostEnviroment, IMusicRepository musicRepository) : BaseService<IArtistRepository, InputCreateArtist, InputUpdateArtist, Artist, OutputArtist, InputIdentifierArtist>(repository), IArtistService
+public class ArtistService(IArtistRepository repository, IHostEnvironment hostEnviroment, IHttpContextAccessor httpContextAccessor, UserManager<User> userRepository, IMusicRepository musicRepository) : BaseService<IArtistRepository, InputCreateArtist, InputUpdateArtist, Artist, OutputArtist, InputIdentifierArtist>(repository), IArtistService
 {
     private readonly IHostEnvironment _hostEnviroment = hostEnviroment;
-    private readonly IMusicRepository _musicRepository = musicRepository;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly UserManager<User> _userRepository = userRepository;
+    private readonly IMusicRepository _musicRepository = musicRepository;    
 
     public override long? Create(InputCreateArtist inputCreate)
     {
@@ -69,6 +74,41 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
 
         _repository!.Delete(FromOutputToEntity(output));
         return true;
+    }
+
+    public bool Review(long id, InputReviewArtist inputReviewArtist)
+    {
+        var entity = FromOutputToEntity(Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: Review"));
+
+        var email = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? throw new InvalidOperationException("Usuário não conectado");
+
+        var user = _userRepository.FindByEmailAsync(email).Result ?? throw new InvalidOperationException("Usuário não encontrado.");
+
+        var review = entity.ListArtistReview?.FirstOrDefault(a => a.ArtistId == entity.Id && a.UserId == user.Id);
+
+        if (review is null)
+            entity.AddReview(user.Id, inputReviewArtist.Rating);
+        else
+            review.Rating = inputReviewArtist.Rating;
+
+        _repository!.Update(entity);
+        return true;
+    }
+
+    public OutputArtistReview? GetReview(long id)
+    {
+        var entity = Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: GetReview");
+
+        var email = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? throw new InvalidOperationException("Usuário não conectado");
+
+        var user = _userRepository.FindByEmailAsync(email).Result ?? throw new InvalidOperationException("Usuário não encontrado.");
+
+        var review = entity.ListArtistReview?.FirstOrDefault(a => a.ArtistId == entity.Id && a.UserId == user.Id);
+
+        if (review is not null)
+            return review;
+
+        return default;
     }
 
     private void DeletePhoto(string profilePhoto)

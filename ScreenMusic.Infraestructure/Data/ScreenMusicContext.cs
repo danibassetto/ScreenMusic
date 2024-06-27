@@ -10,6 +10,7 @@ public class ScreenMusicContext : IdentityDbContext<User, UserRole, long>
     public DbSet<Artist> Artist { get; set; }
     public DbSet<Music> Music { get; set; }
     public DbSet<MusicGenre> MusicGenre { get; set; }
+    public DbSet<ArtistReview> ArtistReview { get; set; }
 
     public ScreenMusicContext() { }
 
@@ -20,6 +21,7 @@ public class ScreenMusicContext : IdentityDbContext<User, UserRole, long>
         modelBuilder.ApplyConfiguration(new ArtistMap());
         modelBuilder.ApplyConfiguration(new MusicMap());
         modelBuilder.ApplyConfiguration(new MusicGenreMap());
+        modelBuilder.ApplyConfiguration(new ArtistReviewMap());
         base.OnModelCreating(modelBuilder);
     }
 }
