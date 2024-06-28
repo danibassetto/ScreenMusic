@@ -110,5 +110,10 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
     {
         return ApiData.Mapper.MapperInputEntity.Map<TInputCreate, TEntity>(inputCreate);
     }
+
+    public TOutputClass CustomMapper<TInputClass, TOutputClass>(TInputClass output)
+    {
+        return ApiData.Mapper.MapperEntityOutput.Map<TInputClass, TOutputClass>(output);
+    }
     #endregion
 }

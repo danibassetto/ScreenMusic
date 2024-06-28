@@ -86,14 +86,14 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
 
         var user = _userRepository.FindByEmailAsync(email).Result ?? throw new InvalidOperationException("Usuário não encontrado.");
 
-        ArtistReview? artistReview = _artistReviewRepository.GetByIdentifier(new InputIdentifierArtistReview(outputArtist.Id, user.Id));
+        OutputArtistReview? outputArtistReview = CustomMapper<ArtistReview, OutputArtistReview>(_artistReviewRepository.GetByIdentifier(new InputIdentifierArtistReview(outputArtist.Id, user.Id))!);
 
-        if (artistReview is null)
+        if (outputArtistReview is null)
             _artistReviewRepository.Create(new ArtistReview(outputArtist.Id, user.Id, Math.Min(Math.Max(inputReviewArtist.Rating, 1), 5)));
         else
         {
-            artistReview.Rating = Math.Min(Math.Max(inputReviewArtist.Rating, 1), 5);
-            _artistReviewRepository.Update(artistReview);
+            outputArtistReview.Rating = Math.Min(Math.Max(inputReviewArtist.Rating, 1), 5);
+            _artistReviewRepository.Update(CustomMapper<OutputArtistReview, ArtistReview>(outputArtistReview));
         }
 
         return true;
@@ -101,18 +101,15 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
 
     public OutputArtistReview? GetReview(long id)
     {
-        var entity = Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: GetReview");
+        var outputArtist = Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: GetReview");
 
         var email = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? throw new InvalidOperationException("Usuário não conectado");
 
         var user = _userRepository.FindByEmailAsync(email).Result ?? throw new InvalidOperationException("Usuário não encontrado.");
 
-        var review = entity.ListArtistReview?.FirstOrDefault(a => a.ArtistId == entity.Id && a.UserId == user.Id);
+        OutputArtistReview? outputArtistReview = CustomMapper<ArtistReview, OutputArtistReview>(_artistReviewRepository.GetByIdentifier(new InputIdentifierArtistReview(outputArtist.Id, user.Id)) ?? new ArtistReview());
 
-        if (review is not null)
-            return review;
-
-        return default;
+        return outputArtistReview ?? default;
     }
 
     private void DeletePhoto(string profilePhoto)
