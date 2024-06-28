@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using ScreenMusic.Arguments;
 using ScreenMusic.Domain.Entities;
@@ -9,12 +10,13 @@ using System.Security.Claims;
 
 namespace ScreenMusic.Domain.Services;
 
-public class ArtistService(IArtistRepository repository, IHostEnvironment hostEnviroment, IHttpContextAccessor httpContextAccessor, UserManager<User> userRepository, IMusicRepository musicRepository) : BaseService<IArtistRepository, InputCreateArtist, InputUpdateArtist, Artist, OutputArtist, InputIdentifierArtist>(repository), IArtistService
+public class ArtistService(IArtistRepository repository, IHostEnvironment hostEnviroment, IHttpContextAccessor httpContextAccessor, UserManager<User> userRepository, IMusicRepository musicRepository, IArtistReviewRepository artistReviewRepository) : BaseService<IArtistRepository, InputCreateArtist, InputUpdateArtist, Artist, OutputArtist, InputIdentifierArtist>(repository), IArtistService
 {
     private readonly IHostEnvironment _hostEnviroment = hostEnviroment;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
     private readonly UserManager<User> _userRepository = userRepository;
     private readonly IMusicRepository _musicRepository = musicRepository;
+    private readonly IArtistReviewRepository _artistReviewRepository = artistReviewRepository;
 
     public override long? Create(InputCreateArtist inputCreate)
     {
@@ -78,20 +80,22 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
 
     public bool Review(long id, InputReviewArtist inputReviewArtist)
     {
-        var output = Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: Review");
+        var outputArtist = Get(id) ?? throw new KeyNotFoundException("Id inválido ou inexistente. Processo: Review");
 
         var email = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? throw new InvalidOperationException("Usuário não conectado");
 
         var user = _userRepository.FindByEmailAsync(email).Result ?? throw new InvalidOperationException("Usuário não encontrado.");
 
-        var review = output.ListArtistReview?.FirstOrDefault(a => a.ArtistId == output.Id && a.UserId == user.Id);
+        ArtistReview? artistReview = _artistReviewRepository.GetByIdentifier(new InputIdentifierArtistReview(outputArtist.Id, user.Id));
 
-        if (review is null)
-            output.ListArtistReview?.Add(new OutputArtistReview() { ArtistId = output.Id, Rating = Math.Min(Math.Max(inputReviewArtist.Rating, 1), 5), UserId = user.Id });
+        if (artistReview is null)
+            _artistReviewRepository.Create(new ArtistReview(outputArtist.Id, user.Id, Math.Min(Math.Max(inputReviewArtist.Rating, 1), 5)));
         else
-            review.Rating = inputReviewArtist.Rating;
+        {
+            artistReview.Rating = Math.Min(Math.Max(inputReviewArtist.Rating, 1), 5);
+            _artistReviewRepository.Update(artistReview);
+        }
 
-        _repository!.Update(FromOutputToEntity(output));
         return true;
     }
 

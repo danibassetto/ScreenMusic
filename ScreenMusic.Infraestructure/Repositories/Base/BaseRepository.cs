@@ -39,7 +39,8 @@ public class BaseRepository<TEntity, TInputIdentifier>(ScreenMusicContext contex
             {
                 var parameter = Expression.Parameter(typeof(TEntity), "x");
                 var member = Expression.Property(parameter, propertyName);
-                var constant = Expression.Constant(propertyValue);
+                var constant = Expression.Constant(propertyValue, member.Type);
+
                 var body = Expression.Equal(member, constant);
                 var lambda = Expression.Lambda<Func<TEntity, bool>>(body, parameter);
 
@@ -47,8 +48,11 @@ public class BaseRepository<TEntity, TInputIdentifier>(ScreenMusicContext contex
             }
         }
 
+        query = BaseRepository<TEntity, TInputIdentifier>.IncludeVirtualProperties(query);
+
         return query.FirstOrDefault();
     }
+
     #endregion
 
     #region Create

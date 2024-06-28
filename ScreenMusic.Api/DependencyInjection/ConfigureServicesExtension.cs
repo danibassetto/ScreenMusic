@@ -69,6 +69,7 @@ public static class ConfigureServicesExtension
         ServiceCollection.AddTransient<IMusicRepository, MusicRepository>();
         ServiceCollection.AddTransient<IMusicGenreService, MusicGenreService>();
         ServiceCollection.AddTransient<IMusicGenreRepository, MusicGenreRepository>();
+        ServiceCollection.AddTransient<IArtistReviewRepository, ArtistReviewRepository>();
 
         ServiceCollection.AddTransient<IApiDataService, ApiDataService>();
     }
