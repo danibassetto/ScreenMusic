@@ -234,13 +234,23 @@ namespace ScreenMusic.Infraestructure.Migrations
                 name: "avaliacao_artista",
                 columns: table => new
                 {
+                    id = table.Column<long>(type: "BIGINT", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     id_artista = table.Column<long>(type: "BIGINT", nullable: false),
                     id_usuario = table.Column<long>(type: "BIGINT", nullable: false),
-                    classificacao = table.Column<int>(type: "INT", nullable: false)
+                    classificacao = table.Column<int>(type: "INT", nullable: false),
+                    ChangeDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_avaliacao_artista", x => new { x.id_artista, x.id_usuario });
+                    table.PrimaryKey("PK_avaliacao_artista", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_avaliacao_artista_AspNetUsers_id_usuario",
+                        column: x => x.id_usuario,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_avaliacao_artista_artista_id_artista",
                         column: x => x.id_artista,
@@ -320,6 +330,16 @@ namespace ScreenMusic.Infraestructure.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_avaliacao_artista_id_artista",
+                table: "avaliacao_artista",
+                column: "id_artista");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_avaliacao_artista_id_usuario",
+                table: "avaliacao_artista",
+                column: "id_usuario");
 
             migrationBuilder.CreateIndex(
                 name: "IX_musica_id_artista",

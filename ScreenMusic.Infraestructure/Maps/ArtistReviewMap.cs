@@ -10,9 +10,15 @@ public class ArtistReviewMap : IEntityTypeConfiguration<ArtistReview>
     {
         builder.ToTable("avaliacao_artista");
 
-        builder.HasKey(a => new { a.ArtistId, a.UserId });
-
         builder.HasOne(x => x.Artist).WithMany(x => x.ListArtistReview).HasForeignKey(x => x.ArtistId);
+        builder.HasOne(x => x.User).WithMany(x => x.ListArtistReview).HasForeignKey(x => x.UserId);
+
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Id).HasColumnName("id");
+        builder.Property(x => x.Id).IsRequired();
+        builder.Property(x => x.Id).HasColumnType("BIGINT");
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
         builder.Property(x => x.ArtistId).HasColumnName("id_artista");
         builder.Property(x => x.ArtistId).IsRequired();

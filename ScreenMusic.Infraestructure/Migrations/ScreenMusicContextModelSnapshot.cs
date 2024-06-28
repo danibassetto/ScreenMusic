@@ -170,20 +170,39 @@ namespace ScreenMusic.Infraestructure.Migrations
 
             modelBuilder.Entity("ScreenMusic.Domain.Entities.ArtistReview", b =>
                 {
+                    b.Property<long?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BIGINT")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long?>("Id"));
+
                     b.Property<long?>("ArtistId")
+                        .IsRequired()
                         .HasColumnType("BIGINT")
                         .HasColumnName("id_artista");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("BIGINT")
-                        .HasColumnName("id_usuario");
+                    b.Property<DateTime?>("ChangeDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("Rating")
                         .IsRequired()
                         .HasColumnType("INT")
                         .HasColumnName("classificacao");
 
-                    b.HasKey("ArtistId", "UserId");
+                    b.Property<long?>("UserId")
+                        .IsRequired()
+                        .HasColumnType("BIGINT")
+                        .HasColumnName("id_usuario");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtistId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("avaliacao_artista", (string)null);
                 });
@@ -432,7 +451,15 @@ namespace ScreenMusic.Infraestructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ScreenMusic.Domain.Entities.User", "User")
+                        .WithMany("ListArtistReview")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Artist");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ScreenMusic.Domain.Entities.Music", b =>
@@ -464,6 +491,11 @@ namespace ScreenMusic.Infraestructure.Migrations
             modelBuilder.Entity("ScreenMusic.Domain.Entities.MusicGenre", b =>
                 {
                     b.Navigation("ListMusic");
+                });
+
+            modelBuilder.Entity("ScreenMusic.Domain.Entities.User", b =>
+                {
+                    b.Navigation("ListArtistReview");
                 });
 #pragma warning restore 612, 618
         }
