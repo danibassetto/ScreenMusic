@@ -1,4 +1,14 @@
-﻿@model IEnumerable<OutputMusicGenre>
+﻿@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+@model IEnumerable<OutputMusicGenre>
 @{
     ViewData["Title"] = "Gêneros Musicais";
 }
@@ -35,15 +45,15 @@
                                 <a role="button" class="btn btn-primary" asp-route-id="@musicGenre.Id" asp-controller="MusicGenre" asp-action="Update" title="Editar">
                                     <i class="bi bi-pencil-square fs-6"></i>
                                 </a>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                                    <i class="bi bi-trash"></i>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@musicGenre.Id">
+                                    <i class="bi bi-trash fs-6"></i>
                                 </button>
 
-                                <div class="modal fade text-black" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                                <div class="modal fade text-black" id="confirmDeleteModal-@musicGenre.Id" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@musicGenre.Id" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                                                <h5 class="modal-title" id="confirmDeleteModalLabel-@musicGenre.Id">Confirmar Exclusão</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -51,7 +61,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <form asp-action="Delete" asp-controller="MusicGenre" asp-route-id="@musicGenre.Id">
+                                                <form asp-action="Delete" asp-controller="MusicGenre" asp-route-id="@musicGenre.Id" method="post">
                                                     <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
                                                 </form>
                                             </div>

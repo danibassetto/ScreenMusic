@@ -1,90 +1,69 @@
 ﻿using Newtonsoft.Json;
 using ScreenMusic.Arguments;
+using ScreenMusic.WebMvc.Services.Base;
 
 namespace ScreenMusic.WebMvc.Services;
 
 public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>(IHttpClientFactory factory)
 {
     private readonly HttpClient _httpClient = factory.CreateClient("API");
-    private readonly string NameService = typeof(TOutput).Name[6..];
+    private readonly string _nameService = typeof(TOutput).Name[6..];
 
-    public async Task<ICollection<TOutput>?> GetAll()
+    public async Task<BaseServiceClientResponse<ICollection<TOutput>>> GetAll()
     {
-        var result = await _httpClient.GetFromJsonAsync<BaseResponseApi<ICollection<TOutput>>>($"api/{NameService}");
-        return result?.Value?.Result;
+        return await HandleRequestAsync<ICollection<TOutput>>(HttpMethod.Get, $"{_nameService}", null);
     }
 
-    public async Task<TOutput?> GetById(long id)
+    public async Task<BaseServiceClientResponse<TOutput>> GetById(long id)
     {
-        HttpResponseMessage response = await _httpClient.GetAsync($"api/{NameService}/{id}");
-
-        if (response.IsSuccessStatusCode)
-        {
-            string content = await response.Content.ReadAsStringAsync();
-
-            TOutput? outputArtist = JsonConvert.DeserializeObject<BaseResponseApi<TOutput>>(content)!.Value!.Result;
-
-            return outputArtist;
-        }
-        else
-            return default;
+        return await HandleRequestAsync<TOutput>(HttpMethod.Get, $"{_nameService}/{id}", null
+        );
     }
 
-    public async Task<TOutput?> GetByName(TIdentifier inputIdentifier)
+    public async Task<BaseServiceClientResponse<bool>> Create(TInputCreate inputCreate)
     {
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"api/{NameService}/GetByIdentifier", inputIdentifier);
-
-        if (response.IsSuccessStatusCode)
-        {
-            string content = await response.Content.ReadAsStringAsync();
-
-            TOutput? outputArtist = JsonConvert.DeserializeObject<BaseResponseApi<TOutput>>(content)!.Value!.Result;
-
-            return outputArtist;
-        }
-        else
-            return default;
+        return await HandleRequestAsync<bool>(HttpMethod.Post, $"{_nameService}", inputCreate);
     }
 
-    public async Task<bool> Create(TInputCreate inputCreate)
+    public async Task<BaseServiceClientResponse<bool>> Update(long id, TInputUpdate inputUpdate)
+    {
+        return await HandleRequestAsync<bool>(HttpMethod.Put, $"{_nameService}/{id}", inputUpdate);
+    }
+
+    public async Task<BaseServiceClientResponse<bool>> Delete(long id)
+    {
+        return await HandleRequestAsync<bool>(HttpMethod.Delete, $"{_nameService}/{id}", null);
+    }
+
+    private async Task<BaseServiceClientResponse<TResponse>> HandleRequestAsync<TResponse>(HttpMethod method, string requestUri, object? requestData)
     {
         try
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"api/{NameService}", inputCreate);
-            response.EnsureSuccessStatusCode();
-            return true;
-        }
-        catch (HttpRequestException)
-        {
-            return false;
-        }
-    }
+            HttpResponseMessage response = method.Method switch
+            {
+                "GET" => await _httpClient.GetAsync($"api/{requestUri}"),
+                "POST" => await _httpClient.PostAsJsonAsync($"api/{requestUri}", requestData),
+                "PUT" => await _httpClient.PutAsJsonAsync($"api/{requestUri}", requestData),
+                "DELETE" => await _httpClient.DeleteAsync($"api/{requestUri}"),
+                _ => throw new NotSupportedException($"HTTP method '{method.Method}' is not supported."),
+            };
 
-    public async Task<bool> Delete(long id)
-    {
-        try
-        {
-            HttpResponseMessage response = await _httpClient.DeleteAsync($"api/{NameService}/{id}");
-            response.EnsureSuccessStatusCode();
-            return true;
-        }
-        catch (HttpRequestException)
-        {
-            return false;
-        }
-    }
+            var responseData = await response.Content.ReadAsStringAsync();
 
-    public async Task<bool> Update(long id, TInputUpdate inputUpdate)
-    {
-        try
-        {
-            HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"api/{NameService}/{id}", inputUpdate);
-            response.EnsureSuccessStatusCode();
-            return true;
+            if (response.IsSuccessStatusCode)
+            {
+                var result = JsonConvert.DeserializeObject<BaseResponseApi<TResponse>>(responseData);
+                return new BaseServiceClientResponse<TResponse>(true, result!.Result, null);
+            }
+            else
+            {
+                var errorResult = JsonConvert.DeserializeObject<BaseResponseApi<TResponse>>(responseData);
+                return new BaseServiceClientResponse<TResponse>(false, default, errorResult?.ErrorMessage);
+            }
         }
-        catch (HttpRequestException)
+        catch (HttpRequestException ex)
         {
-            return false;
+            return new BaseServiceClientResponse<TResponse>(false, default, ex.Message);
         }
     }
 }

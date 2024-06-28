@@ -1,6 +1,7 @@
 ﻿body {
     background-color: #3e3e3e;
     color: white;
+    overflow-x: hidden;
 }
 
 a.navbar-brand {
@@ -66,21 +67,21 @@ button.accept-policy {
     color: white;
 }
 
-.sidebar .nav-link {
-    padding: 15px 20px;
-    font-size: 2.0rem;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    .sidebar .nav-link {
+        padding: 15px 20px;
+        font-size: 2.0rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.sidebar .nav-link .bi,
-.sidebar .nav-link .bi::before {
-    font-size: 2.5rem;
-    color: white;
-    margin-right: 10px;
-}
+        .sidebar .nav-link .bi,
+        .sidebar .nav-link .bi::before {
+            font-size: 2.5rem;
+            color: white;
+            margin-right: 10px;
+        }
 
 .content {
     margin-left: 250px;
@@ -94,10 +95,12 @@ button.accept-policy {
         width: 100%;
         padding-top: 56px;
         color: white;
+        position: static;
     }
 
     .content {
         margin-left: 0;
+        padding-top: 56px;
         color: white;
     }
 }

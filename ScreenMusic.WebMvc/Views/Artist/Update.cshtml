@@ -1,4 +1,14 @@
-﻿@model InputUpdateArtist
+﻿@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+@model InputUpdateArtist
 @{
     ViewData["Title"] = "Edição de Artista";
 }
@@ -34,23 +44,18 @@
             <label for="newProfilePhoto">Nova Foto de Perfil (opcional)</label>
             <input type="file" class="form-control-file" id="newProfilePhoto" name="newProfilePhoto" accept=".jpeg,.jpg,.png" onchange="previewImage(event)" />
         </div>
-
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["ErrorMessage"]
-            </div>
-        }
     </form>
 </div>
 
-<script type="text/javascript">
-    function previewImage(event) {
-        var reader = new FileReader();
-        reader.onload = function () {
-            var output = document.getElementById('profilePhotoPreview');
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-</script>
+@section Scripts {
+    <script type="text/javascript">
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('profilePhotoPreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+}

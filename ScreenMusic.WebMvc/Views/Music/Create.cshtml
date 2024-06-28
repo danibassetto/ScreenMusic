@@ -1,4 +1,14 @@
-﻿@model InputCreateMusic
+﻿@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+@model InputCreateMusic
 @{
     ViewData["Title"] = "Cadastro de Música";
 }
@@ -17,7 +27,7 @@
     <form id="musicForm" asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label asp-for="Name">Nome</label>
-            <input asp-for="Name" class="form-control" placeholder="Nome da Música" required />
+            <input asp-for="Name" class="form-control" maxlength="200" placeholder="Nome da Música" required />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
@@ -25,7 +35,7 @@
 
         <div class="form-group">
             <label asp-for="YoutubeLink">Link do Youtube</label>
-            <input asp-for="YoutubeLink" class="form-control" placeholder="Link do Youtube" required />
+            <input asp-for="YoutubeLink" class="form-control" maxlength="500" placeholder="Link do Youtube" required />
             <span asp-validation-for="YoutubeLink" class="text-danger"></span>
         </div>
 
@@ -39,7 +49,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         </div>
-                        <input asp-for="ReleaseYear" id="releaseYear" class="form-control" type="number" min="1900" max="@DateTime.Now.Year" placeholder="Ano de Lançamento" required />
+                        <input asp-for="ReleaseYear" id="releaseYear" class="form-control" type="number" max="@DateTime.Now.Year" placeholder="Ano de Lançamento" required />
                     </div>
                     <span asp-validation-for="ReleaseYear" class="text-danger"></span>
                 </div>
@@ -71,16 +81,6 @@
                 </div>
             </div>
         </div>
-
-        @if (ViewData.ModelState.ErrorCount > 0)
-        {
-            <div class="alert alert-danger">
-                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <p>@error.ErrorMessage</p>
-                }
-            </div>
-        }
     </form>
 </div>
 

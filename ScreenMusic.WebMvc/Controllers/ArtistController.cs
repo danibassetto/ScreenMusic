@@ -10,14 +10,20 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
 
     public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
     {
-        var listArtist = await _artistServiceClient.GetAll();
-        listArtist ??= new List<OutputArtist>();
+        var response = await _artistServiceClient.GetAll();
+
+        if (!response.Success)
+        {
+            TempData["ErrorMessage"] = response.ErrorMessage ?? "Erro ao listar artistas.";
+            return View(new List<OutputArtist>());
+        }
+
+        var listArtist = response.Data ?? [];
 
         var totalItem = listArtist.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
         var artistsByPage = listArtist.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
         ViewBag.TotalPage = totalPage;
         ViewBag.CurrentPage = pageNumber;
 
@@ -46,23 +52,24 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
 
         var request = new InputCreateArtist(inputCreate.Name!, profilePhoto!, inputCreate.Biography!);
 
-        bool success = await _artistServiceClient.Create(request);
+        var response = await _artistServiceClient.Create(request);
 
-        if (success)
+        if (response.Success)
             return RedirectToAction("Index");
 
-        ModelState.AddModelError(string.Empty, "Erro ao criar artista. Verifique se o artista já existe.");
+        TempData["ErrorMessage"] = response.ErrorMessage ?? "Erro ao criar artista. Verifique se o artista já existe.";
         return View(inputCreate);
     }
 
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var artist = await _artistServiceClient.GetById(id);
+        var response = await _artistServiceClient.GetById(id);
 
-        if (artist == null)
+        if (!response.Success || response.Data == null)
             return NotFound();
 
+        var artist = response.Data;
         var model = new InputUpdateArtist(artist.ProfilePhoto!, artist.Biography!);
 
         ViewBag.Id = id;
@@ -85,26 +92,26 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
             profilePhoto = Convert.ToBase64String(memoryStream.ToArray());
         }
 
-        var requestEdit = new InputUpdateArtist(profilePhoto, inputUpdate.Biography!);
+        var requestEdit = new InputUpdateArtist(profilePhoto!, inputUpdate.Biography!);
 
-        bool success = await _artistServiceClient.Update(id, requestEdit);
+        var response = await _artistServiceClient.Update(id, requestEdit);
 
-        if (success)
+        if (response.Success)
             return RedirectToAction("Index");
 
-        TempData["ErrorMessage"] = "Erro ao atualizar o artista.";
+        TempData["ErrorMessage"] = response.ErrorMessage ?? "Erro ao atualizar o artista.";
         return View(inputUpdate);
     }
 
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
-        bool success = await _artistServiceClient.Delete(id);
+        var response = await _artistServiceClient.Delete(id);
 
-        if (success)
+        if (response.Success)
             return RedirectToAction("Index");
 
-        TempData["ErrorMessage"] = "Erro ao excluir o artista.";
+        TempData["ErrorMessage"] = response.ErrorMessage ?? "Erro ao excluir o artista.";
         return RedirectToAction("Index");
     }
 }

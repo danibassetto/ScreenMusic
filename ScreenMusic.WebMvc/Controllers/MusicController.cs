@@ -12,23 +12,30 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
 
     public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
     {
-        var listMusic = await _musicServiceClient.GetAll();
-        listMusic ??= new List<OutputMusic>();
+        var response = await _musicServiceClient.GetAll();
+
+        if (!response.Success)
+        {
+            TempData["ErrorMessage"] = response.ErrorMessage ?? "Erro ao listar músicas.";
+            return View(new List<OutputMusic>());
+        }
+
+        var listMusic = response.Data ?? [];
 
         foreach (var music in listMusic)
         {
-            music.YoutubeLink = ConvertToEmbedYoutubeUrl(music.YoutubeLink);
+            music.YoutubeLink = ConvertToEmbedYoutubeUrl(music.YoutubeLink!);
         }
 
         var totalItem = listMusic.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
-        var artistsByPage = listMusic.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        var musicByPage = listMusic.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         ViewBag.TotalPage = totalPage;
         ViewBag.CurrentPage = pageNumber;
 
-        return View(artistsByPage);
+        return View(musicByPage);
     }
 
     [HttpGet]
@@ -47,24 +54,25 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
             return View(inputCreate);
         }
 
-        bool success = await _musicServiceClient.Create(inputCreate);
+        var response = await _musicServiceClient.Create(inputCreate);
 
-        if (success)
+        if (response.Success)
             return RedirectToAction("Index");
 
         await LoadComboBoxList();
-        ModelState.AddModelError(string.Empty, "Erro ao criar musica.");
+        ModelState.AddModelError(string.Empty, response.ErrorMessage ?? "Erro ao criar música.");
         return View(inputCreate);
     }
 
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var music = await _musicServiceClient.GetById(id);
+        var response = await _musicServiceClient.GetById(id);
 
-        if (music == null)
+        if (!response.Success || response.Data == null)
             return NotFound();
 
+        var music = response.Data;
         var model = new InputUpdateMusic(music.Name!, music.ReleaseYear, music.ArtistId, music.MusicGenreId, music.YoutubeLink!);
 
         ViewBag.Id = id;
@@ -81,32 +89,47 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
             return View(model);
         }
 
-        bool success = await _musicServiceClient.Update(id, model);
+        var response = await _musicServiceClient.Update(id, model);
 
-        if (success)
+        if (response.Success)
             return RedirectToAction("Index");
 
         await LoadComboBoxList();
-        TempData["ErrorMessage"] = "Erro ao atualizar o musica.";
+        TempData["ErrorMessage"] = response.ErrorMessage ?? "Erro ao atualizar a música.";
         return View(model);
     }
 
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
-        bool success = await _musicServiceClient.Delete(id);
+        var response = await _musicServiceClient.Delete(id);
 
-        if (success)
+        if (response.Success)
             return RedirectToAction("Index");
 
-        TempData["ErrorMessage"] = "Erro ao excluir o musica.";
+        TempData["ErrorMessage"] = response.ErrorMessage ?? "Erro ao excluir a música.";
         return RedirectToAction("Index");
     }
 
     private async Task LoadComboBoxList()
     {
-        ViewBag.Artists = await _artistServiceClient.GetAll();
-        ViewBag.Genres = await _musicGenreServiceClient.GetAll();
+        var listArtist = await _artistServiceClient.GetAll();
+        var listMusicGenre = await _musicGenreServiceClient.GetAll();
+
+        if (listArtist.Success && listMusicGenre.Success)
+        {
+            ViewBag.Artists = listArtist.Data;
+            ViewBag.Genres = listMusicGenre.Data;
+        }
+        else
+        {
+            ViewBag.Artists = new List<OutputArtist>();
+            ViewBag.Genres = new List<OutputMusicGenre>();
+            if (!listArtist.Success)
+                TempData["ErrorMessage"] = listArtist.ErrorMessage ?? "Erro ao carregar combo box de artistas.";
+            if (!listMusicGenre.Success)
+                TempData["ErrorMessage"] = listArtist.ErrorMessage ?? "Erro ao carregar combo box de gênero musical.";
+        }
     }
 
     private static string ConvertToEmbedYoutubeUrl(string youtubeLink)

@@ -1,4 +1,14 @@
-﻿@model InputUpdateMusicGenre
+﻿@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+}
+
+@model InputUpdateMusicGenre
 @{
     ViewData["Title"] = "Edição de Gênero Musical";
 }
@@ -19,15 +29,8 @@
 
         <div class="form-group mb-2">
             <label asp-for="Description">Descrição</label>
-            <textarea asp-for="Description" class="form-control" placeholder="Biografia do artista" rows="4" required>@Model.Description</textarea>
+            <textarea asp-for="Description" class="form-control" maxlength="300" placeholder="Biografia do artista" rows="4" required>@Model.Description</textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
-        </div>        
-
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["ErrorMessage"]
-            </div>
-        }
+        </div>
     </form>
 </div>

@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScreenMusic.Api", "ScreenMu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScreenMusic.Web", "ScreenMusic.Web\ScreenMusic.Web.csproj", "{69AE9752-11BE-42DC-BD55-EA9371EFE4D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenMusic.WebMvc", "ScreenMusic.WebMvc\ScreenMusic.WebMvc.csproj", "{1EE63D10-08E4-430B-B37B-569A664FA8C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{69AE9752-11BE-42DC-BD55-EA9371EFE4D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69AE9752-11BE-42DC-BD55-EA9371EFE4D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69AE9752-11BE-42DC-BD55-EA9371EFE4D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EE63D10-08E4-430B-B37B-569A664FA8C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EE63D10-08E4-430B-B37B-569A664FA8C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EE63D10-08E4-430B-B37B-569A664FA8C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EE63D10-08E4-430B-B37B-569A664FA8C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
