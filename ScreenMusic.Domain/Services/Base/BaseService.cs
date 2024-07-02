@@ -20,10 +20,10 @@ public class BaseService<TBaseRepository, TInputCreate, TInputUpdate, TEntity, T
     #region Read
     public virtual List<TOutput>? GetAll()
     {
-        var entity = _repository!.GetAll();
+        var listEntity = _repository!.GetAll();
 
-        if (entity is not null)
-            return FromEntityToOutput(entity);
+        if (listEntity is not null)
+            return FromEntityToOutput(listEntity);
         else
             return default;
     }

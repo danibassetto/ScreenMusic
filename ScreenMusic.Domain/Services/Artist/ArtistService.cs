@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using ScreenMusic.Arguments;
 using ScreenMusic.Domain.Entities;
@@ -17,6 +16,54 @@ public class ArtistService(IArtistRepository repository, IHostEnvironment hostEn
     private readonly UserManager<User> _userRepository = userRepository;
     private readonly IMusicRepository _musicRepository = musicRepository;
     private readonly IArtistReviewRepository _artistReviewRepository = artistReviewRepository;
+
+    public override List<OutputArtist>? GetAll()
+    {
+        List<OutputArtist>? result = [];
+        var listEntity = _repository!.GetAll();
+
+        if (listEntity is not null)
+        {
+            result = FromEntityToOutput(listEntity);
+            foreach (var output in result!)
+            {
+                output.Classification = (decimal?)output.ListArtistReview?.Select(a => a.Rating).DefaultIfEmpty(0).Average();
+            }
+            return result;
+        }
+        else
+            return default;
+    }
+
+    public override OutputArtist? Get(long id)
+    {
+        OutputArtist? result = new();
+        var entity = _repository!.Get(id);
+
+        if (entity is not null)
+        {
+            result = FromEntityToOutput(entity);
+            result!.Classification = (decimal?)result.ListArtistReview?.Select(a => a.Rating).DefaultIfEmpty(0).Average();
+            return result;
+        }
+        else
+            return default;
+    }
+
+    public override OutputArtist? GetByIdentifier(InputIdentifierArtist inputIdentifier)
+    {
+        OutputArtist? result = new();
+        var entity = _repository!.GetByIdentifier(inputIdentifier);
+
+        if (entity is not null)
+        {
+            result = FromEntityToOutput(entity);
+            result!.Classification = (decimal?)result.ListArtistReview?.Select(a => a.Rating).DefaultIfEmpty(0).Average();
+            return result;
+        }
+        else
+            return default;
+    }
 
     public override long? Create(InputCreateArtist inputCreate)
     {

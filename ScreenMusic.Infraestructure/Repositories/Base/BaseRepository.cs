@@ -86,7 +86,11 @@ public class BaseRepository<TEntity, TInputIdentifier>(ScreenMusicContext contex
     protected static IQueryable<TEntity> IncludeVirtualProperties(IQueryable<TEntity> query)
     {
         var entityType = typeof(TEntity);
-        var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetGetMethod()?.IsVirtual == true && (typeof(IEnumerable<>).IsAssignableFrom(p.PropertyType) || p.PropertyType.IsClass));
+        var baseEntityType = typeof(BaseEntity<>).MakeGenericType(entityType);
+        var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                   .Where(p => p.DeclaringType == entityType &&
+                                               p.GetGetMethod()?.IsVirtual == true &&
+                                               !baseEntityType.GetProperties().Any(bp => bp.Name == p.Name));
 
         foreach (var property in properties)
         {

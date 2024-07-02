@@ -9,7 +9,7 @@ public class MapperEntityOutput : Profile
     public MapperEntityOutput()
     {
         #region Artist
-        CreateMap<Artist, OutputArtist>().ReverseMap();
+        CreateMap<Artist, OutputArtist>().ForMember(dest => dest.Classification, opt => opt.Ignore()).ReverseMap();
         CreateMap<ArtistReview, OutputArtistReview>().ReverseMap();
         #endregion
 
