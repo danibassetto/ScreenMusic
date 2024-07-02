@@ -6,8 +6,8 @@ namespace ScreenMusic.Web.Services;
 
 public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>(IHttpClientFactory factory)
 {
-    private readonly HttpClient _httpClient = factory.CreateClient("API");
-    private readonly string NameService = typeof(TOutput).Name[6..];
+    protected readonly HttpClient _httpClient = factory.CreateClient("API");
+    protected readonly string NameService = typeof(TOutput).Name[6..];
 
     public async Task<ICollection<TOutput>?> GetAll()
     {

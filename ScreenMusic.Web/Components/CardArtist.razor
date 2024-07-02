@@ -2,17 +2,18 @@
 ﻿<MudCard>
     <MudCardMedia Image="@Image"></MudCardMedia>
     <MudCardHeader>
-        <CardHeaderContent>
-            <MudText Typo="Typo.h6">@Artist!.Name</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudText Typo="Typo.body2">@Artist!.Biography</MudText>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Color="Color.Warning" Variant="Variant.Outlined" Href=@($"/UpdateArtist/{Artist!.Name}")>Detalhes</MudButton>
-        </MudCardActions>
-    </MudCard>
+    <CardHeaderContent>
+        <MudText Typo="Typo.h6">@Artist!.Name</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.body2">@Artist!.Biography</MudText>
+        <MudRating SelectedValue="@Convert.ToInt32(Artist!.Classification)" />
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Color="Color.Warning" Variant="Variant.Outlined" Href=@($"/UpdateArtist/{Artist!.Name}")>Detalhes</MudButton>
+    </MudCardActions>
+</MudCard>
 
     @code {
     [Parameter]
@@ -21,7 +22,7 @@
     public string? Image { get; set; }
 
     protected override void OnInitialized()
-    { 
+    {
         Image = Artist!.ProfilePhoto!.Contains("Photo") ? $"https://localhost:7089/{Artist!.ProfilePhoto}" : "images/cardArtista.png";
     }
 }
