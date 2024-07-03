@@ -13,23 +13,26 @@
 
         <MudTextField Class="mt-4" T="string" Placeholder="Nome da música/canção" @bind-Value="name" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
         <MudTextField Class="mt-4" T="string" Placeholder="Link do Youtube" @bind-Value="youtubeLink" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
-        <MudSelect Class="mt-4" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="Artist">
-            @if (ListArtist is not null)
-                @foreach (var artist in ListArtist)
-                {
-                    <MudSelectItem Value="artist">@artist.Name</MudSelectItem>
-                }
-        </MudSelect>
 
-        <MudNumericField Class="mt-4" T="int" Placeholder="Ano de lançamento" @bind-Value="releaseYear" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <MudSelect Class="mr-2" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="Artist">
+                @if (ListArtist is not null)
+                    @foreach (var artist in ListArtist)
+                    {
+                        <MudSelectItem Value="artist">@artist.Name</MudSelectItem>
+                    }
+            </MudSelect>
 
-        <MudSelect Class="mt-4" T="OutputMusicGenre" Label="Gêneros" Variant="Variant.Outlined" @bind-Value="MusicGenre">
-            @if (ListMusicGenre is not null)
-                @foreach (var musicGenre in ListMusicGenre)
-                {
-                    <MudSelectItem Value="musicGenre">@musicGenre.Name</MudSelectItem>
-                }
-        </MudSelect>
+            <MudNumericField Class="mr-2" T="int" Placeholder="Ano de lançamento" @bind-Value="releaseYear" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
+
+            <MudSelect Class="ml-2" T="OutputMusicGenre" Label="Gêneros" Variant="Variant.Outlined" @bind-Value="MusicGenre">
+                @if (ListMusicGenre is not null)
+                    @foreach (var musicGenre in ListMusicGenre)
+                    {
+                        <MudSelectItem Value="musicGenre">@musicGenre.Name</MudSelectItem>
+                    }
+            </MudSelect>
+        </div>
 
         <div class="d-flex justify-space-between align-center mt-4">
             <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Return">Voltar</MudButton>
@@ -65,12 +68,12 @@
         {
             var musicaRequest = new InputCreateMusic(name!, releaseYear, Artist.Id, MusicGenre.Id, youtubeLink!);
             await musicServiceClient.Create(musicaRequest);
-            navigationManager.NavigateTo("/MusicByArtist");
+            navigationManager.NavigateTo("/Music");
         }
     }
 
     private void Return()
     {
-        navigationManager.NavigateTo("/MusicByArtist");
+        navigationManager.NavigateTo("/Music");
     }
 }

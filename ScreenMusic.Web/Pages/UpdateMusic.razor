@@ -14,33 +14,35 @@
         <MudTextField Class="mt-4" T="string" Placeholder="Nome da música/canção" @bind-Value="name" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
         <MudTextField Class="mt-4" T="string" Placeholder="Link do Youtube" @bind-Value="youtubeLink" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
 
-        <MudSelect Class="mt-4" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="Artist" ToStringFunc="GetArtistName">
-            @if (ListArtist is not null)
-            {
-                @foreach (var artist in ListArtist)
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <MudSelect Class="mr-2" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="Artist" ToStringFunc="GetArtistName">
+                @if (ListArtist is not null)
                 {
-                    <MudSelectItem Value="artist">@artist.Name</MudSelectItem>
+                    @foreach (var artist in ListArtist)
+                    {
+                        <MudSelectItem Value="artist">@artist.Name</MudSelectItem>
+                    }
                 }
-            }
-        </MudSelect>
+            </MudSelect>
 
-        <MudNumericField Class="mt-4" T="int" Placeholder="Ano de lançamento" @bind-Value="releaseYear" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
+            <MudNumericField Class="mr-2" T="int" Placeholder="Ano de lançamento" @bind-Value="releaseYear" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
 
-        <MudSelect Class="mt-4" T="OutputMusicGenre" Label="Gênero" Variant="Variant.Outlined" @bind-Value="MusicGenre" ToStringFunc="GetMusicGenreName">
-            @if (ListMusicGenre is not null)
-            {
-                @foreach (var musicGenre in ListMusicGenre)
+            <MudSelect Class="ml-2" T="OutputMusicGenre" Label="Gênero" Variant="Variant.Outlined" @bind-Value="MusicGenre" ToStringFunc="GetMusicGenreName">
+                @if (ListMusicGenre is not null)
                 {
-                    <MudSelectItem Value="musicGenre">@musicGenre.Name</MudSelectItem>
+                    @foreach (var musicGenre in ListMusicGenre)
+                    {
+                        <MudSelectItem Value="musicGenre">@musicGenre.Name</MudSelectItem>
+                    }
                 }
-            }
-        </MudSelect>
+            </MudSelect>
+        </div>
 
         <div class="d-flex justify-space-between align-center mt-4">
             <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Return">Voltar</MudButton>
             <div>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-3" @onclick="Update">Salvar</MudButton>
                 <MudButton Variant="Variant.Filled" Color="Color.Secondary" Class="ml-3" @onclick="Delete">Deletar</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-3" @onclick="Update">Salvar</MudButton>
             </div>
         </div>
 
@@ -63,7 +65,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Music = await musicServiceClient.GetByName(new InputIdentifierMusic(Name!));
+        Music = await musicServiceClient.GetByIdentifier(new InputIdentifierMusic(Name!));
         releaseYear = Music!.ReleaseYear;
         name = Music.Name!;
         Artist = await artistServiceClient.GetById(Music.ArtistId);
@@ -78,19 +80,19 @@
         {
             var requestEdit = new InputUpdateMusic(name!, releaseYear, Artist.Id, MusicGenre.Id, youtubeLink!);
             await musicServiceClient.Update(Music!.Id, requestEdit);
-            navigationManager.NavigateTo("/MusicByArtist");
+            navigationManager.NavigateTo("/Music");
         }
     }
 
     public async Task Delete()
     {
         await musicServiceClient.Delete(Music!.Id);
-        navigationManager.NavigateTo("/MusicByArtist");
+        navigationManager.NavigateTo("/Music");
     }
 
     private void Return()
     {
-        navigationManager.NavigateTo("/MusicByArtist");
+        navigationManager.NavigateTo("/Music");
     }
 
     private string GetArtistName(OutputArtist artist) => artist.Name!;

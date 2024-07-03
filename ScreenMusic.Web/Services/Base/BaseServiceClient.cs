@@ -31,7 +31,7 @@ public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>
             return default;
     }
 
-    public async Task<TOutput?> GetByName(TIdentifier inputIdentifier)
+    public async Task<TOutput?> GetByIdentifier(TIdentifier inputIdentifier)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"api/{NameService}/GetByIdentifier", inputIdentifier);
 

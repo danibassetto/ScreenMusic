@@ -1,0 +1,48 @@
+﻿@page "/MusicGenre"
+@using ScreenMusic.Arguments
+@inject MusicGenreServiceClient musicGenreServiceClient
+@inject NavigationManager navigationManager
+
+<MudStack Class="mt-4 mb-4" Row="true" Justify="Justify.SpaceBetween">
+    <MudText Class="mb-4" Typo="Typo.h4">Gêneros Musicais cadastrados</MudText>
+    <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Dark" Href=@($"/CreateMusicGenre")/>
+</MudStack>
+
+@if (ListMusicGenre == null || ListMusicGenre.Count == 0)
+{
+    <MudProgressCircular Color="Color.Primary" Size="Size.Large" />
+}
+else
+{
+    <MudTable Items="ListMusicGenre" Striped="true" FixedHeader="true" Height="300px">
+        <HeaderContent>
+            <MudTh>Nome</MudTh>
+            <MudTh>Descrição</MudTh>
+            <MudTh>Ações</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nome">@context.Name</MudTd>
+                <MudTd DataLabel="Descrição">@context.Description</MudTd>
+                <MudTd DataLabel="Ações">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Href=@($"/UpdateMusicGenre/{context.Name}") />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(e => Delete(context.Id))" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+}
+
+
+@code {
+    private ICollection<OutputMusicGenre>? ListMusicGenre;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListMusicGenre = await musicGenreServiceClient.GetAll();
+    }
+
+    private async Task Delete(long id)
+    {
+        await musicGenreServiceClient.Delete(id);
+        navigationManager.Refresh();
+    }
+}
