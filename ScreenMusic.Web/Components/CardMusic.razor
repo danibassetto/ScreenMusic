@@ -1,22 +1,30 @@
 ﻿@using ScreenMusic.Arguments
-﻿<MudCard>
-    <MudCardMedia Image="images/cardArtista.png"></MudCardMedia>
+<MudCard>
+    <iframe class="card-video" src="@ConvertToEmbedYoutubeUrl(Music!.YoutubeLink!)" allowfullscreen></iframe>
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h6">@Music!.Name</MudText>
-            </CardHeaderContent>
+            <MudText Typo="Typo.h6">@Music!.Artist!.Name - @Music!.Name</MudText>
+        </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudText Typo="Typo.body2">Artista/Banda:@Music!.Name</MudText>
+        <MudText Typo="Typo.body2">Artista/Banda: @Music!.Artist?.Name</MudText>
     </MudCardContent>
     <MudCardActions>
         <MudButton Color="Color.Warning"
-                    Variant="Variant.Outlined"
-                    Href=@($"/UpdateMusic/{Music!.Name}")>Detalhes</MudButton>
+                   Variant="Variant.Outlined"
+                   Href=@($"/UpdateMusic/{Music!.Name}")>Detalhes</MudButton>
     </MudCardActions>
 </MudCard>
 
 @code {
     [Parameter]
     public OutputMusic? Music { get; set; }
+
+    private string ConvertToEmbedYoutubeUrl(string youtubeLink)
+    {
+        var uri = new Uri(youtubeLink);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var videoId = query["v"];
+        return $"https://www.youtube.com/embed/{videoId}";
+    }
 }

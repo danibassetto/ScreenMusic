@@ -68,6 +68,7 @@
         Music = await musicServiceClient.GetByIdentifier(new InputIdentifierMusic(Name!));
         releaseYear = Music!.ReleaseYear;
         name = Music.Name!;
+        youtubeLink = Music.YoutubeLink;
         Artist = await artistServiceClient.GetById(Music.ArtistId);
         MusicGenre = await musicGenreServiceClient.GetById(Music.MusicGenreId);
         ListArtist = await artistServiceClient.GetAll();

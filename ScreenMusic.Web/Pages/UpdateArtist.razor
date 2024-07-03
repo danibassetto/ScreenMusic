@@ -3,7 +3,7 @@
 @inject ArtistServiceClient artistServiceClient
 @inject NavigationManager navigationManager
 
-@if (Artist is not null)
+@if (OutputArtist is not null)
 {
     <MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
 
@@ -14,11 +14,18 @@
             <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista" ReadOnly="true" Variant="Variant.Outlined" @bind-Value="name" Required="true" RequiredError="Campo obrigatório." />
 
             <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista" Variant="Variant.Outlined" @bind-Value="biography" Lines="4" Required="true" RequiredError="Campo obrigatório." />
-            
+
+            <MudImage Class="mt-4" src="@fileImage" />
+            <MudFileUpload T="IBrowserFile" Accept=".jpeg;,.jpg,.png" FilesChanged="UploadFile">
+                <ButtonTemplate>
+                    <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.FileUpload" for="@context">Foto de Perfil</MudButton>
+                </ButtonTemplate>
+            </MudFileUpload>
+
             <div class="mt-4">
                 <MudText>Deixe sua avaliação:</MudText>
                 <MudRating @bind-SelectedValue="rating" @onclick="Review" />
-            </div>            
+            </div>
 
             <div class="d-flex justify-space-between align-center mt-4">
                 <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Return">Voltar</MudButton>
@@ -40,7 +47,9 @@ else
     private string? name;
     private string? biography;
     private int rating;
-    public OutputArtist? Artist { get; set; }
+    private string? profilePhoto;
+    private string? fileImage;
+    public OutputArtist? OutputArtist { get; set; }
     public OutputArtistReview? ArtistReview { get; set; }
 
     [Parameter]
@@ -48,34 +57,49 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Artist = await artistServiceClient.GetByIdentifier(new InputIdentifierArtist(Name!));
-        ArtistReview = await artistServiceClient.GetReview(Artist!.Id);
-        name = Artist!.Name;
-        biography = Artist!.Biography;
+        OutputArtist = await artistServiceClient.GetByIdentifier(new InputIdentifierArtist(Name!));
+        ArtistReview = await artistServiceClient.GetReview(OutputArtist!.Id);
+        name = OutputArtist!.Name;
+        biography = OutputArtist!.Biography;
         rating = ArtistReview!.Rating ?? 0;
+        fileImage = $"https://localhost:7089{OutputArtist.ProfilePhoto}";
     }
 
     private async Task Delete()
     {
-        await artistServiceClient.Delete(Artist!.Id);
+        await artistServiceClient.Delete(OutputArtist!.Id);
         navigationManager.NavigateTo("/Artist");
     }
 
     private async Task Update()
     {
-        var inputUpdateArtist = new InputUpdateArtist(Artist!.ProfilePhoto!, biography!);
-        await artistServiceClient.Update(Artist!.Id, inputUpdateArtist);
+        var inputUpdateArtist = new InputUpdateArtist(profilePhoto, biography!);
+        await artistServiceClient.Update(OutputArtist!.Id, inputUpdateArtist);
         navigationManager.NavigateTo("/Artist");
     }
 
     private async Task Review()
     {
         var inputReviewArtist = new InputReviewArtist(rating);
-        await artistServiceClient.Review(Artist!.Id, inputReviewArtist);
+        await artistServiceClient.Review(OutputArtist!.Id, inputReviewArtist);
     }
 
     private void Return()
     {
         navigationManager.NavigateTo("/Artist");
-    }    
+    }
+
+    private async Task UploadFile(IBrowserFile file)
+    {
+        var format = "image/jpeg";
+        var resizedImage = await file.RequestImageFileAsync(format, 200, 200);
+
+        using var fileStream = resizedImage.OpenReadStream();
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+
+        var imageUpload = Convert.ToBase64String(memoryStream.ToArray());
+        fileImage = $"data:{format};base64,{imageUpload}";
+        profilePhoto = imageUpload;
+    }
 }
