@@ -9,14 +9,11 @@
 
     <MudText Class="mt-8" Typo="Typo.h4">Cadastro de Música</MudText>
 
-    @if (listErrorMessage is not null && listErrorMessage.Any())
+    @if (!string.IsNullOrEmpty(errorMessage))
     {
-        @foreach (var errorMessage in listErrorMessage)
-        {
-            <MudAlert Severity="Severity.Error">
-                @errorMessage
-            </MudAlert>
-        }
+        <MudAlert Severity="Severity.Error">
+            @errorMessage
+        </MudAlert>
     }
 
     <MudForm>
@@ -57,7 +54,7 @@
     private int releaseYear;
     private string? youtubeLink;
     private string? name;
-    private List<string>? listErrorMessage;
+    private string? errorMessage;
 
     private ICollection<OutputArtist>? ListOutputArtist;
     private ICollection<OutputMusicGenre>? ListOutputMusicGenre;
@@ -73,12 +70,12 @@
         if (responseListArtist.Success)
             ListOutputArtist = responseListArtist.Data;
         else
-            listErrorMessage?.Add(responseListArtist.ErrorMessage ?? "Erro ao carregar combo de artistas.");
+            errorMessage = responseListArtist.ErrorMessage ?? "Erro ao carregar combo de artistas.";
 
         if (responseListMusicGenre.Success)
             ListOutputMusicGenre = responseListMusicGenre.Data;
         else
-            listErrorMessage?.Add(responseListMusicGenre.ErrorMessage ?? "Erro ao carregar combo de gêneros musicais.");
+            errorMessage = responseListMusicGenre.ErrorMessage ?? "Erro ao carregar combo de gêneros musicais.";
 
     }
 
@@ -92,7 +89,7 @@
             if (response.Success)
                 navigationManager.NavigateTo("/Music");
             else
-                listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao criar música.");
+                errorMessage = response.ErrorMessage ?? "Erro ao criar música.";
         }
     }
 

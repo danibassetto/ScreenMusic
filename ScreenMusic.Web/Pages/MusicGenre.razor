@@ -53,12 +53,11 @@ else
             errorMessage = response.ErrorMessage ?? "Erro ao listar gêneros musicais.";
     }
 
-    // rever
     private async Task Delete(long id)
     {
         var response = await musicGenreServiceClient.Delete(id);
         if (response.Success)
-            navigationManager.NavigateTo("/MusicGenre");
+            navigationManager.NavigateTo("/MusicGenre", true);
         else
             errorMessage = response.ErrorMessage ?? "Erro ao listar gêneros musicais.";
     }

@@ -9,14 +9,11 @@
 
         <MudText Class="mt-8" Typo="Typo.h4">Edição de Gênero Musical</MudText>
 
-        @if (listErrorMessage is not null && listErrorMessage.Any())
+        @if (!string.IsNullOrEmpty(errorMessage))
         {
-            @foreach (var errorMessage in listErrorMessage)
-            {
-                <MudAlert Severity="Severity.Error">
-                    @errorMessage
-                </MudAlert>
-            }
+            <MudAlert Severity="Severity.Error">
+                @errorMessage
+            </MudAlert>
         }
 
         <MudForm>
@@ -43,7 +40,7 @@ else
 @code {
     private string? name;
     private string? description;
-    private List<string>? listErrorMessage;
+    private string? errorMessage;
     public OutputMusicGenre? OutputMusicGenre { get; set; }
 
     [Parameter]
@@ -59,7 +56,7 @@ else
             description = OutputMusicGenre!.Description;
         }
         else
-            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao carregar gênero musical.");
+            errorMessage = response.ErrorMessage ?? "Erro ao carregar gênero musical.";
     }
 
     private async Task Delete()
@@ -68,7 +65,7 @@ else
         if (response.Success)
             navigationManager.NavigateTo("/MusicGenre");
         else
-            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao excluir gênero musical.");
+            errorMessage = response.ErrorMessage ?? "Erro ao excluir gênero musical.";
 
     }
 
@@ -79,7 +76,7 @@ else
         if (response.Success)
             navigationManager.NavigateTo("/MusicGenre");
         else
-            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao atualizar gênero musical.");
+            errorMessage = response.ErrorMessage ?? "Erro ao atualizar gênero musical.";
     }
 
     private void Return()

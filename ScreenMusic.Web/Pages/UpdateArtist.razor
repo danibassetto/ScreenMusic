@@ -9,14 +9,11 @@
 
         <MudText Class="mt-8" Typo="Typo.h4">Edição de Artista</MudText>
 
-        @if (listErrorMessage is not null && listErrorMessage.Any())
+        @if (!string.IsNullOrEmpty(errorMessage))
         {
-            @foreach (var errorMessage in listErrorMessage)
-            {
-                <MudAlert Severity="Severity.Error">
-                    @errorMessage
-                </MudAlert>
-            }
+            <MudAlert Severity="Severity.Error">
+                @errorMessage
+            </MudAlert>
         }
 
         <MudForm>
@@ -58,7 +55,7 @@ else
     private int rating;
     private string? profilePhoto;
     private string? fileImage;
-    private List<string>? listErrorMessage;
+    private string? errorMessage;
     public OutputArtist? OutputArtist { get; set; }
     public OutputArtistReview? OutputArtistReview { get; set; }
 
@@ -83,10 +80,10 @@ else
                 rating = OutputArtistReview!.Rating ?? 0;
             }
             else
-                listErrorMessage?.Add(responseArtistReview.ErrorMessage ?? "Erro ao carregar avaliação de artista");
+                errorMessage = responseArtistReview.ErrorMessage ?? "Erro ao carregar avaliação de artista";
         }
         else
-            listErrorMessage?.Add(responseArtist.ErrorMessage ?? "Erro ao carregar artista");        
+            errorMessage = responseArtist.ErrorMessage ?? "Erro ao carregar artista";        
     }
 
     private async Task Delete()
@@ -95,7 +92,7 @@ else
         if (response.Success)
             navigationManager.NavigateTo("/Artist");
         else
-            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao excluir artista");
+            errorMessage = response.ErrorMessage ?? "Erro ao excluir artista";
     }
 
     private async Task Update()
@@ -105,7 +102,7 @@ else
         if (response.Success)
             navigationManager.NavigateTo("/Artist");
         else
-            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao atualizar artista");
+            errorMessage = response.ErrorMessage ?? "Erro ao atualizar artista";
     }
 
     private async Task Review()

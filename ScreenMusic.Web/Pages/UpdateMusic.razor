@@ -9,14 +9,11 @@
 
     <MudText Class="mt-8" Typo="Typo.h4">Edição de Música</MudText>
 
-    @if (listErrorMessage is not null && listErrorMessage.Any())
+    @if (!string.IsNullOrEmpty(errorMessage))
     {
-        @foreach (var errorMessage in listErrorMessage)
-        {
-            <MudAlert Severity="Severity.Error">
-                @errorMessage
-            </MudAlert>
-        }
+        <MudAlert Severity="Severity.Error">
+            @errorMessage
+        </MudAlert>
     }
 
     <MudForm>
@@ -63,7 +60,7 @@
     private int releaseYear;
     private string? youtubeLink;
     private string? name;
-    private List<string>? listErrorMessage;
+    private string? errorMessage;
     private OutputMusicGenre? OutputMusicGenre { get; set; }
     private OutputArtist? OutputArtist { get; set; }
     public OutputMusic? OutputMusic { get; set; }
@@ -87,29 +84,29 @@
             if (responseArtist.Success)
                 OutputArtist = responseArtist.Data;
             else
-                listErrorMessage?.Add(responseArtist.ErrorMessage ?? "Erro ao carregar artista.");
+                errorMessage = responseArtist.ErrorMessage ?? "Erro ao carregar artista.";
 
             var responseMusicGenre = await musicGenreServiceClient.GetById(OutputMusic.MusicGenreId);
             if (responseMusicGenre.Success)
                 OutputMusicGenre = responseMusicGenre.Data;
             else
-                listErrorMessage?.Add(responseMusicGenre.ErrorMessage ?? "Erro ao carregar gênero musical.");
+                errorMessage = responseMusicGenre.ErrorMessage ?? "Erro ao carregar gênero musical.";
 
             var responseListArtist = await artistServiceClient.GetAll();
             if (responseListArtist.Success)
                 ListOutputArtist = responseListArtist.Data;
             else
-                listErrorMessage?.Add(responseListArtist.ErrorMessage ?? "Erro ao carregar combo de artistas.");
+                errorMessage = responseListArtist.ErrorMessage ?? "Erro ao carregar combo de artistas.";
 
             var responseListMusicGenre = await musicGenreServiceClient.GetAll();
             if (responseListMusicGenre.Success)
                 ListOutputMusicGenre = responseListMusicGenre.Data;
             else
-                listErrorMessage?.Add(responseListMusicGenre.ErrorMessage ?? "Erro ao carregar combo de gêneros musicais.");
+                errorMessage = responseListMusicGenre.ErrorMessage ?? "Erro ao carregar combo de gêneros musicais.";
 
         }
         else
-            listErrorMessage?.Add(responseMusic.ErrorMessage ?? "Erro ao carregar música.");
+            errorMessage = responseMusic.ErrorMessage ?? "Erro ao carregar música.";
     }
 
     private async Task Update()
@@ -121,7 +118,7 @@
             if (response.Success)
                 navigationManager.NavigateTo("/Music");
             else
-                listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao atualizar música");
+                errorMessage = response.ErrorMessage ?? "Erro ao atualizar música";
         }
     }
 
@@ -131,7 +128,7 @@
         if (response.Success)
             navigationManager.NavigateTo("/Music");
         else
-            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao excluir música");
+            errorMessage = response.ErrorMessage ?? "Erro ao excluir música";
     }
 
     private void Return()
