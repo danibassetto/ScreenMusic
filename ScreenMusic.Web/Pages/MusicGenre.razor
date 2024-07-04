@@ -21,7 +21,7 @@
 }
 else
 {
-    <MudTable Items="ListOutputMusicGenre" Striped="true" FixedHeader="true" Height="300px">
+    <MudTable Items="ListOutputMusicGenre" Striped="true" FixedHeader="true" Height="550px">
         <HeaderContent>
             <MudTh>Nome</MudTh>
             <MudTh>Descrição</MudTh>
@@ -48,7 +48,7 @@ else
         var response = await musicGenreServiceClient.GetAll();
 
         if (response.Success)
-            ListOutputMusicGenre = response.Data;
+            ListOutputMusicGenre = response.Data?.OrderBy(x => x.Name).ToList();
         else
             errorMessage = response.ErrorMessage ?? "Erro ao listar gêneros musicais.";
     }
@@ -57,7 +57,10 @@ else
     {
         var response = await musicGenreServiceClient.Delete(id);
         if (response.Success)
-            navigationManager.NavigateTo("/MusicGenre", true);
+        {
+            navigationManager.NavigateTo("/MusicGenre");
+            ListOutputMusicGenre?.Remove(ListOutputMusicGenre.Select(x => x).Where(x => x.Id == id).FirstOrDefault()!);
+        }
         else
             errorMessage = response.ErrorMessage ?? "Erro ao listar gêneros musicais.";
     }
