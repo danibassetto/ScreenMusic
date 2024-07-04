@@ -1,38 +1,17 @@
-﻿using Newtonsoft.Json;
-using ScreenMusic.Arguments;
-using System.Net.Http.Json;
+﻿using ScreenMusic.Arguments;
+using ScreenMusic.Web.Services.Base;
 
 namespace ScreenMusic.Web.Services;
 
-public class ArtistServiceClient(IHttpClientFactory factory) : BaseServiceClient<InputCreateArtist, InputUpdateArtist, OutputArtist, InputIdentifierArtist>(factory) 
+public class ArtistServiceClient(IHttpClientFactory factory) : BaseServiceClient<InputCreateArtist, InputUpdateArtist, OutputArtist, InputIdentifierArtist>(factory)
 {
-    public async Task<bool> Review(long id, InputReviewArtist inputReviewArtist)
+    public async Task<BaseServiceClientResponse<bool>> Review(long id, InputReviewArtist inputReviewArtist)
     {
-        try
-        {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"api/{NameService}/Review/{id}", inputReviewArtist);
-            response.EnsureSuccessStatusCode();
-            return true;
-        }
-        catch (HttpRequestException)
-        {
-            return false;
-        }
+        return await HandleRequestAsync<bool>(HttpMethod.Post, $"{_nameService}/Review/{id}", inputReviewArtist);
     }
 
-    public async Task<OutputArtistReview?> GetReview(long id)
+    public async Task<BaseServiceClientResponse<OutputArtistReview>> GetReview(long id)
     {
-        HttpResponseMessage response = await _httpClient.GetAsync($"api/{NameService}/GetReview/{id}");
-
-        if (response.IsSuccessStatusCode)
-        {
-            string content = await response.Content.ReadAsStringAsync();
-
-            OutputArtistReview? outputArtistReview = JsonConvert.DeserializeObject<BaseResponseApi<OutputArtistReview>>(content)!.Result;
-
-            return outputArtistReview;
-        }
-        else
-            return default;
+        return await HandleRequestAsync<OutputArtistReview>(HttpMethod.Get, $"{_nameService}/GetReview/{id}", null);
     }
 }

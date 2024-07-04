@@ -6,7 +6,7 @@ using ScreenMusic.Domain.Interfaces.Service;
 namespace ScreenMusic.Api.Controllers;
 
 [Route("api/[controller]")]
-public class ArtistController(IApiDataService apiDataService, IArtistService service) : BaseController<IArtistService, InputCreateArtist, InputUpdateArtist, OutputArtist, InputIdentifierArtist>(apiDataService, service) 
+public class ArtistController(IApiDataService apiDataService, IArtistService service) : BaseController<IArtistService, InputCreateArtist, InputUpdateArtist, OutputArtist, InputIdentifierArtist>(apiDataService, service)
 {
     [HttpPost("Review/{id}")]
     public virtual async Task<ActionResult<BaseResponseApi<bool>>> Review(long id, InputReviewArtist inputReviewArtist)

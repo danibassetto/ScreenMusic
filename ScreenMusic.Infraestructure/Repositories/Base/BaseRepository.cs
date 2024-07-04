@@ -67,7 +67,7 @@ public class BaseRepository<TEntity, TInputIdentifier>(ScreenMusicContext contex
     #region Update
     public long? Update(TEntity entity)
     {
-        _context.Update(entity.SetUpdateData());     
+        _context.Update(entity.SetUpdateData());
         _context.SaveChanges();
         return entity.Id;
     }

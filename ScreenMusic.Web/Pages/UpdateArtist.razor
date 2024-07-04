@@ -9,8 +9,17 @@
 
         <MudText Class="mt-8" Typo="Typo.h4">Edição de Artista</MudText>
 
-        <MudForm>
+        @if (listErrorMessage is not null && listErrorMessage.Any())
+        {
+            @foreach (var errorMessage in listErrorMessage)
+            {
+                <MudAlert Severity="Severity.Error">
+                    @errorMessage
+                </MudAlert>
+            }
+        }
 
+        <MudForm>
             <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista" ReadOnly="true" Variant="Variant.Outlined" @bind-Value="name" Required="true" RequiredError="Campo obrigatório." />
 
             <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista" Variant="Variant.Outlined" @bind-Value="biography" Lines="4" Required="true" RequiredError="Campo obrigatório." />
@@ -49,33 +58,54 @@ else
     private int rating;
     private string? profilePhoto;
     private string? fileImage;
+    private List<string>? listErrorMessage;
     public OutputArtist? OutputArtist { get; set; }
-    public OutputArtistReview? ArtistReview { get; set; }
+    public OutputArtistReview? OutputArtistReview { get; set; }
 
     [Parameter]
     public string? Name { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        OutputArtist = await artistServiceClient.GetByIdentifier(new InputIdentifierArtist(Name!));
-        ArtistReview = await artistServiceClient.GetReview(OutputArtist!.Id);
-        name = OutputArtist!.Name;
-        biography = OutputArtist!.Biography;
-        rating = ArtistReview!.Rating ?? 0;
-        fileImage = $"https://localhost:7089{OutputArtist.ProfilePhoto}";
+        var responseArtist = await artistServiceClient.GetByIdentifier(new InputIdentifierArtist(Name!));
+
+        if (responseArtist.Success)
+        {
+            OutputArtist = responseArtist.Data;
+            name = OutputArtist!.Name;
+            biography = OutputArtist!.Biography;
+            fileImage = $"https://localhost:7089{OutputArtist.ProfilePhoto}";
+
+            var responseArtistReview = await artistServiceClient.GetReview(OutputArtist!.Id);
+            if (responseArtistReview.Success)
+            {
+                OutputArtistReview = responseArtistReview.Data;
+                rating = OutputArtistReview!.Rating ?? 0;
+            }
+            else
+                listErrorMessage?.Add(responseArtistReview.ErrorMessage ?? "Erro ao carregar avaliação de artista");
+        }
+        else
+            listErrorMessage?.Add(responseArtist.ErrorMessage ?? "Erro ao carregar artista");        
     }
 
     private async Task Delete()
     {
-        await artistServiceClient.Delete(OutputArtist!.Id);
-        navigationManager.NavigateTo("/Artist");
+        var response = await artistServiceClient.Delete(OutputArtist!.Id);
+        if (response.Success)
+            navigationManager.NavigateTo("/Artist");
+        else
+            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao excluir artista");
     }
 
     private async Task Update()
     {
         var inputUpdateArtist = new InputUpdateArtist(profilePhoto, biography!);
-        await artistServiceClient.Update(OutputArtist!.Id, inputUpdateArtist);
-        navigationManager.NavigateTo("/Artist");
+        var response = await artistServiceClient.Update(OutputArtist!.Id, inputUpdateArtist);
+        if (response.Success)
+            navigationManager.NavigateTo("/Artist");
+        else
+            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao atualizar artista");
     }
 
     private async Task Review()

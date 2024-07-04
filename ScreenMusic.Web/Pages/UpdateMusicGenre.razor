@@ -3,14 +3,23 @@
 @inject MusicGenreServiceClient musicGenreServiceClient
 @inject NavigationManager navigationManager
 
-@if (MusicGenre is not null)
+@if (OutputMusicGenre is not null)
 {
     <MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
 
         <MudText Class="mt-8" Typo="Typo.h4">Edição de Gênero Musical</MudText>
 
-        <MudForm>
+        @if (listErrorMessage is not null && listErrorMessage.Any())
+        {
+            @foreach (var errorMessage in listErrorMessage)
+            {
+                <MudAlert Severity="Severity.Error">
+                    @errorMessage
+                </MudAlert>
+            }
+        }
 
+        <MudForm>
             <MudTextField Class="mt-4" T="string" Placeholder="Nome do Gênero Musical" ReadOnly="true" Variant="Variant.Outlined" @bind-Value="name" Required="true" RequiredError="Campo obrigatório." />
 
             <MudTextField Class="mt-4" T="string" Placeholder="Descrição do Gênero Musical" Variant="Variant.Outlined" @bind-Value="description" Lines="4" Required="true" RequiredError="Campo obrigatório." />
@@ -34,29 +43,43 @@ else
 @code {
     private string? name;
     private string? description;
-    public OutputMusicGenre? MusicGenre { get; set; }
+    private List<string>? listErrorMessage;
+    public OutputMusicGenre? OutputMusicGenre { get; set; }
 
     [Parameter]
     public string? Name { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        MusicGenre = await musicGenreServiceClient.GetByIdentifier(new InputIdentifierMusicGenre(Name!));
-        name = MusicGenre!.Name;
-        description = MusicGenre!.Description;
+        var response = await musicGenreServiceClient.GetByIdentifier(new InputIdentifierMusicGenre(Name!));
+        if (response.Success)
+        {
+            OutputMusicGenre = response.Data;
+            name = OutputMusicGenre!.Name;
+            description = OutputMusicGenre!.Description;
+        }
+        else
+            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao carregar gênero musical.");
     }
 
     private async Task Delete()
     {
-        await musicGenreServiceClient.Delete(MusicGenre!.Id);
-        navigationManager.NavigateTo("/MusicGenre");
+        var response = await musicGenreServiceClient.Delete(OutputMusicGenre!.Id);
+        if (response.Success)
+            navigationManager.NavigateTo("/MusicGenre");
+        else
+            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao excluir gênero musical.");
+
     }
 
     private async Task Update()
     {
-        var inputUpdateMusicGenre = new InputUpdateMusicGenre(MusicGenre?.Description!);
-        await musicGenreServiceClient.Update(MusicGenre!.Id, inputUpdateMusicGenre);
-        navigationManager.NavigateTo("/MusicGenre");
+        var inputUpdateMusicGenre = new InputUpdateMusicGenre(description!);
+        var response = await musicGenreServiceClient.Update(OutputMusicGenre!.Id, inputUpdateMusicGenre);
+        if (response.Success)
+            navigationManager.NavigateTo("/MusicGenre");
+        else
+            listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao atualizar gênero musical.");
     }
 
     private void Return()

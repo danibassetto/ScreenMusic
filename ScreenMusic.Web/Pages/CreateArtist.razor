@@ -7,8 +7,14 @@
 
     <MudText Class="mt-8" Typo="Typo.h4">Cadastro do Artista</MudText>
 
-    <MudForm>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <MudAlert Severity="Severity.Error">
+            @errorMessage
+        </MudAlert>
+    }
 
+    <MudForm>
         <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista" Variant="Variant.Outlined" @bind-Value="name" Required="true" RequiredError="Campo obrigatório." />
 
         <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista" Variant="Variant.Outlined" @bind-Value="biography" Lines="4" Required="true" RequiredError="Campo obrigatório." />
@@ -20,18 +26,12 @@
             </ButtonTemplate>
         </MudFileUpload>
 
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <MudAlert Severity="Severity.Error" Class="mt-4">@errorMessage</MudAlert>
-        }
-
         <div class="d-flex justify-space-between align-center mt-4">
             <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Return">Voltar</MudButton>
             <div>
                 <MudButton Variant="Variant.Filled" @onclick="Create" Color="Color.Primary" Class="ml-auto">Cadastrar</MudButton>
             </div>
         </div>
-
     </MudForm>
 </MudPaper>
 
@@ -44,15 +44,13 @@
 
     private async Task Create()
     {
-        errorMessage = null; // Reset error message
+        var inputCreateArtist = new InputCreateArtist(name!, profilePhoto!, biography!);
+        var response = await artistServiceClient.Create(inputCreateArtist);
 
-        var request = new InputCreateArtist(name!, profilePhoto!, biography!);
-        bool success = await artistServiceClient.Create(request);
-
-        if (success)
+        if (response.Success)
             navigationManager.NavigateTo("/Artist");
         else
-            errorMessage = "Erro ao criar artista. Verifique se o artista já existe.";
+            errorMessage = response.ErrorMessage ?? "Erro ao criar artista.";
     }
 
     private async Task UploadFile(IBrowserFile file)

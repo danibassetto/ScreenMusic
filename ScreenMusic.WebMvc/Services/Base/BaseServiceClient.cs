@@ -16,8 +16,7 @@ public class BaseServiceClient<TInputCreate, TInputUpdate, TOutput, TIdentifier>
 
     public async Task<BaseServiceClientResponse<TOutput>> GetById(long id)
     {
-        return await HandleRequestAsync<TOutput>(HttpMethod.Get, $"{_nameService}/{id}", null
-        );
+        return await HandleRequestAsync<TOutput>(HttpMethod.Get, $"{_nameService}/{id}", null);
     }
 
     public async Task<BaseServiceClientResponse<bool>> Create(TInputCreate inputCreate)

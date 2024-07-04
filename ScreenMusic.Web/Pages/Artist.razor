@@ -7,10 +7,17 @@
     <MudPagination Count="@totalPage" SelectedChanged="PageChange"></MudPagination>
 </MudStack>
 
-@if (ListArtistByPage is not null)
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <MudAlert Severity="Severity.Error">
+        @errorMessage
+    </MudAlert>
+}
+
+@if (ListOutputArtistByPage is not null)
 {
     <MudGrid>
-        @foreach (var artist in ListArtistByPage)
+        @foreach (var artist in ListOutputArtistByPage)
         {
             <MudItem xs="3">
                 <CardArtist Artist="artist" />
@@ -23,24 +30,33 @@
     private int tamanho = 8;
     private int totalItem;
     private int totalPage;
-    private ICollection<OutputArtist>? ListArtist;
-    private ICollection<OutputArtist>? ListArtistByPage;
+    private string? errorMessage;
+    private ICollection<OutputArtist>? ListOutputArtist;
+    private ICollection<OutputArtist>? ListOutputArtistByPage;
 
     protected override async Task OnInitializedAsync()
     {
-        ListArtist = await artistServiceClient.GetAll();
-        if (ListArtist is not null)
+        var response = await artistServiceClient.GetAll();
+
+        if (response.Success)
         {
-            ListArtist = ListArtist.OrderByDescending(a => a.Id).ToList();
-            totalItem = ListArtist.Count();
-            totalPage = Convert.ToInt32(Math.Ceiling((totalItem * 1.0) / tamanho));
-            this.PageChange(1);
+            ListOutputArtist = response.Data;
+
+            if (ListOutputArtist is not null)
+            {
+                ListOutputArtist = ListOutputArtist.OrderByDescending(a => a.Id).ToList();
+                totalItem = ListOutputArtist.Count();
+                totalPage = Convert.ToInt32(Math.Ceiling((totalItem * 1.0) / tamanho));
+                this.PageChange(1);
+            }
         }
+        else
+            errorMessage = response.ErrorMessage ?? "Erro ao listar artistas.";
     }
 
     private void PageChange(int pageNumber)
     {
         var indice = pageNumber - 1;
-        ListArtistByPage = ListArtist!.Skip(tamanho * indice).Take(tamanho).ToList();
+        ListOutputArtistByPage = ListOutputArtist!.Skip(tamanho * indice).Take(tamanho).ToList();
     }
 }

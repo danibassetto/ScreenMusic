@@ -21,8 +21,8 @@ public class AuthenticationServiceClient(IHttpClientFactory factory) : Authentic
             var info = await response.Content.ReadFromJsonAsync<OutputLoggedUser>();
             Claim[] dados =
             [
-                new Claim(ClaimTypes.Name, info.Email),
-                new Claim(ClaimTypes.Email, info.Email)
+                new Claim(ClaimTypes.Name, info?.Email!),
+                new Claim(ClaimTypes.Email, info?.Email!)
             ];
 
             var identity = new ClaimsIdentity(dados, "Cookies");

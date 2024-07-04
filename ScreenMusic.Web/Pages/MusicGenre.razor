@@ -5,16 +5,23 @@
 
 <MudStack Class="mt-4 mb-4" Row="true" Justify="Justify.SpaceBetween">
     <MudText Class="mb-4" Typo="Typo.h4">Gêneros Musicais cadastrados</MudText>
-    <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Dark" Href=@($"/CreateMusicGenre")/>
+    <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Dark" Href=@($"/CreateMusicGenre") />
 </MudStack>
 
-@if (ListMusicGenre == null || ListMusicGenre.Count == 0)
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <MudAlert Severity="Severity.Error">
+        @errorMessage
+    </MudAlert>
+}
+
+@if (ListOutputMusicGenre == null || ListOutputMusicGenre.Count == 0)
 {
     <MudProgressCircular Color="Color.Primary" Size="Size.Large" />
 }
 else
 {
-    <MudTable Items="ListMusicGenre" Striped="true" FixedHeader="true" Height="300px">
+    <MudTable Items="ListOutputMusicGenre" Striped="true" FixedHeader="true" Height="300px">
         <HeaderContent>
             <MudTh>Nome</MudTh>
             <MudTh>Descrição</MudTh>
@@ -33,16 +40,26 @@ else
 
 
 @code {
-    private ICollection<OutputMusicGenre>? ListMusicGenre;
+    private ICollection<OutputMusicGenre>? ListOutputMusicGenre;
+    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        ListMusicGenre = await musicGenreServiceClient.GetAll();
+        var response = await musicGenreServiceClient.GetAll();
+
+        if (response.Success)
+            ListOutputMusicGenre = response.Data;
+        else
+            errorMessage = response.ErrorMessage ?? "Erro ao listar gêneros musicais.";
     }
 
+    // rever
     private async Task Delete(long id)
     {
-        await musicGenreServiceClient.Delete(id);
-        navigationManager.Refresh();
+        var response = await musicGenreServiceClient.Delete(id);
+        if (response.Success)
+            navigationManager.NavigateTo("/MusicGenre");
+        else
+            errorMessage = response.ErrorMessage ?? "Erro ao listar gêneros musicais.";
     }
 }

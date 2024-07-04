@@ -1,6 +1,4 @@
-﻿using ScreenMusic.Arguments;
-
-namespace ScreenMusic.Domain.Interfaces.Service;
+﻿namespace ScreenMusic.Domain.Interfaces.Service;
 
 public interface IBaseService<TInputCreate, TInputUpdate, TOutput, TInputIdentifier>
 {

@@ -7,10 +7,17 @@
     <MudPagination Count="@totalPage" SelectedChanged="PageChange"></MudPagination>
 </MudStack>
 
-@if (ListMusicByPage is not null)
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <MudAlert Severity="Severity.Error">
+        @errorMessage
+    </MudAlert>
+}
+
+@if (ListOutputMusicByPage is not null)
 {
     <MudGrid>
-        @foreach (var musica in ListMusicByPage)
+        @foreach (var musica in ListOutputMusicByPage)
         {
             <MudItem xs="3">
                 <CardMusic Music=musica />
@@ -19,29 +26,37 @@
     </MudGrid>
 }
 
-
 @code {
     private int tamanho = 8;
     private int totalItem;
     private int totalPage;
-    private ICollection<OutputMusic>? ListMusic;
-    private ICollection<OutputMusic>? ListMusicByPage;
+    private string? errorMessage;
+    private ICollection<OutputMusic>? ListOutputMusic;
+    private ICollection<OutputMusic>? ListOutputMusicByPage;
 
     protected override async Task OnInitializedAsync()
     {
-        ListMusic = await musicServiceClient.GetAll();
-        if (ListMusic is not null)
+        var response = await musicServiceClient.GetAll();
+
+        if (response.Success)
         {
-            ListMusic = ListMusic.OrderByDescending(a => a.Id).ToList();
-            totalItem = ListMusic.Count();
-            totalPage = Convert.ToInt32(Math.Ceiling((totalItem * 1.0) / tamanho));
-            this.PageChange(1);
+            ListOutputMusic = response.Data;
+
+            if (ListOutputMusic is not null)
+            {
+                ListOutputMusic = ListOutputMusic.OrderByDescending(a => a.Id).ToList();
+                totalItem = ListOutputMusic.Count();
+                totalPage = Convert.ToInt32(Math.Ceiling((totalItem * 1.0) / tamanho));
+                this.PageChange(1);
+            }
         }
+        else
+            errorMessage = response.ErrorMessage ?? "Erro ao carregar músicas.";        
     }
 
     private void PageChange(int pageNumber)
     {
         var indice = pageNumber - 1;
-        ListMusicByPage = ListMusic!.Skip(tamanho * indice).Take(tamanho).ToList();
+        ListOutputMusicByPage = ListOutputMusic!.Skip(tamanho * indice).Take(tamanho).ToList();
     }
 }

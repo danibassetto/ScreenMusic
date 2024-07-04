@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ScreenMusic.Domain.Entities;
+﻿namespace ScreenMusic.Domain.Entities;
 
 public class ArtistReview : BaseEntity<ArtistReview>
 {

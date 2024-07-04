@@ -9,15 +9,24 @@
 
     <MudText Class="mt-8" Typo="Typo.h4">Cadastro de Música</MudText>
 
-    <MudForm>
+    @if (listErrorMessage is not null && listErrorMessage.Any())
+    {
+        @foreach (var errorMessage in listErrorMessage)
+        {
+            <MudAlert Severity="Severity.Error">
+                @errorMessage
+            </MudAlert>
+        }
+    }
 
+    <MudForm>
         <MudTextField Class="mt-4" T="string" Placeholder="Nome da música/canção" @bind-Value="name" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
         <MudTextField Class="mt-4" T="string" Placeholder="Link do Youtube" @bind-Value="youtubeLink" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
 
         <div class="d-flex justify-content-between align-items-center mt-4">
-            <MudSelect Class="mr-2" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="Artist">
-                @if (ListArtist is not null)
-                    @foreach (var artist in ListArtist)
+            <MudSelect Class="mr-2" T="OutputArtist" Label="Artistas" Variant="Variant.Outlined" @bind-Value="OutputArtist">
+                @if (ListOutputArtist is not null)
+                    @foreach (var artist in ListOutputArtist)
                     {
                         <MudSelectItem Value="artist">@artist.Name</MudSelectItem>
                     }
@@ -25,9 +34,9 @@
 
             <MudNumericField Class="mr-2" T="int" Placeholder="Ano de lançamento" @bind-Value="releaseYear" Variant="Variant.Outlined" Required="true" RequiredError="Campo obrigatório." />
 
-            <MudSelect Class="ml-2" T="OutputMusicGenre" Label="Gêneros" Variant="Variant.Outlined" @bind-Value="MusicGenre">
-                @if (ListMusicGenre is not null)
-                    @foreach (var musicGenre in ListMusicGenre)
+            <MudSelect Class="ml-2" T="OutputMusicGenre" Label="Gêneros" Variant="Variant.Outlined" @bind-Value="OutputMusicGenre">
+                @if (ListOutputMusicGenre is not null)
+                    @foreach (var musicGenre in ListOutputMusicGenre)
                     {
                         <MudSelectItem Value="musicGenre">@musicGenre.Name</MudSelectItem>
                     }
@@ -40,7 +49,6 @@
                 <MudButton Variant="Variant.Filled" @onclick="Create" Color="Color.Primary" Class="ml-auto">Cadastrar</MudButton>
             </div>
         </div>
-
     </MudForm>
 
 </MudPaper>
@@ -49,26 +57,42 @@
     private int releaseYear;
     private string? youtubeLink;
     private string? name;
+    private List<string>? listErrorMessage;
 
-    private ICollection<OutputArtist>? ListArtist;
-    private ICollection<OutputMusicGenre>? ListMusicGenre;
+    private ICollection<OutputArtist>? ListOutputArtist;
+    private ICollection<OutputMusicGenre>? ListOutputMusicGenre;
 
-    private OutputArtist? Artist { get; set; }
-    private OutputMusicGenre? MusicGenre { get; set; }
+    private OutputArtist? OutputArtist { get; set; }
+    private OutputMusicGenre? OutputMusicGenre { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ListArtist = await artistServiceClient.GetAll();
-        ListMusicGenre = await musicGenreServiceClient.GetAll();
+        var responseListArtist = await artistServiceClient.GetAll();
+        var responseListMusicGenre = await musicGenreServiceClient.GetAll();
+
+        if (responseListArtist.Success)
+            ListOutputArtist = responseListArtist.Data;
+        else
+            listErrorMessage?.Add(responseListArtist.ErrorMessage ?? "Erro ao carregar combo de artistas.");
+
+        if (responseListMusicGenre.Success)
+            ListOutputMusicGenre = responseListMusicGenre.Data;
+        else
+            listErrorMessage?.Add(responseListMusicGenre.ErrorMessage ?? "Erro ao carregar combo de gêneros musicais.");
+
     }
 
     public async Task Create()
     {
-        if (Artist != null && MusicGenre != null)
+        if (OutputArtist != null && OutputMusicGenre != null)
         {
-            var musicaRequest = new InputCreateMusic(name!, releaseYear, Artist.Id, MusicGenre.Id, youtubeLink!);
-            await musicServiceClient.Create(musicaRequest);
-            navigationManager.NavigateTo("/Music");
+            var inputCreateMusic = new InputCreateMusic(name!, releaseYear, OutputArtist.Id, OutputMusicGenre.Id, youtubeLink!);
+            var response = await musicServiceClient.Create(inputCreateMusic);
+
+            if (response.Success)
+                navigationManager.NavigateTo("/Music");
+            else
+                listErrorMessage?.Add(response.ErrorMessage ?? "Erro ao criar música.");
         }
     }
 
