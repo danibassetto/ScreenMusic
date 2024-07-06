@@ -25,9 +25,8 @@ namespace ScreenMusic.WebMvc.Services
                 {
                     var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, info.Email),
-                        new Claim(ClaimTypes.Email, info.Email)
-                        // Adicione outras claims conforme necessário
+                        new(ClaimTypes.Name, info.Email),
+                        new(ClaimTypes.Email, info.Email)
                     };
 
                     identity = new ClaimsIdentity(claims, "Cookies");
