@@ -1,19 +1,26 @@
-using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using ScreenMusic.WebMvc.DelegatingHandlers;
 using ScreenMusic.WebMvc.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddControllersWithViews();
 builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationServiceClient>();
-builder.Services.AddScoped<AuthenticationServiceClient>(sp => (AuthenticationServiceClient)sp.GetRequiredService<AuthenticationStateProvider>());
 
 builder.Services.AddScoped<CookieHandler>();
+builder.Services.AddSingleton<AuthenticationServiceClient>();
 builder.Services.AddTransient<ArtistServiceClient>();
 builder.Services.AddTransient<MusicServiceClient>();
 builder.Services.AddTransient<MusicGenreServiceClient>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Authentication/Login";
+        options.LogoutPath = "/Authentication/Logout";
+    });
 
 builder.Services.AddHttpClient("API", client =>
 {
@@ -30,9 +37,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -1,75 +1,65 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
-using System.Security.Claims;
-using System.Net.Http.Json;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using ScreenMusic.Arguments;
+using System.Security.Claims;
 
-namespace ScreenMusic.WebMvc.Services
+namespace ScreenMusic.WebMvc.Services;
+
+public class AuthenticationServiceClient(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor)
 {
-    public class AuthenticationServiceClient(IHttpClientFactory factory) : AuthenticationStateProvider
+    private readonly HttpClient _httpClient = factory.CreateClient("API");
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+
+    public async Task<OutputAuthentication> Register(string email, string senha)
     {
-        private readonly HttpClient _httpClient = factory.CreateClient("API");
-        private bool _authenticated = false;
-
-        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        var response = await _httpClient.PostAsJsonAsync("auth/register", new
         {
-            var identity = new ClaimsIdentity();
-            var user = new ClaimsPrincipal(identity);
+            email,
+            password = senha
+        });
 
-            var response = await _httpClient.GetAsync("auth/manage/info");
+        if (response.IsSuccessStatusCode)
+            return new OutputAuthentication { IsSuccess = true };
 
-            if (response.IsSuccessStatusCode)
+        return new OutputAuthentication { IsSuccess = false, Error = "Email/senha inválidos" };
+    }
+
+    public async Task<OutputAuthentication> Login(string email, string senha)
+    {
+        var response = await _httpClient.PostAsJsonAsync("auth/login?useCookies=true", new
+        {
+            email,
+            password = senha
+        });
+
+        if (response.IsSuccessStatusCode)
+        {
+            var claims = new List<Claim>
             {
-                var info = await response.Content.ReadFromJsonAsync<OutputLoggedUser>();
+                 new(ClaimTypes.Name, email),
+                 new(ClaimTypes.Email, email)
+            };
 
-                if (info != null && !string.IsNullOrEmpty(info.Email))
-                {
-                    var claims = new List<Claim>
-                    {
-                        new(ClaimTypes.Name, info.Email),
-                        new(ClaimTypes.Email, info.Email)
-                    };
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    identity = new ClaimsIdentity(claims, "Cookies");
-                    user = new ClaimsPrincipal(identity);
-                    _authenticated = true;
-                }
-                else
-                    _authenticated = false;
-            }
-            else
-                _authenticated = false;
+            await _httpContextAccessor.HttpContext!.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                new AuthenticationProperties { IsPersistent = true });
 
-            return new AuthenticationState(user);
+            return new OutputAuthentication { IsSuccess = true };
         }
 
-        public async Task<OutputAuthentication> LoginAsync(string email, string senha)
-        {
-            var response = await _httpClient.PostAsJsonAsync("auth/login?useCookies=true", new
-            {
-                email,
-                password = senha
-            });
+        return new OutputAuthentication { IsSuccess = false, Error = "Login/senha inválidos" };
+    }
 
-            if (response.IsSuccessStatusCode)
-            {
-                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-                _authenticated = true;
-                return new OutputAuthentication { IsSuccess = true };
-            }
+    public async Task Logout()
+    {
+        await _httpContextAccessor.HttpContext!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+    }
 
-            return new OutputAuthentication { IsSuccess = false, ListError = ["Login/senha inválidos"] };
-        }
-
-        public async Task LogoutAsync()
-        {
-            await _httpClient.PostAsync("auth/logout", null);
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-            _authenticated = false;
-        }
-
-        public bool IsAuthenticated()
-        {
-            return _authenticated;
-        }
+    public bool IsAuthenticated()
+    {
+        return _httpContextAccessor.HttpContext!.User.Identity!.IsAuthenticated;
     }
 }

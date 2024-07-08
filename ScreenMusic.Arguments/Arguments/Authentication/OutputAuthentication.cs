@@ -3,5 +3,5 @@
 public class OutputAuthentication
 {
     public bool IsSuccess { get; set; }
-    public string[]? ListError { get; set; }
+    public string? Error { get; set; }
 }
