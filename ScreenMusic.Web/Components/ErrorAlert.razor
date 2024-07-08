@@ -1,0 +1,16 @@
+﻿@code {
+    [Parameter]
+    public string? ErrorMessage { get; set; }
+
+    private void CloseAlert()
+    {
+        ErrorMessage = null;
+    }
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="CloseAlert">
+        @ErrorMessage
+    </MudAlert>
+}

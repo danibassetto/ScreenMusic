@@ -9,12 +9,7 @@
 
         <MudText Class="mt-8" Typo="Typo.h4">Edição de Artista</MudText>
 
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <MudAlert Severity="Severity.Error">
-                @errorMessage
-            </MudAlert>
-        }
+        <ErrorAlert ErrorMessage="@errorMessage" />
 
         <MudForm>
             <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista" ReadOnly="true" Variant="Variant.Outlined" @bind-Value="name" Required="true" RequiredError="Campo obrigatório." />

@@ -7,12 +7,7 @@
     <MudPagination Count="@totalPage" SelectedChanged="PageChange"></MudPagination>
 </MudStack>
 
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-    <MudAlert Severity="Severity.Error">
-        @errorMessage
-    </MudAlert>
-}
+<ErrorAlert ErrorMessage="@errorMessage" />
 
 @if (ListOutputArtistByPage is not null)
 {

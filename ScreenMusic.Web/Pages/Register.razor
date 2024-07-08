@@ -5,12 +5,8 @@
 @attribute [AllowAnonymous]
 
 <MudPaper Class="px-8 pt-2 pb-4 mx-16 my-8" Justify="Justify.Center">
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <MudAlert Severity="Severity.Error">
-            @errorMessage
-        </MudAlert>
-    }
+    <ErrorAlert ErrorMessage="@errorMessage" />
+
     <MudForm>       
         <MudTextField T="string" Label="Email" @bind-Value="email"
                       Variant="Variant.Outlined" Class="my-4"

@@ -8,12 +8,7 @@
     <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Dark" Href=@($"/CreateMusicGenre") />
 </MudStack>
 
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-    <MudAlert Severity="Severity.Error">
-        @errorMessage
-    </MudAlert>
-}
+<ErrorAlert ErrorMessage="@errorMessage" />
 
 @if (ListOutputMusicGenre == null || ListOutputMusicGenre.Count == 0)
 {
