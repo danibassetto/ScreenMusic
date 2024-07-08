@@ -1,21 +1,21 @@
 ﻿@using ScreenMusic.Arguments
-﻿<MudCard>
-    <MudCardMedia Image="@Image"></MudCardMedia>
+﻿<MudCard Style="width: 220px; height: 450px; overflow:hidden;">
+    <MudCardMedia Style="width: 220px; height: 220px;" Image="@Image"></MudCardMedia>
     <MudCardHeader>
         <CardHeaderContent>
             <MudText Typo="Typo.h6">@Artist!.Name</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudText Typo="Typo.body2">@Artist!.Biography</MudText>
-            <MudRating SelectedValue="@Convert.ToInt32(Artist!.Classification)" ReadOnly="true" Class="mt-2" />
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Color="Color.Warning" Variant="Variant.Outlined" Href=@($"/UpdateArtist/{Artist!.Name}")>Detalhes</MudButton>
-        </MudCardActions>
-    </MudCard>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.body2" translate="yes" Style="height: 40px; overflow:hidden;">@Artist!.Biography</MudText>
+        <MudRating SelectedValue="@Convert.ToInt32(Artist!.Classification)" ReadOnly="true" Class="mt-2" />
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Color="Color.Warning" Variant="Variant.Outlined" Href=@($"/UpdateArtist/{Artist!.Name}")>Detalhes</MudButton>
+    </MudCardActions>
+</MudCard>
 
-    @code {
+@code {
     [Parameter]
     public OutputArtist? Artist { get; set; }
 
