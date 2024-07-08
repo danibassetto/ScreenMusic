@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using ScreenMusic.Arguments;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace ScreenMusic.WebMvc.Services;
 
@@ -20,8 +21,12 @@ public class AuthenticationServiceClient(IHttpClientFactory factory, IHttpContex
 
         if (response.IsSuccessStatusCode)
             return new OutputAuthentication { IsSuccess = true };
-
-        return new OutputAuthentication { IsSuccess = false, Error = "Email/senha inválidos" };
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            var apiErrorResponse = JsonSerializer.Deserialize<OutputAuthenticationError>(errorContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new OutputAuthentication { IsSuccess = false, Error = string.Join("; ", apiErrorResponse?.Errors?.SelectMany(e => e.Value)!) };
+        }
     }
 
     public async Task<OutputAuthentication> Login(string email, string senha)
@@ -49,8 +54,12 @@ public class AuthenticationServiceClient(IHttpClientFactory factory, IHttpContex
 
             return new OutputAuthentication { IsSuccess = true };
         }
-
-        return new OutputAuthentication { IsSuccess = false, Error = "Login/senha inválidos" };
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            var apiErrorResponse = JsonSerializer.Deserialize<OutputAuthenticationError>(errorContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new OutputAuthentication { IsSuccess = false, Error = string.Join("; ", apiErrorResponse?.Errors?.SelectMany(e => e.Value)!) };
+        }
     }
 
     public async Task Logout()

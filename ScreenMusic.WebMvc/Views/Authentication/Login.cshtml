@@ -5,7 +5,6 @@
     @if (HttpContextAccessor.HttpContext!.User.Identity!.IsAuthenticated)
     {
         <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">Bem-vindo!</h4>
             <p>Você está autenticado como: @HttpContextAccessor.HttpContext.User.Identity.Name</p>
             <hr>
             <form asp-action="Logout" method="post">
@@ -18,19 +17,18 @@
         <div class="container mt-2 text-black">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
+                    @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewData["ErrorMessage"]
+                        </div>
+                    }
+                    <div class="card shadow">
+                        <div class="card-header text-white" style="background-color: #9820b0;">
                             <h4>Login</h4>
                         </div>
                         <div class="card-body">
-                            <form asp-action="Login" method="post" class="p-4 border rounded bg-light">
-                                @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
-                                {
-                                    <div class="alert alert-danger" role="alert">
-                                        @ViewData["ErrorMessage"]
-                                    </div>
-                                }
-
+                            <form asp-action="Login" method="post" class="p-4 rounded bg-light">                                
                                 <div class="form-group mb-3">
                                     <label for="Email">Email</label>
                                     <input type="email" name="Email" class="form-control" required placeholder="Digite seu email" />
@@ -39,10 +37,10 @@
                                     <label for="Password">Senha</label>
                                     <input type="password" name="Password" class="form-control" required placeholder="Digite sua senha" />
                                 </div>
-                                <div class="form-group text-center">
-                                    <button type="submit" class="btn btn-primary btn-block w-100">Login</button>
+                                <div class="form-group text-center mb-0">
+                                    <button type="submit" class="btn btn-block w-100 text-white" style="background-color: #9820b0;">Login</button>
                                 </div>
-                                <div class="form-group text-center mt-3">
+                                <div class="form-group text-center mt-3 mb-0">
                                     <a asp-action="Register" class="btn btn-link">Não tem uma conta? Registre-se aqui</a>
                                 </div>
                             </form>

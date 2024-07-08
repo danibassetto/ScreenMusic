@@ -5,27 +5,35 @@
 @attribute [AllowAnonymous]
 
 <MudPaper Class="px-8 pt-2 pb-4 mx-16 my-8" Justify="Justify.Center">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <MudAlert Severity="Severity.Error">
+            @errorMessage
+        </MudAlert>
+    }
     <AuthorizeView>
         <Authorized>
             <p>Você está conectado como @context.User.Identity!.Name </p>
         </Authorized>
-        <NotAuthorized>
+        <NotAuthorized>            
             <MudForm>
                 <MudTextField T="string" Label="Email" @bind-Value="email"
                               Variant="Variant.Outlined" Class="my-4"
-                              Required="true" RequiredError="Email obrigatório!"
-                              OnlyValidateIfDirty="true" />
+                              Required="true" RequiredError="Email obrigatório!"/>
 
                 <MudTextField T="string" Label="Senha" @bind-Value="password"
                               InputType="InputType.Password"
                               Variant="Variant.Outlined" Class="my-4"
-                              Required="true" RequiredError="Senha obrigatória!"
-                              OnlyValidateIfDirty="true" />
+                              Required="true" RequiredError="Senha obrigatória!"/>
 
                 <MudButton Variant="Variant.Filled" Color="Color.Primary"
                            Class="my-6" @onclick="LogInto">
                     Login
                 </MudButton>
+
+                <MudText Class="mt-4">
+                    Não tem uma conta? <MudLink Href="/register">Registre-se</MudLink>
+                </MudText>
             </MudForm>
         </NotAuthorized>
     </AuthorizeView>
@@ -34,14 +42,34 @@
 @code {
     private string? email;
     private string? password;
+    private string? errorMessage;
 
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
 
+    protected override void OnParametersSet()
+    {
+        var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        if (query["email"] != null && query["password"] != null)
+        {
+            email = query["email"];
+            password = query["password"];
+        }
+    }
+
     private async Task LogInto()
     {
-        var response = await authenticationServiceClient.LoginAsync(email!, password!);
-        if(response.IsSuccess && ReturnUrl is not null)
-            navigationManager.NavigateTo(ReturnUrl);
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            errorMessage = "Necessário informar todos os campos";
+        else
+        {
+            var response = await authenticationServiceClient.Login(email!, password!);
+            if (response.IsSuccess && ReturnUrl is not null)
+                navigationManager.NavigateTo(ReturnUrl);
+            else
+                errorMessage = response.Error ?? "Erro ao efetuar login.";
+        }
     }
 }

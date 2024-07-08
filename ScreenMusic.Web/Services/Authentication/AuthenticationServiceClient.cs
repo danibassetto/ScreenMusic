@@ -2,6 +2,7 @@
 using ScreenMusic.Arguments;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace ScreenMusic.Web.Services;
 
@@ -33,7 +34,7 @@ public class AuthenticationServiceClient(IHttpClientFactory factory) : Authentic
         return new AuthenticationState(pessoa);
     }
 
-    public async Task<OutputAuthentication> LoginAsync(string email, string senha)
+    public async Task<OutputAuthentication> Login(string email, string senha)
     {
         var response = await _httpClient.PostAsJsonAsync("auth/login?useCookies=true", new
         {
@@ -46,11 +47,33 @@ public class AuthenticationServiceClient(IHttpClientFactory factory) : Authentic
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
             return new OutputAuthentication { IsSuccess = true };
         }
-
-        return new OutputAuthentication { IsSuccess = false, Error = "Login/senha inválidos" };
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            var apiErrorResponse = JsonSerializer.Deserialize<OutputAuthenticationError>(errorContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new OutputAuthentication { IsSuccess = false, Error = string.Join("; ", apiErrorResponse?.Errors?.SelectMany(e => e.Value)!) };
+        }
     }
 
-    public async Task LogoutAsync()
+    public async Task<OutputAuthentication> Register(string email, string senha)
+    {
+        var response = await _httpClient.PostAsJsonAsync("auth/register", new
+        {
+            email,
+            password = senha
+        });
+
+        if (response.IsSuccessStatusCode)
+            return new OutputAuthentication { IsSuccess = true };
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            var apiErrorResponse = JsonSerializer.Deserialize<OutputAuthenticationError>(errorContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new OutputAuthentication { IsSuccess = false, Error = string.Join("; ", apiErrorResponse?.Errors?.SelectMany(e => e.Value)!) };
+        }
+    }
+
+    public async Task Logout()
     {
         await _httpClient.PostAsync("auth/logout", null);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());

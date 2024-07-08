@@ -1,12 +1,16 @@
 ﻿@page "/logout"
 @inject AuthenticationServiceClient authenticationServiceClient
+@inject NavigationManager navigationManager
 @attribute [AllowAnonymous]
 
 @code {
     protected override async Task OnInitializedAsync()
     {
         if (await authenticationServiceClient.VerifyAuthenticated())
-            await authenticationServiceClient.LogoutAsync();
+        {
+            await authenticationServiceClient.Logout();
+            navigationManager.NavigateTo("/");
+        }
         await base.OnInitializedAsync();
     }
 }
