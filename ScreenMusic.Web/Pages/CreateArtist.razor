@@ -39,6 +39,12 @@
 
     private async Task Create()
     {
+        if (string.IsNullOrEmpty(profilePhoto))
+        {
+            errorMessage = "Foto de artista é obrigatória.";
+            return;
+        }
+
         var inputCreateArtist = new InputCreateArtist(name!, profilePhoto!, biography!);
         var response = await artistServiceClient.Create(inputCreateArtist);
 
