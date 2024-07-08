@@ -56,6 +56,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ScreenMusic.Arguments\ScreenMusic.Arguments.csproj" />
   </ItemGroup>
 

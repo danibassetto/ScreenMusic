@@ -1,0 +1,64 @@
+﻿@page "/register"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationServiceClient authenticationServiceClient
+@inject NavigationManager navigationManager
+@attribute [AllowAnonymous]
+
+<MudPaper Class="px-8 pt-2 pb-4 mx-16 my-8" Justify="Justify.Center">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <MudAlert Severity="Severity.Error">
+            @errorMessage
+        </MudAlert>
+    }
+    <MudForm>       
+        <MudTextField T="string" Label="Email" @bind-Value="email"
+                      Variant="Variant.Outlined" Class="my-4"
+                      Required="true" RequiredError="Email obrigatório!"
+                      OnlyValidateIfDirty="true" />
+
+        <MudTextField T="string" Label="Senha" @bind-Value="password"
+                      InputType="InputType.Password"
+                      Variant="Variant.Outlined" Class="my-4"
+                      Required="true" RequiredError="Senha obrigatória!"
+                      OnlyValidateIfDirty="true" />
+
+        <MudTextField T="string" Label="Confirme sua senha" @bind-Value="confirmPassword"
+                      InputType="InputType.Password"
+                      Variant="Variant.Outlined" Class="my-4"
+                      Required="true" RequiredError="Senha obrigatória!"
+                      OnlyValidateIfDirty="true" />
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   Class="my-6" @onclick="RegisterInto">
+            Registrar
+        </MudButton>
+
+        <MudText Class="mt-4">
+            Já tem uma conta? <MudLink Href="/login">Efetue login</MudLink>
+        </MudText>
+    </MudForm>
+</MudPaper>
+
+@code {
+    private string? email;
+    private string? password;
+    private string? confirmPassword;
+    private string? errorMessage;
+
+    private async Task RegisterInto()
+    {
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
+            errorMessage = "Necessário informar todos os campos";
+        else if (confirmPassword != password)
+            errorMessage = "As senhas não são iguais!";
+        else
+        {
+            var response = await authenticationServiceClient.Register(email!, password!);
+            if (response.IsSuccess)
+                navigationManager.NavigateTo($"/login?email={email}&password={password}");
+            else
+                errorMessage = response.Error ?? "Erro ao registrar-se.";
+        }
+    }
+}

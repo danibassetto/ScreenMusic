@@ -1,3 +1,5 @@
-﻿@using ScreenMusic.WebMvc
+﻿@using Microsoft.AspNetCore.Authorization
+@using ScreenMusic.WebMvc
 @using ScreenMusic.Arguments
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@attribute [Authorize]
