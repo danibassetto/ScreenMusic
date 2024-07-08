@@ -1,19 +1,17 @@
-﻿@{
-    if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-}
-
-@model IEnumerable<OutputMusicGenre>
+﻿@model IEnumerable<OutputMusicGenre>
 @{
     ViewData["Title"] = "Gêneros Musicais";
 }
 
 <div class="text-center">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="btn btn-danger btn-sm close-alert" data-bs-dismiss="alert" aria-label="Close">X</button>
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
     <h1 class="display-4">Listagem de Gêneros Musicais</h1>    
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">

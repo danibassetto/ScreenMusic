@@ -77,3 +77,12 @@ body {
     .btn-icon i {
         margin: 0;
     }
+
+.close-alert {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    border-radius: 15px;
+    width: 30px;
+    height: 31px;
+}

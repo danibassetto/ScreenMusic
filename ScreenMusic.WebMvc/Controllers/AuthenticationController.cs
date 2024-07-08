@@ -11,6 +11,8 @@ public class AuthenticationController(AuthenticationServiceClient authentication
 
     public IActionResult Login()
     {
+        ViewData["Email"] = TempData["Email"];
+        ViewData["Password"] = TempData["Password"];
         return View();
     }
 
@@ -23,7 +25,7 @@ public class AuthenticationController(AuthenticationServiceClient authentication
             return RedirectToAction(nameof(HomeController.Index), "Home");
         else
         {
-            ViewData["ErrorMessage"] = result.Error;
+            TempData["ErrorMessage"] = result.Error;
             return View();
         }
     }
@@ -45,10 +47,14 @@ public class AuthenticationController(AuthenticationServiceClient authentication
 
         var result = await _authenticationServiceClient.Register(email, password);
         if (result.IsSuccess)
+        {
+            TempData["Email"] = email;
+            TempData["Password"] = password;
             return RedirectToAction(nameof(Login));
+        }
         else
         {
-            ViewData["ErrorMessage"] = result.Error;
+            TempData["ErrorMessage"] = result.Error;
             return View();
         }
     }    

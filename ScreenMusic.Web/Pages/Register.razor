@@ -14,20 +14,15 @@
     <MudForm>       
         <MudTextField T="string" Label="Email" @bind-Value="email"
                       Variant="Variant.Outlined" Class="my-4"
-                      Required="true" RequiredError="Email obrigatório!"
-                      OnlyValidateIfDirty="true" />
+                      Required="true" RequiredError="Email obrigatório!"/>
 
-        <MudTextField T="string" Label="Senha" @bind-Value="password"
-                      InputType="InputType.Password"
-                      Variant="Variant.Outlined" Class="my-4"
-                      Required="true" RequiredError="Senha obrigatória!"
-                      OnlyValidateIfDirty="true" />
+        <MudTextField @bind-Value="password" Label="Senha" Variant="Variant.Outlined" Class="my-4"
+                      InputType="@PasswordInput" Adornment="Adornment.End" Required="true" RequiredError="Senha obrigatória!"
+                      AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowPassword" AdornmentAriaLabel="Mostrar senha" />
 
-        <MudTextField T="string" Label="Confirme sua senha" @bind-Value="confirmPassword"
-                      InputType="InputType.Password"
-                      Variant="Variant.Outlined" Class="my-4"
-                      Required="true" RequiredError="Senha obrigatória!"
-                      OnlyValidateIfDirty="true" />
+        <MudTextField @bind-Value="confirmPassword" Label="Confirme sua senha" Variant="Variant.Outlined" Class="my-4"
+                      InputType="@PasswordInput" Adornment="Adornment.End" Required="true" RequiredError="Senha obrigatória!"
+                      AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowPassword" AdornmentAriaLabel="Mostrar senha" />
 
         <MudButton Variant="Variant.Filled" Color="Color.Primary"
                    Class="my-6" @onclick="RegisterInto">
@@ -45,6 +40,9 @@
     private string? password;
     private string? confirmPassword;
     private string? errorMessage;
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     private async Task RegisterInto()
     {
@@ -59,6 +57,22 @@
                 navigationManager.NavigateTo($"/login?email={email}&password={password}");
             else
                 errorMessage = response.Error ?? "Erro ao registrar-se.";
+        }
+    }
+
+    void ShowPassword()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
         }
     }
 }

@@ -15,21 +15,18 @@
         <Authorized>
             <p>Você está conectado como @context.User.Identity!.Name </p>
         </Authorized>
-        <NotAuthorized>            
+        <NotAuthorized>
             <MudForm>
                 <MudTextField T="string" Label="Email" @bind-Value="email"
                               Variant="Variant.Outlined" Class="my-4"
-                              Required="true" RequiredError="Email obrigatório!"/>
+                              Required="true" RequiredError="Email obrigatório!" />
 
-                <MudTextField T="string" Label="Senha" @bind-Value="password"
-                              InputType="InputType.Password"
-                              Variant="Variant.Outlined" Class="my-4"
-                              Required="true" RequiredError="Senha obrigatória!"/>
+                <MudTextField @bind-Value="password" Label="Senha" Variant="Variant.Outlined" 
+                              InputType="@PasswordInput" Adornment="Adornment.End" Required="true" RequiredError="Senha obrigatória!"
+                              AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowPassword" AdornmentAriaLabel="Mostrar senha" Class="my-4"/>
 
-                <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                           Class="my-6" @onclick="LogInto">
-                    Login
-                </MudButton>
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="my-6" @onclick="LogInto">Login</MudButton>
 
                 <MudText Class="mt-4">
                     Não tem uma conta? <MudLink Href="/register">Registre-se</MudLink>
@@ -43,6 +40,9 @@
     private string? email;
     private string? password;
     private string? errorMessage;
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
@@ -70,6 +70,22 @@
                 navigationManager.NavigateTo(ReturnUrl);
             else
                 errorMessage = response.Error ?? "Erro ao efetuar login.";
+        }
+    }
+
+    void ShowPassword()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
         }
     }
 }

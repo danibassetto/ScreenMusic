@@ -50,8 +50,8 @@ public class AuthenticationServiceClient(IHttpClientFactory factory) : Authentic
         else
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            var apiErrorResponse = JsonSerializer.Deserialize<OutputAuthenticationError>(errorContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return new OutputAuthentication { IsSuccess = false, Error = string.Join("; ", apiErrorResponse?.Errors?.SelectMany(e => e.Value)!) };
+            var outputAuthenticationError = JsonSerializer.Deserialize<OutputAuthenticationError>(errorContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new OutputAuthentication { IsSuccess = false, Error = outputAuthenticationError?.Errors?.ToList().Count > 0 ? string.Join("; ", outputAuthenticationError?.Errors?.ToList()!) : "Login/senha inválido." };
         }
     }
 
@@ -68,8 +68,8 @@ public class AuthenticationServiceClient(IHttpClientFactory factory) : Authentic
         else
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            var apiErrorResponse = JsonSerializer.Deserialize<OutputAuthenticationError>(errorContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return new OutputAuthentication { IsSuccess = false, Error = string.Join("; ", apiErrorResponse?.Errors?.SelectMany(e => e.Value)!) };
+            var outputAuthenticationError = JsonSerializer.Deserialize<OutputAuthenticationError>(errorContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new OutputAuthentication { IsSuccess = false, Error = outputAuthenticationError?.Errors?.ToList().Count > 0 ? string.Join("; ", outputAuthenticationError?.Errors?.ToList()!) : "Email/senha inválido." };
         }
     }
 

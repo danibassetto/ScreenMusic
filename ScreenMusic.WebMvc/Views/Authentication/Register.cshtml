@@ -1,29 +1,40 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 
+@{
+    ViewData["Title"] = "Registre-se";
+}
+
 <div class="container mt-5">
     <div class="container mt-2 text-black">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+                @if (TempData["ErrorMessage"] != null)
                 {
                     <div class="alert alert-danger" role="alert">
-                        @ViewData["ErrorMessage"]
+                        <button type="button" class="btn btn-danger btn-sm close-alert" data-bs-dismiss="alert" aria-label="Close">X</button>
+                        @TempData["ErrorMessage"]
                     </div>
                 }
+
                 <div class="card shadow">
                     <div class="card-header text-white" style="background-color: #9820b0;">
                         <h4>Registrar</h4>
                     </div>
                     <div class="card-body">
-                        <form asp-action="Register" method="post" class="border rounded bg-light p-4">                 
+                        <form asp-action="Register" method="post" class="border rounded bg-light p-4">
                             <div class="form-group mb-3">
                                 <label for="Email">Email</label>
                                 <input type="email" name="Email" class="form-control" required placeholder="Digite seu email" />
                             </div>
-                            <div class="form-group mb-3">
+                            <div class="form-outline mb-4">
                                 <label for="Password">Senha</label>
-                                <input type="password" name="Password" class="form-control" required placeholder="Digite sua senha" />
+                                <div class="input-group">
+                                    <input type="password" name="Password" class="form-control" required id="password" placeholder="Digite sua senha" />
+                                    <button class="btn btn-outline-secondary" type="button" id="showHidePassword">
+                                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="ConfirmPassword">Confirme sua senha</label>
