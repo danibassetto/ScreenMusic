@@ -23,7 +23,7 @@ public class MusicGenreController(MusicGenreServiceClient musicGenreServiceClien
         var totalItem = listMusicGenre.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
-        var musicGenresByPage = listMusicGenre.OrderByDescending(a => a.Id)
+        var musicGenresByPage = listMusicGenre.OrderBy(a => a.Name)
                                               .Skip((pageNumber - 1) * pageSize)
                                               .Take(pageSize)
                                               .ToList();

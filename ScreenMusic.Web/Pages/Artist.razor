@@ -39,7 +39,7 @@
 
             if (ListOutputArtist is not null)
             {
-                ListOutputArtist = ListOutputArtist.OrderByDescending(a => a.Id).ToList();
+                ListOutputArtist = ListOutputArtist.OrderBy(a => a.Name).ToList();
                 totalItem = ListOutputArtist.Count();
                 totalPage = Convert.ToInt32(Math.Ceiling((totalItem * 1.0) / tamanho));
                 this.PageChange(1);

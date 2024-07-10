@@ -1,9 +1,9 @@
 ﻿@using ScreenMusic.Arguments
 <MudCard>
-    <iframe class="card-video" src="@ConvertToEmbedYoutubeUrl(Music!.YoutubeLink!)" allowfullscreen></iframe>
+    <iframe class="card-video" style="height: 200px" src="@ConvertToEmbedYoutubeUrl(Music!.YoutubeLink!)" allowfullscreen></iframe>
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h6">@Music!.Artist!.Name - @Music!.Name</MudText>
+            <MudText Typo="Typo.h6">@Music!.Name</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>

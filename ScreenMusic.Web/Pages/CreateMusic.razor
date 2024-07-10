@@ -63,12 +63,12 @@
         var responseListMusicGenre = await musicGenreServiceClient.GetAll();
 
         if (responseListArtist.Success)
-            ListOutputArtist = responseListArtist.Data;
+            ListOutputArtist = responseListArtist.Data?.OrderBy(x => x.Name).ToList();
         else
             errorMessage = responseListArtist.ErrorMessage ?? "Erro ao carregar combo de artistas.";
 
         if (responseListMusicGenre.Success)
-            ListOutputMusicGenre = responseListMusicGenre.Data;
+            ListOutputMusicGenre = responseListMusicGenre.Data?.OrderBy(x => x.Name).ToList();
         else
             errorMessage = responseListMusicGenre.ErrorMessage ?? "Erro ao carregar combo de gêneros musicais.";
 

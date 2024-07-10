@@ -30,7 +30,7 @@ public class MusicController(MusicServiceClient musicServiceClient, ArtistServic
         var totalItem = listMusic.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
-        var musicByPage = listMusic.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        var musicByPage = listMusic.OrderBy(a => a.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         ViewBag.TotalPage = totalPage;
         ViewBag.CurrentPage = pageNumber;

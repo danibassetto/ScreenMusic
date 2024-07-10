@@ -23,7 +23,7 @@ public class ArtistController(ArtistServiceClient artistServiceClient) : Control
         var totalItem = listArtist.Count;
         var totalPage = (int)Math.Ceiling(totalItem / (double)pageSize);
 
-        var artistsByPage = listArtist.OrderByDescending(a => a.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        var artistsByPage = listArtist.OrderBy(a => a.Name).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         ViewBag.TotalPage = totalPage;
         ViewBag.CurrentPage = pageNumber;
 

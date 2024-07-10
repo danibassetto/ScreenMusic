@@ -39,7 +39,7 @@
 
             if (ListOutputMusic is not null)
             {
-                ListOutputMusic = ListOutputMusic.OrderByDescending(a => a.Id).ToList();
+                ListOutputMusic = ListOutputMusic.OrderBy(a => a.Name).ToList();
                 totalItem = ListOutputMusic.Count();
                 totalPage = Convert.ToInt32(Math.Ceiling((totalItem * 1.0) / tamanho));
                 this.PageChange(1);
